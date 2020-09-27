@@ -1,0 +1,3 @@
+Download data from different sources;
+Mapping result to the database;
+Calculate them and save again to the database;
