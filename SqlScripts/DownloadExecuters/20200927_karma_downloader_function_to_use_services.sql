@@ -78,9 +78,12 @@ begin
 	
 	insert into murr_downloader.service_attribute_strings(service_service_attribute_id, service_service_attribute_title)
 	values(d_service_service_attribute_id, in_service_value)
-	on conflict (d_service_service_attribute_id) do update 
+	on conflict (service_service_attribute_id) do update 
 	set service_service_attribute_title = in_service_value;		
 end
-$$ language plpgsql;
+$$ language plpgsql
+	SECURITY DEFINER;
 
+ALTER FUNCTION murr_downloader.insert_service_string
+    OWNER TO karma_admin;
 
