@@ -1,5 +1,3 @@
-insert into murr_downloader.service_attributes
-
 insert into murr_downloader.service_attributes(service_attribute_title, service_attribute_description)
 values('LAST_LIFE_DATE_TIME', 'Последнее время отклика сервиса'),
 ('LAST_WORKING_DATE_TIME', 'Последнее время отклика сервиса, если он находится в рабочем статусе'),
