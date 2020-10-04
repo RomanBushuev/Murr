@@ -8,22 +8,60 @@ using Microsoft.Extensions.Logging;
 
 namespace DownloaderService
 {
-    public class Worker : BackgroundService
+    public class TimedHostedService : IHostedService, IDisposable
     {
-        private readonly ILogger<Worker> _logger;
+        private readonly ILogger<TimedHostedService> _logger;
+        private Timer _timer;
+        private readonly int _interval = 10;
 
-        public Worker(ILogger<Worker> logger)
+        public TimedHostedService(ILogger<TimedHostedService> logger)
         {
             _logger = logger;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        public void Dispose()
         {
-            while (!stoppingToken.IsCancellationRequested)
+            _timer?.Dispose();
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Timed Hosted Service running");
+            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(_interval));
+            return Task.CompletedTask;
+        }
+
+        private void DoWork(object state)
+        {
+            _timer?.Change(Timeout.Infinite, 0);
+            _logger.LogInformation($"Work: {Thread.GetCurrentProcessorId()}");
+            try
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
+                Job();
             }
+            catch (Exception ex)
+            {
+                _logger.LogInformation($"{ex}");
+            }
+            finally
+            {
+                _logger.LogInformation($"Continue the service:{Thread.GetCurrentProcessorId()}");
+                _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(_interval));
+            }
+        }
+
+        private void Job()
+        {
+            //start job
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Timed Hosted Service is stopping.");
+
+            _timer?.Change(Timeout.Infinite, 0);
+
+            return Task.CompletedTask;
         }
     }
 }
