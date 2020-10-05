@@ -62,6 +62,17 @@ namespace KarmaCore.BaseTypes
 
             return value;
         }
+
+
+        public static ParamDescriptor ConvertParam(ParamDescriptor oldParamDescriptor,
+            ParamDescriptor newParamDescriptor)
+        {
+            if(oldParamDescriptor.ParamType == newParamDescriptor.ParamType)
+            {
+                oldParamDescriptor.Value = newParamDescriptor;
+            }
+            return oldParamDescriptor;
+        }
     }
 
 }
