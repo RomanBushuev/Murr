@@ -1,4 +1,6 @@
 ﻿using KarmaCore.BaseTypes;
+using KarmaCore.BaseTypes.Logger;
+using KarmaCore.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ namespace KarmaCore
     {
         private bool isInitialized = false;
         protected List<ParamDescriptor> _paramDescriptors = new List<ParamDescriptor>();
+        protected MurrLogger _murrLogger = new MurrLogger();
 
         public virtual void Run()
         {
@@ -34,6 +37,11 @@ namespace KarmaCore
             }
             var needParam = _paramDescriptors.FirstOrDefault(z => z.Ident == paramDescriptor.Ident);
             needParam = ParamDescriptorExtensions.ConvertParam(needParam, paramDescriptor);
+        }
+
+        public void Notify(string message, MurrMessageType murrMessageType = MurrMessageType.Information) 
+        {
+            _murrLogger.Notify(message, murrMessageType);
         }
     }
 }

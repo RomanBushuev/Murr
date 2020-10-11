@@ -1,19 +1,31 @@
-﻿using KarmaCore;
+﻿using CbrServices;
+using KarmaCore;
 using KarmaCore.BaseTypes;
 using KarmaCore.Enumerations;
+using KarmaCore.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Xml;
 
 namespace DownloaderProvider
 {
-    public class DownloadForeignExchange : Calculation
+    public class DownloadForeignExchange : Calculation, IXmlResult
     {
-        public string RunDateTime = "RunDateTime";
+        private XmlDocument _xmlDocument = null;
+        public const string RunDateTime = "RunDateTime";
+        public XmlDocument Document => _xmlDocument;
 
         public override void Run()
         {
-            base.Run();
+            Notify($"Задача загрузки иностранных валют начата");
+            DailyInfoSoapClient client = new DailyInfoSoapClient(DailyInfoSoapClient.EndpointConfiguration.DailyInfoSoap);
+            DateTime dateTime = _paramDescriptors.ConvertDate(RunDateTime);
+            var temp = client.GetCursOnDateXMLAsync(dateTime);
+            XmlDocument xmlDocument = new XmlDocument();
+            var xmlNode = temp.Result;
+            xmlDocument.LoadXml($"<Currencies><ValidDate>{dateTime.ToString("dd.MM.yyyy")}</ValidDate>{xmlNode.InnerXml}</Currencies>");
+            _xmlDocument = xmlDocument;
+            Notify($"Задача загрузки иностранных валют закончена");
         }
 
         public override IReadOnlyCollection<ParamDescriptor> GetParamDescriptors()

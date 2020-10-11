@@ -1,7 +1,9 @@
 ﻿using KarmaCore.Enumerations;
+using KarmaCore.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace KarmaCore.BaseTypes
@@ -27,7 +29,7 @@ namespace KarmaCore.BaseTypes
     public static class ParamDescriptorExtensions
     {
         private static NumberStyles _numberFormat = NumberStyles.Float;
-        private static string[] _formats = new string[] { "dd.MM.yyyy" };
+        private static string[] _formats = new string[] { "dd.MM.yyyy HH:mm:ss", "dd.MM.yyyy H:mm:ss", "dd.MM.yyyy" };
 
         public static decimal ConvertNum(this ParamDescriptor paramDescriptor)
         {
@@ -52,6 +54,19 @@ namespace KarmaCore.BaseTypes
             return value;
         }
 
+        public static DateTime ConvertDate(this IEnumerable<ParamDescriptor> paramDescriptors, string ident)
+        {
+            var param = paramDescriptors.FirstOrDefault(z => z.Ident == ident);
+            if (param != null)
+            {
+                return param.ConvertDate();
+            }
+            else
+            {
+                throw new KarmaCoreException($"Не найден параметр {ident}");
+            }
+        }
+
         public static DateTime ConvertDate(this ParamDescriptor paramDescriptor,
             string[] formats)
         {
@@ -69,7 +84,7 @@ namespace KarmaCore.BaseTypes
         {
             if(oldParamDescriptor.ParamType == newParamDescriptor.ParamType)
             {
-                oldParamDescriptor.Value = newParamDescriptor;
+                oldParamDescriptor.Value = newParamDescriptor.Value;
             }
             return oldParamDescriptor;
         }
