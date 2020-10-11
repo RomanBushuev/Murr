@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace DownloaderProvider
+namespace DownloadTasks
 {
     public class DownloadForeignExchange : Calculation, IXmlResult
     {
