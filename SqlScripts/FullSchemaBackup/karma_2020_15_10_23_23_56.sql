@@ -17,6 +17,15 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: hangfire; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA hangfire;
+
+
+ALTER SCHEMA hangfire OWNER TO postgres;
+
+--
 -- Name: murr_data; Type: SCHEMA; Schema: -; Owner: karma_admin
 --
 
@@ -33,6 +42,108 @@ CREATE SCHEMA murr_downloader;
 
 
 ALTER SCHEMA murr_downloader OWNER TO karma_admin;
+
+--
+-- Name: add_cbr_foreign_exchange(timestamp without time zone); Type: FUNCTION; Schema: murr_downloader; Owner: karma_admin
+--
+
+CREATE FUNCTION murr_downloader.add_cbr_foreign_exchange(in_datetime timestamp without time zone) RETURNS bigint
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$	
+declare
+	d_folder_id bigint;
+	d_folder_title character varying(255) = 'CBR_DOWNLOAD_SERVICES';
+	d_folder_sub_id bigint;
+	d_folder_sub_root character varying(255) = 'FOREIGN_EXCHANGE';
+	d_service_service_attribute_id bigint = null;
+	d_title character varying(255);
+	d_hint text = null;
+	d_task_parameters jsonb;
+	d_task_tempate_id bigint;
+begin
+	--создать папку для загрузок 
+	select folder_id into d_folder_id 
+	from murr_downloader.folders 
+	where folder_title = d_folder_title and folder_type_id = 1 and folder_root_id is null;
+	
+	if d_folder_id is null
+	then
+		insert into murr_downloader.folders(folder_root_id, folder_title, folder_type_id)
+		values(null, d_folder_title, 1)
+		returning folder_id into d_folder_id;
+	end if;
+	
+	--добавить папку 
+	select folder_id into d_folder_sub_id
+	from murr_downloader.folders
+	where folder_title = d_folder_sub_root and folder_type_id = 1 and folder_root_id = d_folder_id;
+	
+	--добавить под папку 
+	if d_folder_sub_id is null 
+	then 
+		insert into murr_downloader.folders(folder_root_id, folder_title, folder_type_id)
+		values(d_folder_id, d_folder_sub_root, 1)
+		returning folder_id into d_folder_sub_id;
+	end if;
+	
+	--добавить время в под папку
+	d_folder_title = to_char(in_datetime, 'YYYY_MM_DD');
+	
+	select folder_id into d_folder_id
+	from murr_downloader.folders
+	where folder_title = d_folder_title and folder_type_id = 1 and folder_root_id = d_folder_sub_id;
+	
+	if d_folder_id is null 
+	then 
+		insert into murr_downloader.folders(folder_root_id, folder_title, folder_type_id)
+		values(d_folder_sub_id, d_folder_title, 1)
+		returning folder_id into d_folder_id;
+	end if;
+	
+	d_title = d_folder_title || '_' ||  to_char(nextval('murr_downloader.murr_sequence'::regclass), 'FM999999999999999999');
+	
+	d_task_parameters = ('{
+    "RunDateTime": "' || to_char(now(), 'YYYY-MM-DD') ||'"
+	}')::jsonb;
+	
+	--создаем шаблон
+	insert into murr_downloader.task_templates(task_template_title, 
+		task_template_created_time, 
+		task_template_folder_id, 
+		task_parameters, 
+		task_type_id) values(d_title, now()::timestamp without time zone, d_folder_id, d_task_parameters, 1)
+	returning task_template_id into d_task_tempate_id;
+	return d_task_tempate_id;
+	
+	--добавляем задачу к нам в шаблон
+	insert into murr_downloader.tasks(task_template_id, task_created_time, task_status_id)
+	values(d_task_tempate_id, now()::timestamp without time zone, 1)
+	returning task_id into d_task_tempate_id;
+	
+	return d_task_template_id;
+end
+$$;
+
+
+ALTER FUNCTION murr_downloader.add_cbr_foreign_exchange(in_datetime timestamp without time zone) OWNER TO karma_admin;
+
+--
+-- Name: get_jobs(); Type: FUNCTION; Schema: murr_downloader; Owner: karma_admin
+--
+
+CREATE FUNCTION murr_downloader.get_jobs() RETURNS TABLE(task_id bigint, task_template_id bigint, task_status_id bigint)
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$	
+declare
+begin
+	return query
+		select tasks.task_id, tasks.task_template_id, tasks.task_status_id
+		from murr_downloader.tasks;
+end
+$$;
+
+
+ALTER FUNCTION murr_downloader.get_jobs() OWNER TO karma_admin;
 
 --
 -- Name: insert_service_date(character varying, character varying, timestamp without time zone); Type: FUNCTION; Schema: murr_downloader; Owner: karma_admin
@@ -288,6 +399,346 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: counter; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.counter (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    value bigint NOT NULL,
+    expireat timestamp without time zone
+);
+
+
+ALTER TABLE hangfire.counter OWNER TO karma_admin;
+
+--
+-- Name: counter_id_seq; Type: SEQUENCE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE SEQUENCE hangfire.counter_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hangfire.counter_id_seq OWNER TO karma_admin;
+
+--
+-- Name: counter_id_seq; Type: SEQUENCE OWNED BY; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER SEQUENCE hangfire.counter_id_seq OWNED BY hangfire.counter.id;
+
+
+--
+-- Name: hash; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.hash (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    field text NOT NULL,
+    value text,
+    expireat timestamp without time zone,
+    updatecount integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE hangfire.hash OWNER TO karma_admin;
+
+--
+-- Name: hash_id_seq; Type: SEQUENCE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE SEQUENCE hangfire.hash_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hangfire.hash_id_seq OWNER TO karma_admin;
+
+--
+-- Name: hash_id_seq; Type: SEQUENCE OWNED BY; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER SEQUENCE hangfire.hash_id_seq OWNED BY hangfire.hash.id;
+
+
+--
+-- Name: job; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.job (
+    id bigint NOT NULL,
+    stateid bigint,
+    statename text,
+    invocationdata text NOT NULL,
+    arguments text NOT NULL,
+    createdat timestamp without time zone NOT NULL,
+    expireat timestamp without time zone,
+    updatecount integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE hangfire.job OWNER TO karma_admin;
+
+--
+-- Name: job_id_seq; Type: SEQUENCE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE SEQUENCE hangfire.job_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hangfire.job_id_seq OWNER TO karma_admin;
+
+--
+-- Name: job_id_seq; Type: SEQUENCE OWNED BY; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER SEQUENCE hangfire.job_id_seq OWNED BY hangfire.job.id;
+
+
+--
+-- Name: jobparameter; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.jobparameter (
+    id bigint NOT NULL,
+    jobid bigint NOT NULL,
+    name text NOT NULL,
+    value text,
+    updatecount integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE hangfire.jobparameter OWNER TO karma_admin;
+
+--
+-- Name: jobparameter_id_seq; Type: SEQUENCE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE SEQUENCE hangfire.jobparameter_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hangfire.jobparameter_id_seq OWNER TO karma_admin;
+
+--
+-- Name: jobparameter_id_seq; Type: SEQUENCE OWNED BY; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER SEQUENCE hangfire.jobparameter_id_seq OWNED BY hangfire.jobparameter.id;
+
+
+--
+-- Name: jobqueue; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.jobqueue (
+    id bigint NOT NULL,
+    jobid bigint NOT NULL,
+    queue text NOT NULL,
+    fetchedat timestamp without time zone,
+    updatecount integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE hangfire.jobqueue OWNER TO karma_admin;
+
+--
+-- Name: jobqueue_id_seq; Type: SEQUENCE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE SEQUENCE hangfire.jobqueue_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hangfire.jobqueue_id_seq OWNER TO karma_admin;
+
+--
+-- Name: jobqueue_id_seq; Type: SEQUENCE OWNED BY; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER SEQUENCE hangfire.jobqueue_id_seq OWNED BY hangfire.jobqueue.id;
+
+
+--
+-- Name: list; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.list (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    value text,
+    expireat timestamp without time zone,
+    updatecount integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE hangfire.list OWNER TO karma_admin;
+
+--
+-- Name: list_id_seq; Type: SEQUENCE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE SEQUENCE hangfire.list_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hangfire.list_id_seq OWNER TO karma_admin;
+
+--
+-- Name: list_id_seq; Type: SEQUENCE OWNED BY; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER SEQUENCE hangfire.list_id_seq OWNED BY hangfire.list.id;
+
+
+--
+-- Name: lock; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.lock (
+    resource text NOT NULL,
+    updatecount integer DEFAULT 0 NOT NULL,
+    acquired timestamp without time zone
+);
+
+
+ALTER TABLE hangfire.lock OWNER TO karma_admin;
+
+--
+-- Name: schema; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.schema (
+    version integer NOT NULL
+);
+
+
+ALTER TABLE hangfire.schema OWNER TO karma_admin;
+
+--
+-- Name: server; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.server (
+    id text NOT NULL,
+    data text,
+    lastheartbeat timestamp without time zone NOT NULL,
+    updatecount integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE hangfire.server OWNER TO karma_admin;
+
+--
+-- Name: set; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.set (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    score double precision NOT NULL,
+    value text NOT NULL,
+    expireat timestamp without time zone,
+    updatecount integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE hangfire.set OWNER TO karma_admin;
+
+--
+-- Name: set_id_seq; Type: SEQUENCE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE SEQUENCE hangfire.set_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hangfire.set_id_seq OWNER TO karma_admin;
+
+--
+-- Name: set_id_seq; Type: SEQUENCE OWNED BY; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER SEQUENCE hangfire.set_id_seq OWNED BY hangfire.set.id;
+
+
+--
+-- Name: state; Type: TABLE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE TABLE hangfire.state (
+    id bigint NOT NULL,
+    jobid bigint NOT NULL,
+    name text NOT NULL,
+    reason text,
+    createdat timestamp without time zone NOT NULL,
+    data text,
+    updatecount integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE hangfire.state OWNER TO karma_admin;
+
+--
+-- Name: state_id_seq; Type: SEQUENCE; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE SEQUENCE hangfire.state_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hangfire.state_id_seq OWNER TO karma_admin;
+
+--
+-- Name: state_id_seq; Type: SEQUENCE OWNED BY; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER SEQUENCE hangfire.state_id_seq OWNED BY hangfire.state.id;
+
+
+--
 -- Name: example_table; Type: TABLE; Schema: murr_downloader; Owner: karma_admin
 --
 
@@ -340,7 +791,8 @@ COMMENT ON TABLE murr_downloader.folder_types IS 'Типы папок';
 CREATE TABLE murr_downloader.folders (
     folder_id bigint DEFAULT nextval('murr_downloader.murr_sequence'::regclass) NOT NULL,
     folder_root_id bigint,
-    folder_title character varying(255)
+    folder_title character varying(255),
+    folder_type_id bigint NOT NULL
 );
 
 
@@ -712,6 +1164,166 @@ COMMENT ON TABLE murr_downloader.tasks_task_attributes IS 'Таблица для
 
 
 --
+-- Name: counter id; Type: DEFAULT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.counter ALTER COLUMN id SET DEFAULT nextval('hangfire.counter_id_seq'::regclass);
+
+
+--
+-- Name: hash id; Type: DEFAULT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.hash ALTER COLUMN id SET DEFAULT nextval('hangfire.hash_id_seq'::regclass);
+
+
+--
+-- Name: job id; Type: DEFAULT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.job ALTER COLUMN id SET DEFAULT nextval('hangfire.job_id_seq'::regclass);
+
+
+--
+-- Name: jobparameter id; Type: DEFAULT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.jobparameter ALTER COLUMN id SET DEFAULT nextval('hangfire.jobparameter_id_seq'::regclass);
+
+
+--
+-- Name: jobqueue id; Type: DEFAULT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.jobqueue ALTER COLUMN id SET DEFAULT nextval('hangfire.jobqueue_id_seq'::regclass);
+
+
+--
+-- Name: list id; Type: DEFAULT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.list ALTER COLUMN id SET DEFAULT nextval('hangfire.list_id_seq'::regclass);
+
+
+--
+-- Name: set id; Type: DEFAULT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.set ALTER COLUMN id SET DEFAULT nextval('hangfire.set_id_seq'::regclass);
+
+
+--
+-- Name: state id; Type: DEFAULT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.state ALTER COLUMN id SET DEFAULT nextval('hangfire.state_id_seq'::regclass);
+
+
+--
+-- Name: counter counter_pkey; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.counter
+    ADD CONSTRAINT counter_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hash hash_key_field_key; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.hash
+    ADD CONSTRAINT hash_key_field_key UNIQUE (key, field);
+
+
+--
+-- Name: hash hash_pkey; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.hash
+    ADD CONSTRAINT hash_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: job job_pkey; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.job
+    ADD CONSTRAINT job_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jobparameter jobparameter_pkey; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.jobparameter
+    ADD CONSTRAINT jobparameter_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jobqueue jobqueue_pkey; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.jobqueue
+    ADD CONSTRAINT jobqueue_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: list list_pkey; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.list
+    ADD CONSTRAINT list_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lock lock_resource_key; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.lock
+    ADD CONSTRAINT lock_resource_key UNIQUE (resource);
+
+
+--
+-- Name: schema schema_pkey; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.schema
+    ADD CONSTRAINT schema_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: server server_pkey; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.server
+    ADD CONSTRAINT server_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: set set_key_value_key; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.set
+    ADD CONSTRAINT set_key_value_key UNIQUE (key, value);
+
+
+--
+-- Name: set set_pkey; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.set
+    ADD CONSTRAINT set_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: state state_pkey; Type: CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.state
+    ADD CONSTRAINT state_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: example_table example_table_title_key; Type: CONSTRAINT; Schema: murr_downloader; Owner: karma_admin
 --
 
@@ -912,6 +1524,71 @@ ALTER TABLE ONLY murr_downloader.tasks_task_attributes
 
 
 --
+-- Name: ix_hangfire_counter_expireat; Type: INDEX; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE INDEX ix_hangfire_counter_expireat ON hangfire.counter USING btree (expireat);
+
+
+--
+-- Name: ix_hangfire_counter_key; Type: INDEX; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE INDEX ix_hangfire_counter_key ON hangfire.counter USING btree (key);
+
+
+--
+-- Name: ix_hangfire_job_statename; Type: INDEX; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE INDEX ix_hangfire_job_statename ON hangfire.job USING btree (statename);
+
+
+--
+-- Name: ix_hangfire_jobparameter_jobidandname; Type: INDEX; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE INDEX ix_hangfire_jobparameter_jobidandname ON hangfire.jobparameter USING btree (jobid, name);
+
+
+--
+-- Name: ix_hangfire_jobqueue_jobidandqueue; Type: INDEX; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE INDEX ix_hangfire_jobqueue_jobidandqueue ON hangfire.jobqueue USING btree (jobid, queue);
+
+
+--
+-- Name: ix_hangfire_jobqueue_queueandfetchedat; Type: INDEX; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE INDEX ix_hangfire_jobqueue_queueandfetchedat ON hangfire.jobqueue USING btree (queue, fetchedat);
+
+
+--
+-- Name: ix_hangfire_state_jobid; Type: INDEX; Schema: hangfire; Owner: karma_admin
+--
+
+CREATE INDEX ix_hangfire_state_jobid ON hangfire.state USING btree (jobid);
+
+
+--
+-- Name: jobparameter jobparameter_jobid_fkey; Type: FK CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.jobparameter
+    ADD CONSTRAINT jobparameter_jobid_fkey FOREIGN KEY (jobid) REFERENCES hangfire.job(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: state state_jobid_fkey; Type: FK CONSTRAINT; Schema: hangfire; Owner: karma_admin
+--
+
+ALTER TABLE ONLY hangfire.state
+    ADD CONSTRAINT state_jobid_fkey FOREIGN KEY (jobid) REFERENCES hangfire.job(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: folders fk_folders_folder_id_folder_root_id; Type: FK CONSTRAINT; Schema: murr_downloader; Owner: karma_admin
 --
 
@@ -1048,10 +1725,33 @@ ALTER TABLE ONLY murr_downloader.tasks_task_attributes
 
 
 --
+-- Name: SCHEMA hangfire; Type: ACL; Schema: -; Owner: postgres
+--
+
+GRANT USAGE ON SCHEMA hangfire TO karma_admin;
+
+
+--
 -- Name: SCHEMA murr_downloader; Type: ACL; Schema: -; Owner: karma_admin
 --
 
 GRANT USAGE ON SCHEMA murr_downloader TO karma_downloader;
+
+
+--
+-- Name: FUNCTION add_cbr_foreign_exchange(in_datetime timestamp without time zone); Type: ACL; Schema: murr_downloader; Owner: karma_admin
+--
+
+REVOKE ALL ON FUNCTION murr_downloader.add_cbr_foreign_exchange(in_datetime timestamp without time zone) FROM PUBLIC;
+GRANT ALL ON FUNCTION murr_downloader.add_cbr_foreign_exchange(in_datetime timestamp without time zone) TO karma_downloader;
+
+
+--
+-- Name: FUNCTION get_jobs(); Type: ACL; Schema: murr_downloader; Owner: karma_admin
+--
+
+REVOKE ALL ON FUNCTION murr_downloader.get_jobs() FROM PUBLIC;
+GRANT ALL ON FUNCTION murr_downloader.get_jobs() TO karma_downloader;
 
 
 --

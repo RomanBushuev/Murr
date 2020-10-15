@@ -35,6 +35,24 @@ CREATE SCHEMA murr_downloader;
 ALTER SCHEMA murr_downloader OWNER TO karma_admin;
 
 --
+-- Name: get_jobs(); Type: FUNCTION; Schema: murr_downloader; Owner: karma_admin
+--
+
+CREATE FUNCTION murr_downloader.get_jobs() RETURNS TABLE(task_id bigint, task_template_id bigint, task_status_id bigint)
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$	
+declare
+begin
+	return query
+		select tasks.task_id, tasks.task_template_id, tasks.task_status_id
+		from murr_downloader.tasks;
+end
+$$;
+
+
+ALTER FUNCTION murr_downloader.get_jobs() OWNER TO karma_admin;
+
+--
 -- Name: insert_service_date(character varying, character varying, timestamp without time zone); Type: FUNCTION; Schema: murr_downloader; Owner: karma_admin
 --
 
@@ -340,7 +358,8 @@ COMMENT ON TABLE murr_downloader.folder_types IS 'Типы папок';
 CREATE TABLE murr_downloader.folders (
     folder_id bigint DEFAULT nextval('murr_downloader.murr_sequence'::regclass) NOT NULL,
     folder_root_id bigint,
-    folder_title character varying(255)
+    folder_title character varying(255),
+    folder_type_id bigint NOT NULL
 );
 
 
@@ -712,6 +731,233 @@ COMMENT ON TABLE murr_downloader.tasks_task_attributes IS 'Таблица для
 
 
 --
+-- Data for Name: example_table; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.example_table (id, title) FROM stdin;
+1	roman
+\.
+
+
+--
+-- Data for Name: folder_types; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.folder_types (folder_type_id, folder_type_title, folder_type_description) FROM stdin;
+0	UNDEFINED	Неопределено
+1	DOWNLOAD	Загрузчик
+\.
+
+
+--
+-- Data for Name: folders; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.folders (folder_id, folder_root_id, folder_title, folder_type_id) FROM stdin;
+25	\N	Загрузка валют	1
+\.
+
+
+--
+-- Data for Name: service_attribute_date_strings; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.service_attribute_date_strings (service_service_attribute_id, service_service_attribute_date, service_service_attribute_title) FROM stdin;
+23	2020-09-30 23:30:37.835176	bushuev2
+23	2020-09-30 23:30:40.822627	bushuev3
+23	2020-09-30 23:31:12.424145	bushuev1
+23	2020-09-30 23:31:14.201586	bushuev2
+23	2020-09-30 23:31:16.146409	bushuev3
+23	2020-09-30 23:31:23.618032	bushuev1
+23	2020-09-30 23:31:26.154162	bushuev3
+23	2020-09-30 23:31:37.115381	bushuev3
+24	2020-09-30 23:32:10.387493	error
+24	2020-09-30 23:32:18.164109	error
+23	2020-09-30 23:32:24.99925	bushuev3
+23	2020-09-30 23:32:54.680101	bushuev3
+24	2020-09-30 23:33:23.659797	error
+\.
+
+
+--
+-- Data for Name: service_attribute_dates; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.service_attribute_dates (service_service_attribute_id, service_service_attribute_date) FROM stdin;
+22	2020-09-29 00:00:00
+\.
+
+
+--
+-- Data for Name: service_attribute_numerics; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.service_attribute_numerics (service_service_attribute_id, service_service_attribute_numeric) FROM stdin;
+21	-1
+\.
+
+
+--
+-- Data for Name: service_attribute_strings; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.service_attribute_strings (service_service_attribute_id, service_service_attribute_title) FROM stdin;
+19	Bushuev8
+\.
+
+
+--
+-- Data for Name: service_attributes; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.service_attributes (service_attribute_id, service_attribute_title, service_attribute_description) FROM stdin;
+1	LAST_LIFE_DATE_TIME	Последнее время отклика сервиса
+2	LAST_WORKING_DATE_TIME	Последнее время отклика сервиса, если он находится в рабочем статусе
+3	CURRENT_TASK_ID	Текущая выполняема задача, если задачи нет, -1
+4	SERVICE_LOG	Логирование состояния сервиса
+5	ERROR_SERVICE_LOG	Ошибки сервиса
+10	ALIAS	Псевдоним
+\.
+
+
+--
+-- Data for Name: service_statuses; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.service_statuses (service_status_id, service_status_title, service_status_description) FROM stdin;
+0	UNDEFINED	Неопределено
+1	RUNNING	Запущен
+2	STOPPING	Остановлен
+\.
+
+
+--
+-- Data for Name: services; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.services (service_id, service_title, service_status_id) FROM stdin;
+13	DOWNLOADER	0
+\.
+
+
+--
+-- Data for Name: services_service_attributes; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.services_service_attributes (service_service_attribute_id, service_id, service_attribute_id) FROM stdin;
+19	13	10
+21	13	3
+22	13	1
+23	13	4
+24	13	5
+\.
+
+
+--
+-- Data for Name: task_attribute_date_strings; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.task_attribute_date_strings (task_task_attribute_id, task_task_attribute_date, task_task_attribute_title) FROM stdin;
+\.
+
+
+--
+-- Data for Name: task_attribute_dates; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.task_attribute_dates (task_task_attribute_id, task_task_attribute_date) FROM stdin;
+\.
+
+
+--
+-- Data for Name: task_attribute_numerics; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.task_attribute_numerics (task_task_attribute_id, task_task_attribute_numeric) FROM stdin;
+\.
+
+
+--
+-- Data for Name: task_attribute_strings; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.task_attribute_strings (task_task_attribute_id, task_task_attribute_title) FROM stdin;
+\.
+
+
+--
+-- Data for Name: task_attributes; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.task_attributes (task_attribute_id, task_attribute_title, task_attribute_description) FROM stdin;
+6	ATTEMPTIONS	Кол-во запусков
+7	ERROR_LOG	Ошибки задачи
+8	INFO_LOG	Информационный лог
+9	WARNING_LOG	Предупреждения
+11	START_TASK	Время старта
+12	END_TASK	Время окончания
+\.
+
+
+--
+-- Data for Name: task_statuses; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.task_statuses (task_status_id, task_status_title, task_statuses_description) FROM stdin;
+0	UNDEFINED	Неопределено
+1	CREATING	В состоянии создания
+2	CREATED	Создан
+3	RUNNING	Запущен
+4	DONE	Выполнен
+5	ERROR	Закончен с ошибками
+\.
+
+
+--
+-- Data for Name: task_templates; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.task_templates (task_template_id, task_template_title, task_template_created_time, task_template_folder_id, task_parameters, task_type_id) FROM stdin;
+26	Загрузка валют	2020-10-11 13:56:49.479438	25	{"RunDateTime": "2017-09-08"}	1
+\.
+
+
+--
+-- Data for Name: task_types; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.task_types (task_type_id, task_type_title, task_type_description) FROM stdin;
+0	UNDEFINED	Неопределено
+1	DOWNLOAD CURRENCIES CBRF	Загрузка валюты из ЦБ
+2	DOWNLOAD G2 CURVE CBRF	Загрузка кривой G2 из ЦБ
+\.
+
+
+--
+-- Data for Name: tasks; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.tasks (task_id, task_template_id, task_created_time, task_status_id) FROM stdin;
+27	26	2020-10-11 14:08:27.014837	1
+\.
+
+
+--
+-- Data for Name: tasks_task_attributes; Type: TABLE DATA; Schema: murr_downloader; Owner: karma_admin
+--
+
+COPY murr_downloader.tasks_task_attributes (task_task_attribute_id, task_id, task_attribute_id) FROM stdin;
+\.
+
+
+--
+-- Name: murr_sequence; Type: SEQUENCE SET; Schema: murr_downloader; Owner: karma_admin
+--
+
+SELECT pg_catalog.setval('murr_downloader.murr_sequence', 27, true);
+
+
+--
 -- Name: example_table example_table_title_key; Type: CONSTRAINT; Schema: murr_downloader; Owner: karma_admin
 --
 
@@ -1052,6 +1298,14 @@ ALTER TABLE ONLY murr_downloader.tasks_task_attributes
 --
 
 GRANT USAGE ON SCHEMA murr_downloader TO karma_downloader;
+
+
+--
+-- Name: FUNCTION get_jobs(); Type: ACL; Schema: murr_downloader; Owner: karma_admin
+--
+
+REVOKE ALL ON FUNCTION murr_downloader.get_jobs() FROM PUBLIC;
+GRANT ALL ON FUNCTION murr_downloader.get_jobs() TO karma_downloader;
 
 
 --

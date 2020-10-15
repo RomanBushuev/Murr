@@ -8,20 +8,38 @@ using DownloaderProvider;
 using DownloaderProvider.DbFunctions;
 using System.Data;
 using Npgsql;
+using Microsoft.Extensions.Configuration;
 
 namespace TestFullSolutions.PostgresqlFunctions
 {
     [TestClass]
     public class TestKarmaDownloaderFunctions
     {
-        private string NpgConnection = "User ID=karma_downloader;Password=karma_downloader;Host=localhost;Port=5432;Database=karma;";
 
+        private string GetStringConnection()
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var npgConnection = config
+                .GetSection("DataProviders")
+                .GetValue<string>("KarmaDownloader");
+
+            return npgConnection;
+        }
         [TestMethod]
         public void TestDownloadJobs()
         {
-            using (IDbConnection connection = new NpgsqlConnection(NpgConnection))
+            string npgConnection = GetStringConnection();
+            using (IDbConnection connection = new NpgsqlConnection(npgConnection))
             {
-                var result = KarmaDownloaderFunctions.DownloadKarmaDownloadJobs(connection);
+                connection.Open();
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    var result = KarmaDownloaderFunctions.DownloadKarmaDownloadJobs(connection);
+                    transaction.Rollback();
+                }
             }
         }
 

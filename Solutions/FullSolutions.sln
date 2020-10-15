@@ -21,7 +21,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saver", "Saver", "{58C63F52
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlSaver", "..\Modules\DataProviders\SaverProvider\XmlSaver\XmlSaver\XmlSaver.csproj", "{2A822ABD-5C3E-4D7A-AAE3-344BA26CBB26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadTasks", "..\Modules\DownloadTasks\DownloadTasks\DownloadTasks.csproj", "{579EE2C6-DD66-4CE3-AF16-63186E80BD19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadTasks", "..\Modules\DownloadTasks\DownloadTasks\DownloadTasks.csproj", "{579EE2C6-DD66-4CE3-AF16-63186E80BD19}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScheduleHangfire", "ScheduleHangfire", "{FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaHangfire", "..\Modules\ScheduleHangfire\KarmaHangfire\KarmaHangfire.csproj", "{0DDA6CB2-7A53-42C8-9A87-CEEB69220319}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleProvider", "..\Modules\DataProviders\ScheduleProvider\ScheduleProvider\ScheduleProvider.csproj", "{8034BE6F-7999-4083-9E16-016461F51897}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +59,14 @@ Global
 		{579EE2C6-DD66-4CE3-AF16-63186E80BD19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{579EE2C6-DD66-4CE3-AF16-63186E80BD19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{579EE2C6-DD66-4CE3-AF16-63186E80BD19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DDA6CB2-7A53-42C8-9A87-CEEB69220319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DDA6CB2-7A53-42C8-9A87-CEEB69220319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DDA6CB2-7A53-42C8-9A87-CEEB69220319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DDA6CB2-7A53-42C8-9A87-CEEB69220319}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8034BE6F-7999-4083-9E16-016461F51897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8034BE6F-7999-4083-9E16-016461F51897}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8034BE6F-7999-4083-9E16-016461F51897}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8034BE6F-7999-4083-9E16-016461F51897}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +78,8 @@ Global
 		{D2B3D96F-6354-4FDB-A1F9-E6547A87A500} = {DE1481A8-0BD6-42BF-8B29-19FC982E7124}
 		{2A822ABD-5C3E-4D7A-AAE3-344BA26CBB26} = {58C63F52-8EFD-4939-80B7-3F48992CF7E2}
 		{579EE2C6-DD66-4CE3-AF16-63186E80BD19} = {464D9C4C-D84B-4E2F-8AB2-ED60C96D62EE}
+		{0DDA6CB2-7A53-42C8-9A87-CEEB69220319} = {FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}
+		{8034BE6F-7999-4083-9E16-016461F51897} = {FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01DF47AB-5A7B-4DC3-B568-0056AE70A9EA}

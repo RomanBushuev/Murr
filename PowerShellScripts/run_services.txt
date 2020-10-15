@@ -1,0 +1,6 @@
+net framework
+New-Service -Name "HangBushuev" -BinaryPathName C:\Users\homan\source\repos\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+
+net core
+sc.exe create TestService BinPath=C:\Users\homan\Services\Example\ExampleService.exe
+
