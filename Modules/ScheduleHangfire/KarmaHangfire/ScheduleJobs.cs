@@ -18,6 +18,7 @@ namespace KarmaHangfire
     public partial class ScheduleJobs : ServiceBase
     {
         private BackgroundJobServer _server;
+        private string EveryAt10Hours = "0 8 * * *";
 
         public ScheduleJobs()
         {

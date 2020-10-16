@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace KarmaHangfire
 {
-    class CbrServices
+    public static class CbrServices
     {
+        public static void DownloadForeignExchange()
+        {
+            DateTime dateTime = DateTime.Now.Date;
+        }
     }
 }
