@@ -17,7 +17,6 @@ declare
 	d_task_tempate_id bigint;
 	d_task_id bigint;
 begin
-	raise notice 'hello';
 	--создать папку для загрузок 
 	select folder_id into d_folder_id 
 	from murr_downloader.folders 
@@ -57,7 +56,6 @@ begin
 		returning folder_id into d_folder_id;
 	end if;
 	
-	raise notice 'bushuev';
 	d_title = d_folder_title || '_' ||  to_char(nextval('murr_downloader.murr_sequence'::regclass), 'FM999999999999999999');
 	
 	d_task_parameters = ('{
@@ -71,8 +69,6 @@ begin
 		task_parameters, 
 		task_type_id) values(d_title, now()::timestamp without time zone, d_folder_id, d_task_parameters, 1)
 	returning task_template_id into d_task_tempate_id;
-
-	raise notice 'hello:%', d_task_tempate_id;
 
 	--добавляем задачу к нам в шаблон
 	insert into murr_downloader.tasks(task_template_id, task_created_time, task_status_id)

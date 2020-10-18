@@ -27,7 +27,7 @@ namespace KarmaHangfire
 
         public static void AddCbrServiceDownloads()
         {
-            
+            CbrServices.DownloadForeignExchange();
         }
 
         protected override void OnStart(string[] args)

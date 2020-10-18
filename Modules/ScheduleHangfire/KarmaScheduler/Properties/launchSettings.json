@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "KarmaScheduler": {
+      "commandName": "Project"
+    },
+    "KarmaScheduler.Debug": {
+      "commandName": "Executable",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "KarmaScheduler.Production": {
+      "commandName": "Executable",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Production"
+      }
+    }
+  }
+}

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
 
 namespace KarmaHangfire
 {
@@ -10,7 +7,8 @@ namespace KarmaHangfire
     {
         public static void DownloadForeignExchange()
         {
-            DateTime dateTime = DateTime.Now.Date;
+            string connection = ConfigurationManager.AppSettings["karma_admin"];
+            //KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = DateTime.Now });
         }
     }
 }
