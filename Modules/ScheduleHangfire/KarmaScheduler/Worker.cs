@@ -38,6 +38,7 @@ namespace KarmaScheduler
         public static void AddCbrServiceDownloads(Hangfire.Server.PerformContext context,
             string environment)
         {
+            
             var config = new ConfigurationBuilder()
                 .AddJsonFile($"appsettings.{environment}.json")
                 .Build();
@@ -125,7 +126,9 @@ namespace KarmaScheduler
 
             _timer?.Change(Timeout.Infinite, 0);
 
+            _server?.SendStop();
             _server?.WaitForShutdown(new TimeSpan(0, 0, 10));
+            
             return Task.CompletedTask;
         }
 
