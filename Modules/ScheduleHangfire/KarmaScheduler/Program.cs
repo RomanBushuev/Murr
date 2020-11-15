@@ -22,22 +22,27 @@ namespace KarmaScheduler
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((hostingContext, config) =>
-            {
-                config.AddJsonFile("appsettings.json", optional: true)
-                      .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json");
-                config.AddEnvironmentVariables();
-
-                if (args != null)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    config.AddCommandLine(args);
-                }
-            })
-            .ConfigureServices((hostContext, services) =>
-            {
-                services.AddHostedService<Worker>();
-            }).UseWindowsService();
+                    config.AddJsonFile("appsettings.json", optional: true)
+                    .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json");
+                    config.AddEnvironmentVariables();
+
+                    if (args != null)
+                    {
+                        config.AddCommandLine(args);
+                    }
+                    //StaticConfig = (IConfiguration)config;
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<Worker>();
+                }).UseWindowsService();
+        }
+
+        //public static IConfiguration StaticConfig { get; private set; }
     }
 }

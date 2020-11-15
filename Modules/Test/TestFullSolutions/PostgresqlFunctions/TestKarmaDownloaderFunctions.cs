@@ -66,6 +66,51 @@ namespace TestFullSolutions.PostgresqlFunctions
         }
 
         [TestMethod]
+        public void TestCreateCbrDownloadTasksAndChangeStatus()
+        {
+            string npgConnection = GetStringConnection();
+            using (IDbConnection connection = new NpgsqlConnection(npgConnection))
+            {
+                connection.Open();
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = DateTime.Now });
+                    var result = KarmaDownloaderFunctions.DownloadKarmaDownloadJobs(connection);
+                    Assert.IsNotNull(result.FirstOrDefault(z => z.TaskId == taskId));
+                    Assert.IsTrue(result.FirstOrDefault(z => z.TaskId == taskId).TaskStatusId == (long)TaskStatuses.Created);
+
+                    var isChanged = KarmaDownloaderFunctions.ChangeTaskStatus(connection, taskId, (long)TaskStatuses.Created, (long)TaskStatuses.Running);
+                    Assert.IsTrue(isChanged == 1);
+                    transaction.Rollback();
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestAddDate()
+        {
+            string attemptions = "ATTEMPTIONS";
+            string log = "INFO_LOG";
+            string startTask = "START_TASK";
+
+            string npgConnection = GetStringConnection();
+            using (IDbConnection connection = new NpgsqlConnection(npgConnection))
+            {
+                connection.Open();
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = DateTime.Now });
+
+                    DateTime dateTime = DateTime.Now;
+                    KarmaDownloaderFunctions.InsertNumeric(connection, taskId, attemptions, 2);
+                    KarmaDownloaderFunctions.InsertTaskDate(connection, taskId, startTask, dateTime);
+                    KarmaDownloaderFunctions.InsertTaskDateText(connection, taskId, log, dateTime, "Hello");
+                    transaction.Commit();
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestMapping()
         {
             DbKarmaDownloadJob dbKarmaDownloadJob = new DbKarmaDownloadJob()

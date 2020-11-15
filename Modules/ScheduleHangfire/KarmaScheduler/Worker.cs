@@ -24,7 +24,7 @@ namespace KarmaScheduler
         private Timer _timer;
         private readonly int _interval = 10;
         private string _serviceName = null;
-        private string AtEvery10 = "0 10 * * *";
+        private const string AtEvery22 = "* * * * *";
 
         public Worker(ILogger<Worker> logger,
             IConfiguration configuration)
@@ -36,17 +36,8 @@ namespace KarmaScheduler
 
         [AutomaticRetry(Attempts = 0, Order = 1)]
         public static void AddCbrServiceDownloads(Hangfire.Server.PerformContext context,
-            string environment)
+            string npgConnection)
         {
-            
-            var config = new ConfigurationBuilder()
-                .AddJsonFile($"appsettings.{environment}.json")
-                .Build();
-
-            var npgConnection = config
-                .GetSection("DataProviders")
-                .GetValue<string>("karma_downloader");
-
             try
             {
                 using (IDbConnection connection = new NpgsqlConnection(npgConnection))
@@ -57,6 +48,7 @@ namespace KarmaScheduler
                         long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = DateTime.Now.AddDays(-1) });
                         transaction.Commit();
                     }
+                    connection.Close();
                 }
             }
             catch(Exception ex)
@@ -88,7 +80,10 @@ namespace KarmaScheduler
             {
                 SetMessage("Initialize Hangfire");
                 string karmaDownloader = _configuration.GetSection("DataProviders").GetValue<string>("karma_admin");
-                GlobalConfiguration.Configuration.UsePostgreSqlStorage(karmaDownloader);
+                GlobalConfiguration.Configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseDefaultTypeSerializer()
+                    .UsePostgreSqlStorage(karmaDownloader);
 
                 using (var hangfireConnection = JobStorage.Current.GetConnection())
                 {
@@ -99,10 +94,12 @@ namespace KarmaScheduler
                 }
 
                 _server = new BackgroundJobServer();
-                RecurringJob.AddOrUpdate("AddCbrServiceDownloads", () => AddCbrServiceDownloads(null, _configuration.GetValue<string>("Configuration")), AtEvery10);
+                RecurringJob.AddOrUpdate("AddCbrServiceDownloads", () => AddCbrServiceDownloads(null, karmaDownloader), AtEvery22);
                 SetMessage("Hangfire is initialized");
             }
             SetMessage("End DoWork");
+            SetMessage($"{DateTime.Now}");
+            _timer.Change(TimeSpan.FromMinutes(1), TimeSpan.Zero);
         }
 
         public void SetMessage(string message)

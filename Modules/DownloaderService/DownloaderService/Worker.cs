@@ -52,7 +52,12 @@ namespace DownloaderService
 
         private void Job()
         {
-            //start job
+            //get the jobs
+            //var result = KarmaDownloaderFunctions.DownloadKarmaDownloadJobs(connection);
+
+            //chose the job
+
+
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

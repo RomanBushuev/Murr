@@ -147,7 +147,7 @@ begin
 	
 	--добавляем задачу к нам в шаблон
 	insert into murr_downloader.tasks(task_template_id, task_created_time, task_status_id, saver_template_id)
-	values(d_task_tempate_id, now()::timestamp without time zone, 1, d_saver_template_id)
+	values(d_task_tempate_id, now()::timestamp without time zone, 2, d_saver_template_id)
 	returning task_id into d_task_id;
 	
 	perform murr_downloader.insert_task_numeric(d_task_id, 'ATTEMPTIONS', 1);	

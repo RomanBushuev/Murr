@@ -4,6 +4,7 @@ using DownloaderProvider.Entities;
 using KarmaCore.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DownloaderProvider
@@ -60,6 +61,14 @@ namespace DownloaderProvider
             var config = AutoMapperConfiguration.Configure();
             IMapper mapper = config.CreateMapper();
             return mapper.Map<T, U>(entity);
+        }
+
+        public static IEnumerable<U> ConvertDto<T, U>(IEnumerable<T> entities)
+        {
+            var config = AutoMapperConfiguration.Configure();
+            IMapper mapper = config.CreateMapper();
+            var list = entities.Select(z => mapper.Map<T, U>(z));
+            return list;
         }
     }
 

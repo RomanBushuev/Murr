@@ -29,7 +29,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaHangfire", "..\Modules
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleProvider", "..\Modules\DataProviders\ScheduleProvider\ScheduleProvider\ScheduleProvider.csproj", "{8034BE6F-7999-4083-9E16-016461F51897}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaScheduler", "..\Modules\ScheduleHangfire\KarmaScheduler\KarmaScheduler.csproj", "{5B804221-459E-4023-8317-0C155553E951}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KarmaScheduler", "..\Modules\ScheduleHangfire\KarmaScheduler\KarmaScheduler.csproj", "{5B804221-459E-4023-8317-0C155553E951}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaHangfireWeb", "..\Modules\ScheduleHangfire\KarmaHangfireWeb\KarmaHangfireWeb\KarmaHangfireWeb.csproj", "{A7D882EF-4687-4026-A1C7-CC606DE9F2F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{5B804221-459E-4023-8317-0C155553E951}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B804221-459E-4023-8317-0C155553E951}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B804221-459E-4023-8317-0C155553E951}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7D882EF-4687-4026-A1C7-CC606DE9F2F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7D882EF-4687-4026-A1C7-CC606DE9F2F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7D882EF-4687-4026-A1C7-CC606DE9F2F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7D882EF-4687-4026-A1C7-CC606DE9F2F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +93,7 @@ Global
 		{0DDA6CB2-7A53-42C8-9A87-CEEB69220319} = {FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}
 		{8034BE6F-7999-4083-9E16-016461F51897} = {FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}
 		{5B804221-459E-4023-8317-0C155553E951} = {FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}
+		{A7D882EF-4687-4026-A1C7-CC606DE9F2F0} = {FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01DF47AB-5A7B-4DC3-B568-0056AE70A9EA}
