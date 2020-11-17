@@ -39,7 +39,7 @@ namespace DownloaderProvider.DbFunctions
             long oldTaskStatus,
             long newTaskStatus)
         {
-            string function = "murr_downloader.get_task";
+            string function = "murr_downloader.change_task_status";
 
             return dbConnection.QueryFirst<long>(function,
                 new

@@ -52,8 +52,7 @@ namespace DownloaderProvider
 
         private ConverterDto()
         {
-            entitiesToEntities = new ConverterDbEntitiesToEntities();
-            
+            entitiesToEntities = new ConverterDbEntitiesToEntities();            
         }
 
         public static U ConvertDto<T, U>(T entity)
@@ -71,5 +70,4 @@ namespace DownloaderProvider
             return list;
         }
     }
-
 }

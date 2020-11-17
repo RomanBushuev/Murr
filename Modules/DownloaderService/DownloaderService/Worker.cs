@@ -52,11 +52,6 @@ namespace DownloaderService
 
         private void Job()
         {
-            //get the jobs
-            //var result = KarmaDownloaderFunctions.DownloadKarmaDownloadJobs(connection);
-
-            //chose the job
-
 
         }
 

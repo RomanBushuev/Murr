@@ -14,6 +14,7 @@ using ScheduleProvider.Mappings;
 using System;
 using DownloaderProvider.DatabaseEntities;
 using DownloaderProvider.Entities;
+using System.Text.Json;
 
 namespace TestFullSolutions.PostgresqlFunctions
 {
@@ -27,9 +28,10 @@ namespace TestFullSolutions.PostgresqlFunctions
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var npgConnection = config
-                .GetSection("DataProviders")
-                .GetValue<string>("KarmaDownloader");
+            if (!config.GetSection("DataProviders").Exists())
+                throw new Exception("Отсутствует DataProviders");
+
+            var npgConnection = config["DataProviders:KarmaDownloader"];
 
             return npgConnection;
         }
@@ -105,6 +107,58 @@ namespace TestFullSolutions.PostgresqlFunctions
                     KarmaDownloaderFunctions.InsertNumeric(connection, taskId, attemptions, 2);
                     KarmaDownloaderFunctions.InsertTaskDate(connection, taskId, startTask, dateTime);
                     KarmaDownloaderFunctions.InsertTaskDateText(connection, taskId, log, dateTime, "Hello");
+                    transaction.Rollback();
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestGetProcedureTasks()
+        {
+            string npgConnection = GetStringConnection();
+            using (IDbConnection connection = new NpgsqlConnection(npgConnection))
+            {
+                connection.Open();
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    ProcedureTask procedureTask = new ProcedureTask()
+                    {
+                        ProcedureTitle = "murr_downloader.add_cbr_foreign_exchange",
+                        ProcedureIsUse = true,
+                        ProcedureParams = "{\"in_datetime\": \"now\"}",
+                        ProcedureTemplate = "* * * * *",
+                        ProcedureLastRun = null,
+                        ProcedureNextRun = null
+                    };
+
+                    //вставили процедуру 
+                    var id = KarmaSchedulerFunctions.InsertProcedureTask(connection, procedureTask);
+                    procedureTask.ProcedureTaskId = id;
+
+                    //прочитали процедуру
+                    var result = KarmaSchedulerFunctions.GetProcedureTasks(connection);
+                    Assert.IsNotNull(result.FirstOrDefault(z => z.ProcedureTaskId == id));
+
+                    //изменили значение процедуру
+                    procedureTask.ProcedureLastRun = null;
+                    procedureTask.ProcedureNextRun = new DateTime(2020, 11 , 17, 12 ,00 ,00);                    
+                    KarmaSchedulerFunctions.ChangeProcedureTask(connection, procedureTask);
+
+                    //прочитали процедуру
+                    result = KarmaSchedulerFunctions.GetProcedureTasks(connection);
+                    Assert.IsNull(result.FirstOrDefault(z => z.ProcedureTaskId == id).ProcedureLastRun);
+                    Assert.AreEqual(procedureTask.ProcedureNextRun, result.FirstOrDefault(z => z.ProcedureTaskId == id).ProcedureNextRun);
+
+                    procedureTask.ProcedureLastRun = new DateTime(2020, 11, 17, 12, 00, 00);
+                    procedureTask.ProcedureNextRun = new DateTime(2020, 11, 17, 12, 00, 01);
+                    KarmaSchedulerFunctions.ChangeProcedureTask(connection, procedureTask);
+
+                    //прочитали процедуру
+                    result = KarmaSchedulerFunctions.GetProcedureTasks(connection);
+                    Assert.AreEqual(procedureTask.ProcedureLastRun, result.FirstOrDefault(z => z.ProcedureTaskId == id).ProcedureLastRun);
+                    Assert.AreEqual(procedureTask.ProcedureNextRun, result.FirstOrDefault(z => z.ProcedureTaskId == id).ProcedureNextRun);
+
+
                     transaction.Commit();
                 }
             }

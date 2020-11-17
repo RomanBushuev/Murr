@@ -31,6 +31,7 @@ namespace ScheduleProvider.DbFunctions
                 FluentMapper.Initialize(config =>
                 {
                     config.AddMap(new CbrForeignParamMap());
+                    config.AddMap(new ProcedureTaskMap());
                 });
                 instance._isInitialized = true;
             }

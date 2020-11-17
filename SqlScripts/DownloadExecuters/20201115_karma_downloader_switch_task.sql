@@ -1,4 +1,4 @@
-create or replace function murr_downloader.get_task(in_task_id bigint, 
+create or replace function murr_downloader.change_task_status(in_task_id bigint, 
 	in_old_task_status bigint,
 	in_new_task_status bigint)
 returns bigint
@@ -26,13 +26,13 @@ begin
 end
 $BODY$;
 
-ALTER FUNCTION murr_downloader.get_task(bigint, bigint, bigint) OWNER TO karma_admin;
+ALTER FUNCTION murr_downloader.change_task_status(bigint, bigint, bigint) OWNER TO karma_admin;
 
-GRANT EXECUTE ON FUNCTION murr_downloader.get_task(bigint, bigint, bigint) TO karma_admin;
+GRANT EXECUTE ON FUNCTION murr_downloader.change_task_status(bigint, bigint, bigint) TO karma_admin;
 
-GRANT EXECUTE ON FUNCTION murr_downloader.get_task(bigint, bigint, bigint) TO karma_downloader;
+GRANT EXECUTE ON FUNCTION murr_downloader.change_task_status(bigint, bigint, bigint) TO karma_downloader;
 
-REVOKE ALL ON FUNCTION murr_downloader.get_task(bigint, bigint, bigint) FROM PUBLIC;
+REVOKE ALL ON FUNCTION murr_downloader.change_task_status(bigint, bigint, bigint) FROM PUBLIC;
 
 
 --get task_numeric
