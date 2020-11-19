@@ -106,5 +106,44 @@ namespace ScheduleProvider.DbFunctions
                 },
                 commandType: CommandType.StoredProcedure);
         }
+
+        public static IEnumerable<ProcedureInfo> GetProcedureInfos(IDbConnection dbConnection)
+        {
+            string function = "murr_downloader.get_inner_procedures";
+
+            return dbConnection.Query<ProcedureInfo>(function,
+                commandType: CommandType.StoredProcedure);
+        }
+
+        /// <summary>
+        /// Запускаем функцию
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="function"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static bool RunFunction(IDbConnection dbConnection,
+            string function,
+            Dictionary<string, object> values)
+        {
+            try
+            {
+                if(dbConnection.State == ConnectionState.Closed)
+                    dbConnection.Open();
+
+                NpgsqlCommand command = new NpgsqlCommand(function, (NpgsqlConnection)dbConnection);
+                command.CommandType = CommandType.StoredProcedure;
+                foreach(var val in values)
+                {
+                    command.Parameters.AddWithValue(val.Key, val.Value);
+                }                
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

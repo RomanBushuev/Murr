@@ -61,7 +61,11 @@ namespace TestFullSolutions.KarmaScheduler
             date = new DateTime(2020, 11, 17, 12, 01, 01);
             result = Utils.GetNextDateTime(date, currentDate, template);
             Assert.AreEqual(date.Value, result);
-        }
 
+            //30 секунд
+            date = new DateTime(2020, 11, 17, 12, 00, 30);
+            result = Utils.GetNextDateTime(date, currentDate, template);
+            Assert.AreEqual(result, currentDate.AddMinutes(1));
+        }
     }
 }

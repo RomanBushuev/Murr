@@ -32,6 +32,7 @@ namespace ScheduleProvider.DbFunctions
                 {
                     config.AddMap(new CbrForeignParamMap());
                     config.AddMap(new ProcedureTaskMap());
+                    config.AddMap(new ProcedureInfoMap());
                 });
                 instance._isInitialized = true;
             }

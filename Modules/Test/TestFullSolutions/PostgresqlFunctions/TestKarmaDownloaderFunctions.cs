@@ -15,13 +15,13 @@ using System;
 using DownloaderProvider.DatabaseEntities;
 using DownloaderProvider.Entities;
 using System.Text.Json;
+using ScheduleProvider;
 
 namespace TestFullSolutions.PostgresqlFunctions
 {
     [TestClass]
     public class TestKarmaDownloaderFunctions
     {
-
         private string GetStringConnection()
         {
             var config = new ConfigurationBuilder()
@@ -113,6 +113,65 @@ namespace TestFullSolutions.PostgresqlFunctions
         }
 
         [TestMethod]
+        public void TestGetProcedures()
+        {
+            string npgSqlConnection = GetStringConnection();
+            using (IDbConnection connection = new NpgsqlConnection(npgSqlConnection))
+            {
+                connection.Open();
+
+                var procedures = KarmaSchedulerFunctions.GetProcedureInfos(connection);
+                Assert.IsTrue(procedures.Count() != 0);
+            }
+        }
+
+        [TestMethod]
+        public void TestUseTemplates()
+        {
+            string npgSqlConnection = GetStringConnection();
+            string otherSqlConnection = GetStringConnection();
+            IDbConnection other = new NpgsqlConnection(npgSqlConnection);
+            using (IDbConnection connection = new NpgsqlConnection(npgSqlConnection))
+            {
+                connection.Open();
+
+                var procedures = KarmaSchedulerFunctions.GetProcedureInfos(connection);
+                string function = "add_cbr_foreign_exchange";
+                Dictionary<string, object> keyValuePairs = new Dictionary<string, object>() { ["in_datetime"] = "now" };
+
+                Dictionary<string, string> paramTypes = new Dictionary<string, string>();
+                foreach(var procedure in procedures.Where(z => z.ProcedureName == function))
+                {
+                    paramTypes[procedure.ParameterName] = procedure.DataType;
+                }
+
+                Dictionary<string, object> resultKeyValues = new Dictionary<string, object>();
+                foreach (var paramType in paramTypes)
+                {
+                    var param = keyValuePairs[paramType.Key];
+                    var isChange = Utils.IsUseTemplate(paramType.Value, param.GetType().ToString());
+                    if (isChange)
+                    {
+                        var result = Utils.ChangeParmas(param.ToString());
+                        resultKeyValues[paramType.Key] = result;
+                    }
+                    else
+                    {
+                        resultKeyValues[paramType.Key] = paramType.Value;
+                    }
+                }
+
+                var preciosionNow = DateTime.Now;
+                var value = (DateTime)resultKeyValues["in_datetime"];
+                Assert.IsTrue(value >= preciosionNow.AddSeconds(-1) && value <= preciosionNow.AddSeconds(+1));
+
+                string schema = procedures.FirstOrDefault(z => z.ProcedureName == function).ProcedureSchema;
+                bool isExecuted = KarmaSchedulerFunctions.RunFunction(other, $"{schema}.{function}", resultKeyValues);
+                Assert.IsTrue(isExecuted);
+            }
+        }
+
+        [TestMethod]
         public void TestGetProcedureTasks()
         {
             string npgConnection = GetStringConnection();
@@ -157,7 +216,6 @@ namespace TestFullSolutions.PostgresqlFunctions
                     result = KarmaSchedulerFunctions.GetProcedureTasks(connection);
                     Assert.AreEqual(procedureTask.ProcedureLastRun, result.FirstOrDefault(z => z.ProcedureTaskId == id).ProcedureLastRun);
                     Assert.AreEqual(procedureTask.ProcedureNextRun, result.FirstOrDefault(z => z.ProcedureTaskId == id).ProcedureNextRun);
-
 
                     transaction.Commit();
                 }

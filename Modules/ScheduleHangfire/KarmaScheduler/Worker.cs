@@ -12,6 +12,7 @@ using System.Data;
 using Npgsql;
 using ScheduleProvider.Mappings;
 using System.Diagnostics;
+using ScheduleProvider;
 
 namespace KarmaScheduler
 {
@@ -20,41 +21,15 @@ namespace KarmaScheduler
         private readonly ILogger<Worker> _logger;
         private IConfiguration _configuration;
 
-        private BackgroundJobServer _server;
         private Timer _timer;
         private readonly int _interval = 10;
         private string _serviceName = null;
-        private const string AtEvery22 = "* * * * *";
 
         public Worker(ILogger<Worker> logger,
             IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
-        }
-
-
-        [AutomaticRetry(Attempts = 0, Order = 1)]
-        public static void AddCbrServiceDownloads(Hangfire.Server.PerformContext context,
-            string npgConnection)
-        {
-            try
-            {
-                using (IDbConnection connection = new NpgsqlConnection(npgConnection))
-                {
-                    connection.Open();
-                    using (IDbTransaction transaction = connection.BeginTransaction())
-                    {
-                        long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = DateTime.Now.AddDays(-1) });
-                        transaction.Commit();
-                    }
-                    connection.Close();
-                }
-            }
-            catch(Exception ex)
-            {
-
-            }
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -76,30 +51,54 @@ namespace KarmaScheduler
         {
             SetMessage("Run DoWork");
             _timer?.Change(Timeout.Infinite, 0);
-            if (_server == null)
+            try
             {
-                SetMessage("Initialize Hangfire");
-                string karmaDownloader = _configuration.GetSection("DataProviders").GetValue<string>("karma_admin");
-                GlobalConfiguration.Configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseDefaultTypeSerializer()
-                    .UsePostgreSqlStorage(karmaDownloader);
+                Job();
+            }
+            catch(Exception ex)
+            {
+                SetMessage($"{ex}");
+            }
+            finally
+            {
+                SetMessage("End DoWork");
+                SetMessage($"{DateTime.Now}");
+                _timer.Change(TimeSpan.FromSeconds(_interval), TimeSpan.Zero);
+            }          
+        }
 
-                using (var hangfireConnection = JobStorage.Current.GetConnection())
+        private void Job()
+        {
+            string npgConnection = _configuration.GetValue<string>("Configuration");
+            DateTime currentDate = DateTime.Now;
+
+            using (IDbConnection connection = new NpgsqlConnection(npgConnection))
+            {
+                connection.Open();
+                using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    foreach (var recurringJob in hangfireConnection.GetRecurringJobs())
+                    //прочитали процедуру
+                    var procedureTasks = KarmaSchedulerFunctions.GetProcedureTasks(connection);
+
+                    foreach(var procedureTask in procedureTasks)
                     {
-                        RecurringJob.RemoveIfExists(recurringJob.Id);
+                        DateTime? nextDate = procedureTask.ProcedureNextRun;
+                        if(Utils.MakeNextDate(nextDate, currentDate))
+                        {
+                            //запустить процедуру
+
+                            //изменил значение
+                            DateTime? lastDate = nextDate;
+                            DateTime? futureNextDate = Utils.GetNextDateTime(nextDate, currentDate, procedureTask.ProcedureTemplate);
+
+                            procedureTask.ProcedureNextRun = futureNextDate;
+                            procedureTask.ProcedureLastRun = lastDate;
+
+                            KarmaSchedulerFunctions.ChangeProcedureTask(connection, procedureTask);
+                        }
                     }
                 }
-
-                _server = new BackgroundJobServer();
-                RecurringJob.AddOrUpdate("AddCbrServiceDownloads", () => AddCbrServiceDownloads(null, karmaDownloader), AtEvery22);
-                SetMessage("Hangfire is initialized");
             }
-            SetMessage("End DoWork");
-            SetMessage($"{DateTime.Now}");
-            _timer.Change(TimeSpan.FromMinutes(1), TimeSpan.Zero);
         }
 
         public void SetMessage(string message)
@@ -121,18 +120,13 @@ namespace KarmaScheduler
         {
             _logger.LogInformation("Timed Hosted Service is stopping.");
 
-            _timer?.Change(Timeout.Infinite, 0);
-
-            _server?.SendStop();
-            _server?.WaitForShutdown(new TimeSpan(0, 0, 10));
-            
+            _timer?.Change(Timeout.Infinite, 0);            
             return Task.CompletedTask;
         }
 
         public void Dispose()
         {
             _timer?.Dispose();
-            _server?.Dispose();
         }
     }
 }
