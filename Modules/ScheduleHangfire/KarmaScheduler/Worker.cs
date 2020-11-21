@@ -4,15 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
-using Hangfire;
-using Hangfire.PostgreSql;
-using Hangfire.Storage;
 using ScheduleProvider.DbFunctions;
 using System.Data;
 using Npgsql;
-using ScheduleProvider.Mappings;
 using System.Diagnostics;
 using ScheduleProvider;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KarmaScheduler
 {
@@ -67,9 +65,16 @@ namespace KarmaScheduler
             }          
         }
 
+        private string GetStringConnection()
+        {
+            var npgConnection = _configuration["DataProviders:KarmaDownloader"];
+            return npgConnection;
+        }
+
+
         private void Job()
         {
-            string npgConnection = _configuration.GetValue<string>("Configuration");
+            string npgConnection = GetStringConnection();
             DateTime currentDate = DateTime.Now;
 
             using (IDbConnection connection = new NpgsqlConnection(npgConnection))
@@ -77,24 +82,66 @@ namespace KarmaScheduler
                 connection.Open();
                 using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    //��������� ���������
+                    //прочитали процедуру
                     var procedureTasks = KarmaSchedulerFunctions.GetProcedureTasks(connection);
 
-                    foreach(var procedureTask in procedureTasks)
+                    //Прочитали все процедуры
+                    var procedures = KarmaSchedulerFunctions.GetProcedureInfos(connection);
+
+                    foreach (var procedureTask in procedureTasks)
                     {
-                        DateTime? nextDate = procedureTask.ProcedureNextRun;
+                        var nextDate = procedureTask.ProcedureNextRun;
+
+                        if (procedureTask.ProcedureIsUse)
+                            continue;
+                        
                         if(Utils.MakeNextDate(nextDate, currentDate))
                         {
-                            //��������� ���������
+                            SetMessage($"Прочитали процедуру {procedureTask.ProcedureTitle}");
+                            //запустить процедуру
+                            var keyValuePairs = Utils.ConvertToParams(procedureTask.ProcedureParams);
 
-                            //������� ��������
-                            DateTime? lastDate = nextDate;
-                            DateTime? futureNextDate = Utils.GetNextDateTime(nextDate, currentDate, procedureTask.ProcedureTemplate);
+                            var paramTypes = new Dictionary<string, string>();
+                            foreach (var procedure in procedures
+                                .Where(z=> $"{z.ProcedureSchema}.{z.ProcedureName}" == procedureTask.ProcedureTitle))
+                            {
+                                paramTypes[procedure.ParameterName] = procedure.DataType;
+                            }
+
+                            var resultKeyValues = new Dictionary<string, object>();
+                            foreach(var paramType in paramTypes)
+                            {
+                                var param = keyValuePairs[paramType.Key];
+                                var isChange = Utils.IsUseTemplate(paramType.Value, param.GetType().ToString());
+                                if (isChange)
+                                {
+                                    var result = Utils.ChangeParmas(param.ToString());
+                                    resultKeyValues[paramType.Key] = result;
+                                }
+                                else
+                                {
+                                    resultKeyValues[paramType.Key] = paramType.Value;
+                                }
+                            }
+
+                            string schema = procedures.FirstOrDefault(z => $"{z.ProcedureSchema}.{z.ProcedureName}" == procedureTask.ProcedureTitle)
+                                .ProcedureSchema;
+
+                            IDbConnection other = new NpgsqlConnection(npgConnection);
+                            SetMessage($"Запустили процедуру {procedureTask.ProcedureTitle}");
+                            bool isExecuted = KarmaSchedulerFunctions.RunFunction(other, procedureTask.ProcedureTitle, resultKeyValues);
+
+                            //изменил значение
+                            var lastDate = nextDate;
+                            var futureNextDate = Utils.GetNextDateTime(nextDate, currentDate, procedureTask.ProcedureTemplate);
 
                             procedureTask.ProcedureNextRun = futureNextDate;
                             procedureTask.ProcedureLastRun = lastDate;
 
                             KarmaSchedulerFunctions.ChangeProcedureTask(connection, procedureTask);
+                            SetMessage($"Закончили выполнять процедуру {procedureTask.ProcedureTitle}");
+
+                            transaction.Commit();
                         }
                     }
                 }

@@ -1,6 +1,4 @@
-﻿using KarmaCore.BaseTypes.Logger;
-using KarmaCore.BaseTypes.MurrEvents;
-using KarmaCore.Enumerations;
+﻿using KarmaCore.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +12,6 @@ using ScheduleProvider.Mappings;
 using System;
 using DownloaderProvider.DatabaseEntities;
 using DownloaderProvider.Entities;
-using System.Text.Json;
 using ScheduleProvider;
 
 namespace TestFullSolutions.PostgresqlFunctions
@@ -134,6 +131,8 @@ namespace TestFullSolutions.PostgresqlFunctions
             using (IDbConnection connection = new NpgsqlConnection(npgSqlConnection))
             {
                 connection.Open();
+                other.Open();
+                var transaction = other.BeginTransaction();
 
                 var procedures = KarmaSchedulerFunctions.GetProcedureInfos(connection);
                 string function = "add_cbr_foreign_exchange";
@@ -168,6 +167,8 @@ namespace TestFullSolutions.PostgresqlFunctions
                 string schema = procedures.FirstOrDefault(z => z.ProcedureName == function).ProcedureSchema;
                 bool isExecuted = KarmaSchedulerFunctions.RunFunction(other, $"{schema}.{function}", resultKeyValues);
                 Assert.IsTrue(isExecuted);
+
+                transaction.Rollback();
             }
         }
 
@@ -177,7 +178,7 @@ namespace TestFullSolutions.PostgresqlFunctions
             string npgConnection = GetStringConnection();
             using (IDbConnection connection = new NpgsqlConnection(npgConnection))
             {
-                connection.Open();
+                connection.Open();                
                 using (IDbTransaction transaction = connection.BeginTransaction())
                 {
                     ProcedureTask procedureTask = new ProcedureTask()
@@ -217,7 +218,7 @@ namespace TestFullSolutions.PostgresqlFunctions
                     Assert.AreEqual(procedureTask.ProcedureLastRun, result.FirstOrDefault(z => z.ProcedureTaskId == id).ProcedureLastRun);
                     Assert.AreEqual(procedureTask.ProcedureNextRun, result.FirstOrDefault(z => z.ProcedureTaskId == id).ProcedureNextRun);
 
-                    transaction.Commit();
+                    transaction.Rollback();
                 }
             }
         }
