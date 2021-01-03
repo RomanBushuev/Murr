@@ -101,9 +101,16 @@ namespace TestFullSolutions.PostgresqlFunctions
                     long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = DateTime.Now });
 
                     DateTime dateTime = DateTime.Now;
-                    KarmaDownloaderFunctions.InsertNumeric(connection, taskId, attemptions, 2);
+                    KarmaDownloaderFunctions.InsertTaskNumeric(connection, taskId, attemptions, 2);
                     KarmaDownloaderFunctions.InsertTaskDate(connection, taskId, startTask, dateTime);
                     KarmaDownloaderFunctions.InsertTaskDateText(connection, taskId, log, dateTime, "Hello");
+
+                    var attemps = KarmaDownloaderFunctions.GetTaskDecimal(connection, taskId, attemptions);
+                    Assert.AreEqual(2.0m, attemps);
+
+                    var start = KarmaDownloaderFunctions.GetTaskDate(connection, taskId, startTask);
+                    Assert.AreEqual(dateTime.ToString(), start.ToString());
+
                     transaction.Rollback();
                 }
             }
@@ -122,6 +129,9 @@ namespace TestFullSolutions.PostgresqlFunctions
             }
         }
 
+        /// <summary>
+        /// Запус процедуры
+        /// </summary>
         [TestMethod]
         public void TestUseTemplates()
         {
@@ -248,7 +258,42 @@ namespace TestFullSolutions.PostgresqlFunctions
             Assert.AreEqual(dbKarmaDownloadJob.TaskStatusId, 4);
             Assert.AreEqual(dbKarmaDownloadJob.TaskId, 2);
             Assert.AreEqual(dbKarmaDownloadJob.TaskTemplateId, 2);
+        }
 
+        [TestMethod]
+        public void TestServiceAttributes()
+        {
+            string alias = "ALIAS";
+            string currentTaskId = "CURRENT_TASK_ID";
+            string log = "SERVICE_LOG";
+            string lastWorkingDateTime = "LAST_WORKING_DATE_TIME";
+            string serviceName = "BushuevService";
+            DateTime date = DateTime.Now;
+
+            string npgConnection = GetStringConnection();
+            using (IDbConnection connection = new NpgsqlConnection(npgConnection))
+            {
+                connection.Open();                
+                var transaction = connection.BeginTransaction();
+
+                long serviceId = KarmaDownloaderFunctions.CreateService(connection, serviceName);
+
+                KarmaDownloaderFunctions.InsertServiceDate(connection, serviceName, lastWorkingDateTime, date);
+                KarmaDownloaderFunctions.InsertServiceNumeric(connection, serviceName, currentTaskId, 1);
+                KarmaDownloaderFunctions.InsertServiceString(connection, serviceName, alias, "Roman");
+                KarmaDownloaderFunctions.InsertServiceDateString(connection, serviceName, log, date, "Roman");
+
+                var actualDate = KarmaDownloaderFunctions.GetServiceDate(connection, serviceName, lastWorkingDateTime);
+                Assert.AreEqual(date.ToString(), actualDate.ToString());
+
+                var actualCurrentTaskId = KarmaDownloaderFunctions.GetServiceDecimal(connection, serviceName, currentTaskId);
+                Assert.AreEqual(1.0m, actualCurrentTaskId);
+
+                var actualAlias = KarmaDownloaderFunctions.GetServiceString(connection, serviceName, alias);
+                Assert.AreEqual("Roman", actualAlias);
+
+                transaction.Rollback();
+            }                
         }
     }
 }

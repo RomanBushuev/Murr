@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DownloaderProvider;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace DownloaderService
 {
@@ -13,6 +18,8 @@ namespace DownloaderService
         private readonly ILogger<TimedHostedService> _logger;
         private Timer _timer;
         private readonly int _interval = 10;
+        private IConfiguration _configuration;
+        private string _serviceName;
 
         public TimedHostedService(ILogger<TimedHostedService> logger)
         {
@@ -28,31 +35,48 @@ namespace DownloaderService
         {
             _logger.LogInformation("Timed Hosted Service running");
             _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(_interval));
+            _serviceName = _configuration.GetValue<string>("ServiceName");
             return Task.CompletedTask;
         }
 
         private void DoWork(object state)
         {
             _timer?.Change(Timeout.Infinite, 0);
-            _logger.LogInformation($"Work: {Thread.GetCurrentProcessorId()}");
             try
             {
                 Job();
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"{ex}");
+                SetMessage($"{ex}", "_ERROR");
             }
             finally
             {
-                _logger.LogInformation($"Continue the service:{Thread.GetCurrentProcessorId()}");
-                _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(_interval));
+                SetMessage("End DoWork");
+                SetMessage($"{DateTime.Now}");
+                _timer.Change(TimeSpan.FromSeconds(_interval), TimeSpan.Zero);
             }
+        }
+
+        private string GetStringConnection()
+        {
+            var npgConnection = _configuration["DataProviders:KarmaDownloader"];
+            return npgConnection;
         }
 
         private void Job()
         {
+            //взять работу на исполнение
+            string npgConnection = GetStringConnection();
 
+            ServiceJob serviceJob = new ServiceJob(npgConnection);
+
+            //получили все работы 
+            serviceJob.GetKarmaDownloadJob();
+
+            //
+
+           
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -62,6 +86,22 @@ namespace DownloaderService
             _timer?.Change(Timeout.Infinite, 0);
 
             return Task.CompletedTask;
+        }
+
+        public void SetMessage(string message, string postFix = "")
+        {
+            string generatedService = _serviceName + postFix;
+            if (!string.IsNullOrEmpty(generatedService))
+            {
+                if (!EventLog.SourceExists(generatedService))
+                {
+                    EventLog.CreateEventSource(generatedService, generatedService);
+                }
+                EventLog eventLog = new EventLog();
+                eventLog.Source = generatedService;
+
+                eventLog.WriteEntry(message);
+            }
         }
     }
 }

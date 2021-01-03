@@ -53,16 +53,16 @@ namespace KarmaScheduler
             {
                 Job();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                SetMessage($"{ex}");
+                SetMessage($"{ex}", "_ERROR");
             }
             finally
             {
                 SetMessage("End DoWork");
                 SetMessage($"{DateTime.Now}");
                 _timer.Change(TimeSpan.FromSeconds(_interval), TimeSpan.Zero);
-            }          
+            }
         }
 
         private string GetStringConnection()
@@ -82,20 +82,23 @@ namespace KarmaScheduler
                 connection.Open();
                 using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    //прочитали процедуру
+                    //прочитали задачи-процедуры
                     var procedureTasks = KarmaSchedulerFunctions.GetProcedureTasks(connection);
 
                     //Прочитали все процедуры
                     var procedures = KarmaSchedulerFunctions.GetProcedureInfos(connection);
 
+                    SetMessage($"Прочитали процедур: {procedureTasks.Count()}");
+
+                    //для каждой процедуры смотрим время выполнения
                     foreach (var procedureTask in procedureTasks)
                     {
+                        //время выполнения наступило ? 
                         var nextDate = procedureTask.ProcedureNextRun;
-
-                        if (procedureTask.ProcedureIsUse)
+                        if (!procedureTask.ProcedureIsUse)
                             continue;
-                        
-                        if(Utils.MakeNextDate(nextDate, currentDate))
+
+                        if (Utils.MakeNextDate(nextDate, currentDate))
                         {
                             SetMessage($"Прочитали процедуру {procedureTask.ProcedureTitle}");
                             //запустить процедуру
@@ -103,13 +106,13 @@ namespace KarmaScheduler
 
                             var paramTypes = new Dictionary<string, string>();
                             foreach (var procedure in procedures
-                                .Where(z=> $"{z.ProcedureSchema}.{z.ProcedureName}" == procedureTask.ProcedureTitle))
+                                .Where(z => $"{z.ProcedureSchema}.{z.ProcedureName}" == procedureTask.ProcedureTitle))
                             {
                                 paramTypes[procedure.ParameterName] = procedure.DataType;
                             }
 
                             var resultKeyValues = new Dictionary<string, object>();
-                            foreach(var paramType in paramTypes)
+                            foreach (var paramType in paramTypes)
                             {
                                 var param = keyValuePairs[paramType.Key];
                                 var isChange = Utils.IsUseTemplate(paramType.Value, param.GetType().ToString());
@@ -127,9 +130,8 @@ namespace KarmaScheduler
                             string schema = procedures.FirstOrDefault(z => $"{z.ProcedureSchema}.{z.ProcedureName}" == procedureTask.ProcedureTitle)
                                 .ProcedureSchema;
 
-                            IDbConnection other = new NpgsqlConnection(npgConnection);
                             SetMessage($"Запустили процедуру {procedureTask.ProcedureTitle}");
-                            bool isExecuted = KarmaSchedulerFunctions.RunFunction(other, procedureTask.ProcedureTitle, resultKeyValues);
+                            bool isExecuted = KarmaSchedulerFunctions.RunFunction(connection, procedureTask.ProcedureTitle, resultKeyValues);
 
                             //изменил значение
                             var lastDate = nextDate;
@@ -140,24 +142,26 @@ namespace KarmaScheduler
 
                             KarmaSchedulerFunctions.ChangeProcedureTask(connection, procedureTask);
                             SetMessage($"Закончили выполнять процедуру {procedureTask.ProcedureTitle}");
-
-                            transaction.Commit();
                         }
                     }
+
+                    transaction.Commit();
                 }
+                connection.Close();
             }
         }
 
-        public void SetMessage(string message)
+        public void SetMessage(string message, string postFix = "")
         {
-            if(!string.IsNullOrEmpty(_serviceName))
+            string generatedService = _serviceName + postFix;
+            if (!string.IsNullOrEmpty(generatedService))
             {
-                if(!EventLog.SourceExists(_serviceName))
+                if (!EventLog.SourceExists(generatedService))
                 {
-                    EventLog.CreateEventSource(_serviceName, _serviceName);
+                    EventLog.CreateEventSource(generatedService, generatedService);
                 }
                 EventLog eventLog = new EventLog();
-                eventLog.Source = _serviceName;
+                eventLog.Source = generatedService;
 
                 eventLog.WriteEntry(message);
             }
