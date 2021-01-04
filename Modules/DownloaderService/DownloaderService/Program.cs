@@ -29,7 +29,8 @@ namespace DownloaderService
                 {
                     services.AddOptions();
                     string karmaDownloader = hostContext.Configuration.GetSection("DataProviders").GetValue<string>("KarmaDownloader");
-                    services.AddSingleton<IServiceJob>(new ServiceJob(karmaDownloader));
+                    services.AddSingleton<ITaskActions>(new TaskActions(karmaDownloader));
+                    services.AddSingleton<IServiceActions>(new ServiceActions(karmaDownloader));
                     services.AddHostedService<TimedHostedService>();
                 }).UseWindowsService();
     }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DownloaderProvider;
+using KarmaCore.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -20,8 +21,12 @@ namespace DownloaderService
         private readonly int _interval = 10;
         private IConfiguration _configuration;
         private string _serviceName;
+        private ITaskActions _taskActions;
+        private IServiceActions _serviceActions;
 
-        public TimedHostedService(ILogger<TimedHostedService> logger)
+        public TimedHostedService(ILogger<TimedHostedService> logger,
+            ITaskActions taskActions,
+            IServiceActions serviceActions)
         {
             _logger = logger;
         }
@@ -66,13 +71,13 @@ namespace DownloaderService
 
         private void Job()
         {
-            //взять работу на исполнение
+            //РІР·СЏС‚СЊ СЂР°Р±РѕС‚Сѓ РЅР° РёСЃРїРѕР»РЅРµРЅРёРµ
             string npgConnection = GetStringConnection();
 
-            ServiceJob serviceJob = new ServiceJob(npgConnection);
 
-            //получили все работы 
-            serviceJob.GetKarmaDownloadJob();
+
+            //РїРѕР»СѓС‡РёР»Рё РІСЃРµ СЂР°Р±РѕС‚С‹ 
+            _taskActions.GetKarmaDownloadJob();
 
             //
 

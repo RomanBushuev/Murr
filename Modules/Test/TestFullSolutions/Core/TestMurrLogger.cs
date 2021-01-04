@@ -1,7 +1,9 @@
 ﻿using KarmaCore.BaseTypes.Logger;
 using KarmaCore.BaseTypes.MurrEvents;
 using KarmaCore.Enumerations;
+using KarmaCore.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,6 +36,14 @@ namespace TestFullSolutions.Core
 
             Assert.AreEqual("Test1", testLogger.Messages.First());
             Assert.AreEqual("Test2", testLogger.Messages.Last());
+        }
+
+        [TestMethod]
+        public void TestGetAttribute()
+        {
+            ServiceStatuses status = ServiceStatuses.Running;
+            var attribute = status.ToDbAttribute();
+            Assert.AreEqual("RUNNING", attribute);
         }
     }
 }

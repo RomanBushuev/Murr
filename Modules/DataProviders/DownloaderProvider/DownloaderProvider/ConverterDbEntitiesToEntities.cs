@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DownloaderProvider.DatabaseEntities;
-using DownloaderProvider.Entities;
+using KarmaCore.Entities;
 using KarmaCore.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -19,13 +19,28 @@ namespace DownloaderProvider
                     x => x.MapFrom(source => (TaskStatuses)source.TaskStatusId))
                 .ReverseMap()
                 .ForMember(m=> m.TaskId, x=>x.MapFrom(source => source.TaskId))
-                .ForMember(m => m.TaskTemplateId, x => x.MapFrom(source => source.TaskTemplateId));
+                .ForMember(m => m.TaskTemplateId, x => x.MapFrom(source => source.TaskTemplateId))
+                .ForMember(m=>m.SaverTemplateId, x=>x.MapFrom(source => source.SaverTemplateId));
 
             CreateMap<KarmaDownloadJob, DbKarmaDownloadJob>()
                 .ForMember(m => (TaskStatuses)m.TaskStatusId,
                     x=> x.MapFrom(source => (long)source.TaskStatuses))
                 .ForMember(m => m.TaskId, x => x.MapFrom(source => source.TaskId))
-                .ForMember(m => m.TaskTemplateId, x => x.MapFrom(source => source.TaskTemplateId));
+                .ForMember(m => m.TaskTemplateId, x => x.MapFrom(source => source.TaskTemplateId))
+                .ForMember(m => m.SaverTemplateId, x => x.MapFrom(source => source.SaverTemplateId));
+
+            CreateMap<DbKarmaService, KarmaService>()
+                .ForMember(m => (long)m.ServiceStatus,
+                    x => x.MapFrom(source => (ServiceStatuses)source.ServiceStatus))
+                .ReverseMap()
+                .ForMember(m => m.ServiceId, x => x.MapFrom(source => source.ServiceId))
+                .ForMember(m => m.ServiceTitle, x => x.MapFrom(source => source.ServiceTitle));
+
+            CreateMap<KarmaService, DbKarmaService>()
+                .ForMember(m => (ServiceStatuses)m.ServiceStatus,
+                    x => x.MapFrom(source => (long)source.ServiceStatus))
+                .ForMember(m => m.ServiceId, x => x.MapFrom(source => source.ServiceId))
+                .ForMember(m => m.ServiceTitle, x => x.MapFrom(source => source.ServiceTitle));
         }
     }
 

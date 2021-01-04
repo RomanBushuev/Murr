@@ -395,5 +395,13 @@ namespace DownloaderProvider.DbFunctions
                 },
                 commandType: CommandType.StoredProcedure);
         }
+
+        public static IEnumerable<DbKarmaService> DownloadKarmaServices(IDbConnection dbConnection)
+        {
+            string function = "murr_downloader.get_services";
+
+            return dbConnection.Query<DbKarmaService>(function,
+                commandType: CommandType.StoredProcedure);
+        }
     }
 }

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DownloaderProvider.Entities
+namespace KarmaCore.Entities
 {
     public class KarmaDownloadJob
     {

@@ -11,8 +11,10 @@ using ScheduleProvider.DbFunctions;
 using ScheduleProvider.Mappings;
 using System;
 using DownloaderProvider.DatabaseEntities;
-using DownloaderProvider.Entities;
+using KarmaCore.Entities;
 using ScheduleProvider;
+using KarmaCore.Interfaces;
+using KarmaCore.Utils;
 
 namespace TestFullSolutions.PostgresqlFunctions
 {
@@ -133,7 +135,7 @@ namespace TestFullSolutions.PostgresqlFunctions
         /// Запус процедуры
         /// </summary>
         [TestMethod]
-        public void TestUseTemplates()
+        public void TestUseTemplates(bool save = false)
         {
             string npgSqlConnection = GetStringConnection();
             string otherSqlConnection = GetStringConnection();
@@ -178,7 +180,10 @@ namespace TestFullSolutions.PostgresqlFunctions
                 bool isExecuted = KarmaSchedulerFunctions.RunFunction(other, $"{schema}.{function}", resultKeyValues);
                 Assert.IsTrue(isExecuted);
 
-                transaction.Rollback();
+                if (save)
+                    transaction.Commit();
+                else
+                    transaction.Rollback();
             }
         }
 
@@ -294,6 +299,110 @@ namespace TestFullSolutions.PostgresqlFunctions
 
                 transaction.Rollback();
             }                
+        }
+
+        [TestMethod]
+        public void TestDownloadTask()
+        {
+            string npgConnection = GetStringConnection();
+            string _serviceName = "BushuevService";
+            string currentTaskId = "CURRENT_TASK_ID";
+            string attemptions = "ATTEMPTIONS";
+
+            ITaskActions taskActions = new TaskActions(npgConnection);
+            IServiceActions serviceActions = new ServiceActions(npgConnection);
+
+            using (IDbConnection connection = new NpgsqlConnection(npgConnection))
+            {
+                KarmaDownloaderFunctions.CreateService(connection, _serviceName);
+            }
+
+            var services = serviceActions.GetKarmaServices();
+
+            //проверим, что у сервиса есть
+            if(services.FirstOrDefault(z=>z.ServiceTitle == _serviceName) == null)
+            {
+                SetMessage($"Сервис:[{_serviceName}] не найден");
+                return;
+            }
+
+            //проверим, что сервис рабочий
+            if (services.First(z=>z.ServiceTitle == _serviceName).ServiceStatus != ServiceStatuses.Running)
+            {
+                SetMessage($"Сервис:[{_serviceName}] имеет статус {services.First(z => z.ServiceTitle == _serviceName).ServiceStatus.ToDbAttribute()}");
+                return;
+            }
+
+
+            decimal? value = serviceActions.GetNumber(_serviceName, currentTaskId);
+            //если работа есть, то проверили попытку выполнить данную работу
+            if (value.HasValue && value != -1.0m)
+            {
+                long taskId = long.Parse(value.Value.ToString());
+                //увеличить attemptions 
+                decimal? attemption = taskActions.GetNumber(taskId, attemptions); 
+
+                if(!attemption.HasValue)
+                {
+                    taskActions.SetAttribute(taskId, attemptions, 1.0m);
+                }
+                else
+                {
+                    taskActions.SetAttribute(taskId, attemptions, attemption.Value + 1);
+                }
+
+                //если кол-во > 3 то берем другую задачу
+                attemption = taskActions.GetNumber(taskId, attemptions);
+
+                if (attemption > 3.0m)
+                {
+                    serviceActions.SetAttribute(_serviceName, currentTaskId, -1.0m);
+                    value = null;
+                    //задачу поставить в статус выполнена 
+                    taskActions.ErrorJob(taskId);
+                }
+            }
+
+            long? taskId = null;
+            KarmaDownloadJob karmaDownloadJob = null;
+            //получили все работы
+            if (!value.HasValue || (value.HasValue && value == -1.0m))
+            {
+                var tasks = taskActions.GetKarmaDownloadJob();
+
+                if (tasks.Count(z => z.TaskStatuses == TaskStatuses.Created) != 0)
+                {
+                    SetMessage($"Кол-во найденных работ: {tasks.Count(z => z.TaskStatuses == TaskStatuses.Created)}");
+                    foreach (var task in tasks.Where(z => z.TaskStatuses == TaskStatuses.Created))
+                    {
+                        var result = taskActions.RunJob(task.TaskId);
+                        karmaDownloadJob = task;
+                        if (result == 1)
+                        {
+                            taskId = task.TaskId;
+                            serviceActions.SetAttribute(_serviceName, currentTaskId, 1.0m);
+                            taskActions.SetAttribute(task.TaskId, attemptions, 1.0m);
+                        }
+                    }
+                }
+            }
+
+            if(!taskId.HasValue)
+            {
+                return;
+            }
+
+            SetMessage($"Сервис:{_serviceName} начал работу над {taskId}");
+
+            
+            //выполнили работу 
+
+            //изменили статус работы в 
+        }
+
+        private void SetMessage(string message, string postfix ="")
+        {
+            Console.WriteLine($"[{postfix}]:{message}");
         }
     }
 }
