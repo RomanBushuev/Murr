@@ -13,7 +13,7 @@ namespace DownloaderProvider
     {
         public ConverterDbEntitiesToEntities()
         {
-            //long enum
+            //karma job
             CreateMap<DbKarmaDownloadJob, KarmaDownloadJob>()
                 .ForMember(m => (long)m.TaskStatuses,
                     x => x.MapFrom(source => (TaskStatuses)source.TaskStatusId))
@@ -29,6 +29,7 @@ namespace DownloaderProvider
                 .ForMember(m => m.TaskTemplateId, x => x.MapFrom(source => source.TaskTemplateId))
                 .ForMember(m => m.SaverTemplateId, x => x.MapFrom(source => source.SaverTemplateId));
 
+            //karma service
             CreateMap<DbKarmaService, KarmaService>()
                 .ForMember(m => (long)m.ServiceStatus,
                     x => x.MapFrom(source => (ServiceStatuses)source.ServiceStatus))
@@ -41,6 +42,24 @@ namespace DownloaderProvider
                     x => x.MapFrom(source => (long)source.ServiceStatus))
                 .ForMember(m => m.ServiceId, x => x.MapFrom(source => source.ServiceId))
                 .ForMember(m => m.ServiceTitle, x => x.MapFrom(source => source.ServiceTitle));
+
+            //calculation template
+            CreateMap<DbCalculationJson, CalculationJson>()
+                .ForMember(m => m.JsonParameters, x => x.MapFrom(source => source.TaskTemplate))
+                .ForMember(m => m.TaskType, x => x.MapFrom(source => source.TaskType));
+
+            CreateMap<CalculationJson, DbCalculationJson>()
+                .ForMember(m => m.TaskTemplate, x => x.MapFrom(source => source.JsonParameters))
+                .ForMember(m => m.TaskType, x => x.MapFrom(source => source.TaskType));
+
+            //saver template
+            CreateMap<DbSaverJson, SaverJson>()
+                .ForMember(m => m.JsonParameters, x => x.MapFrom(source => source.JsonParameters))
+                .ForMember(m => m.SaverType, x => x.MapFrom(source => source.SaverType));
+
+            CreateMap<SaverJson, DbSaverJson>()
+                .ForMember(m => m.JsonParameters, x => x.MapFrom(source => source.JsonParameters))
+                .ForMember(m => m.SaverType, x => x.MapFrom(source => source.SaverType));
         }
     }
 

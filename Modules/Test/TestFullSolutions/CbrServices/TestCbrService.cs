@@ -9,7 +9,7 @@ using KarmaCore.Enumerations;
 using KarmaCore.Interfaces;
 using System.Reflection;
 using System.IO;
-using DownloadTasks;
+using KarmaCore.Calculations;
 
 namespace TestFullSolutions.CbrServices
 {

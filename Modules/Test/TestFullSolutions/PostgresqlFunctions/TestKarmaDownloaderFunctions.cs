@@ -15,6 +15,8 @@ using KarmaCore.Entities;
 using ScheduleProvider;
 using KarmaCore.Interfaces;
 using KarmaCore.Utils;
+using KarmaCore.Calculations;
+using XmlSaver;
 
 namespace TestFullSolutions.PostgresqlFunctions
 {
@@ -238,6 +240,9 @@ namespace TestFullSolutions.PostgresqlFunctions
             }
         }
 
+        /// <summary>
+        /// Тестирование мапинглв 
+        /// </summary>
         [TestMethod]
         public void TestMapping()
         {
@@ -265,6 +270,9 @@ namespace TestFullSolutions.PostgresqlFunctions
             Assert.AreEqual(dbKarmaDownloadJob.TaskTemplateId, 2);
         }
 
+        /// <summary>
+        /// Формирование сервиса и добавление к нему атрибутов
+        /// </summary>
         [TestMethod]
         public void TestServiceAttributes()
         {
@@ -301,8 +309,11 @@ namespace TestFullSolutions.PostgresqlFunctions
             }                
         }
 
+        /// <summary>
+        /// Загрузка по задаче
+        /// </summary>
         [TestMethod]
-        public void TestDownloadTask()
+        public void TestDownloadService()
         {
             string npgConnection = GetStringConnection();
             string _serviceName = "BushuevService";
@@ -338,32 +349,31 @@ namespace TestFullSolutions.PostgresqlFunctions
             //если работа есть, то проверили попытку выполнить данную работу
             if (value.HasValue && value != -1.0m)
             {
-                long taskId = long.Parse(value.Value.ToString());
+                long numberTaskId = long.Parse(value.Value.ToString());
                 //увеличить attemptions 
-                decimal? attemption = taskActions.GetNumber(taskId, attemptions); 
+                decimal? attemption = taskActions.GetNumber(numberTaskId, attemptions); 
 
                 if(!attemption.HasValue)
                 {
-                    taskActions.SetAttribute(taskId, attemptions, 1.0m);
+                    taskActions.SetAttribute(numberTaskId, attemptions, 1.0m);
                 }
                 else
                 {
-                    taskActions.SetAttribute(taskId, attemptions, attemption.Value + 1);
+                    taskActions.SetAttribute(numberTaskId, attemptions, attemption.Value + 1);
                 }
 
                 //если кол-во > 3 то берем другую задачу
-                attemption = taskActions.GetNumber(taskId, attemptions);
+                attemption = taskActions.GetNumber(numberTaskId, attemptions);
 
                 if (attemption > 3.0m)
                 {
                     serviceActions.SetAttribute(_serviceName, currentTaskId, -1.0m);
                     value = null;
                     //задачу поставить в статус выполнена 
-                    taskActions.ErrorJob(taskId);
+                    taskActions.ErrorJob(numberTaskId);
                 }
             }
 
-            long? taskId = null;
             KarmaDownloadJob karmaDownloadJob = null;
             //получили все работы
             if (!value.HasValue || (value.HasValue && value == -1.0m))
@@ -376,28 +386,38 @@ namespace TestFullSolutions.PostgresqlFunctions
                     foreach (var task in tasks.Where(z => z.TaskStatuses == TaskStatuses.Created))
                     {
                         var result = taskActions.RunJob(task.TaskId);
-                        karmaDownloadJob = task;
                         if (result == 1)
                         {
-                            taskId = task.TaskId;
-                            serviceActions.SetAttribute(_serviceName, currentTaskId, 1.0m);
+                            karmaDownloadJob = task;
+                            serviceActions.SetAttribute(_serviceName, currentTaskId, karmaDownloadJob.TaskId);
                             taskActions.SetAttribute(task.TaskId, attemptions, 1.0m);
+                            break;
                         }
                     }
                 }
             }
 
-            if(!taskId.HasValue)
+            if(karmaDownloadJob == null)
             {
+                serviceActions.SetAttribute(_serviceName, currentTaskId, -1.0m);
                 return;
             }
 
-            SetMessage($"Сервис:{_serviceName} начал работу над {taskId}");
+            SetMessage($"Сервис:{_serviceName} начал работу над {karmaDownloadJob.TaskId}");
 
-            
-            //выполнили работу 
+            var calculationJson = taskActions.GetCalculationJson(karmaDownloadJob.TaskTemplateId);
+            var calculation = CalculationFactory.GetCalculation(calculationJson);
+            calculation.Run();
 
-            //изменили статус работы в 
+            if (karmaDownloadJob.SaverTemplateId.HasValue)
+            {
+                var saverJson = taskActions.GetSaverJson(karmaDownloadJob.SaverTemplateId.Value);
+                var saver = SaverFactory.GetXmlSaver(saverJson, calculation);
+                saver.Save();
+            }
+
+            serviceActions.SetAttribute(_serviceName, currentTaskId, -1.0m);
+            taskActions.EndJob(karmaDownloadJob.TaskId);
         }
 
         private void SetMessage(string message, string postfix ="")

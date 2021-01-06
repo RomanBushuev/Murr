@@ -54,7 +54,7 @@ namespace ScheduleProvider
             return nextDate.Value <= currentDate;
         }
 
-        public static Dictionary<string, object> ConvertToParams(string json)
+        public static Dictionary<string, object> ConvertJsonToParams(string json)
         {
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             return dictionary;

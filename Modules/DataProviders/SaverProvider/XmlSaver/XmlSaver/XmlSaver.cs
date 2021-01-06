@@ -1,5 +1,8 @@
-﻿using KarmaCore.Interfaces;
+﻿using KarmaCore.Entities;
+using KarmaCore.Interfaces;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace XmlSaver
@@ -46,5 +49,24 @@ namespace XmlSaver
         public string Connection { get; set; } = null;
         public IXmlResult XmlResult { get; set; } = null;
         public bool IsReplaced { get; set; } = false;
+
+        public static XmlSaver Deserialize(SaverJson saverJson)
+        {
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(saverJson.JsonParameters);
+            XmlSaver xmlSaver = new XmlSaver();
+            if(dict.ContainsKey("Path"))
+            {
+                var connection = dict["Path"];
+                xmlSaver.Connection = connection;
+            }
+
+            if(dict.ContainsKey("IsReplaced"))
+            {
+                var isReplaced = bool.Parse(dict["IsReplaced"]);
+                xmlSaver.IsReplaced = isReplaced;
+            }
+
+            return xmlSaver;
+        }
     }
 }

@@ -5,8 +5,13 @@ using System.Xml;
 
 namespace KarmaCore.Interfaces
 {
-    public interface IXmlResult
+    public interface IResult
     {
-        public XmlDocument Document { get; }
+        
+    }
+
+    public interface IXmlResult : IResult
+    {
+        XmlDocument Document { get; set; }
     }
 }

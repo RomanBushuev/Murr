@@ -1,6 +1,8 @@
 ﻿using KarmaCore.BaseTypes;
 using KarmaCore.BaseTypes.Logger;
+using KarmaCore.Entities;
 using KarmaCore.Enumerations;
+using KarmaCore.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +13,16 @@ namespace KarmaCore
     /// <summary>
     /// Задача, расчет, все что угодно
     /// </summary>
-    public class Calculation
+    public class Calculation : IResult
     {
         private bool isInitialized = false;
-        protected List<ParamDescriptor> _paramDescriptors = new List<ParamDescriptor>();
+        protected List<ParamDescriptor> _paramDescriptors = null;
         protected MurrLogger _murrLogger = new MurrLogger();
+        protected KarmaEnvironment _karmaEnvironment = new KarmaEnvironment();
+
+        public virtual TaskTypes TaskTypes { get; }
+
+        public KarmaEnvironment KarmaEnvironment { get { return _karmaEnvironment; } }
 
         public virtual void Run()
         {
@@ -30,10 +37,9 @@ namespace KarmaCore
 
         public virtual void SetParamDescriptors(ParamDescriptor paramDescriptor)
         {
-            if(!isInitialized)
+            if(_paramDescriptors == null)
             {
                 GetParamDescriptors();
-                isInitialized = true;
             }
             var needParam = _paramDescriptors.FirstOrDefault(z => z.Ident == paramDescriptor.Ident);
             needParam = ParamDescriptorExtensions.ConvertParam(needParam, paramDescriptor);
@@ -42,6 +48,11 @@ namespace KarmaCore
         public void Notify(string message, MurrMessageType murrMessageType = MurrMessageType.Information) 
         {
             _murrLogger.Notify(message, murrMessageType);
+        }
+
+        public virtual CalculationJson Serialize()
+        {
+            throw new Exception("");
         }
     }
 }

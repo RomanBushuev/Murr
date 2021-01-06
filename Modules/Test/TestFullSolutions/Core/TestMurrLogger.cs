@@ -1,4 +1,5 @@
-﻿using KarmaCore.BaseTypes.Logger;
+﻿using KarmaCore.BaseTypes;
+using KarmaCore.BaseTypes.Logger;
 using KarmaCore.BaseTypes.MurrEvents;
 using KarmaCore.Enumerations;
 using KarmaCore.Utils;
@@ -44,6 +45,68 @@ namespace TestFullSolutions.Core
             ServiceStatuses status = ServiceStatuses.Running;
             var attribute = status.ToDbAttribute();
             Assert.AreEqual("RUNNING", attribute);
+        }
+
+        [TestMethod]
+        public void SerializeAndDeserialize()
+        {
+            List<ParamDescriptor> paramDescriptors = new List<ParamDescriptor>()
+            {
+              new ParamDescriptor()
+              {
+                  Ident = "dat",
+                  Description = "dat",
+                  ParamType = ParamType.DateTime,
+                  Value = new DateTime(2021, 01, 05)
+              },
+              new ParamDescriptor()
+              {
+                  Ident = "num",
+                  Description = "num",
+                  ParamType = ParamType.Decimal,
+                  Value = 123456.123456m
+              },
+               new ParamDescriptor()
+              {
+                  Ident = "ident",
+                  Description = "ident",
+                  ParamType = ParamType.String,
+                  Value = "ident"
+              }
+            };
+
+            string json = paramDescriptors.SerializeJson();
+
+            paramDescriptors = new List<ParamDescriptor>()
+            {
+              new ParamDescriptor()
+              {
+                  Ident = "dat",
+                  Description = "dat",
+                  ParamType = ParamType.DateTime,
+                  Value = new DateTime(2020, 01, 01)
+              },
+              new ParamDescriptor()
+              {
+                  Ident = "num",
+                  Description = "num",
+                  ParamType = ParamType.Decimal,
+                  Value = 0.1m
+              },
+               new ParamDescriptor()
+              {
+                  Ident = "ident",
+                  Description = "ident",
+                  ParamType = ParamType.String,
+                  Value = "val"
+              }
+            };
+
+            var newValuews = ParamDescriptorExtensions.DeserializeJson(json, paramDescriptors);
+
+            Assert.AreEqual(new DateTime(2021, 01, 05).ToString(), newValuews.FirstOrDefault(z => z.Ident == "dat").Value.ToString());
+            Assert.AreEqual(123456.123456m, (decimal)newValuews.FirstOrDefault(z => z.Ident == "num").Value);
+            Assert.AreEqual("ident", newValuews.FirstOrDefault(z => z.Ident == "ident").Value.ToString());
         }
     }
 }

@@ -13,7 +13,7 @@ namespace KarmaScheduler
             {
                 CreateHostBuilder(args).Build().Run();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ;
             }
@@ -26,7 +26,7 @@ namespace KarmaScheduler
                 {
                     config.AddJsonFile("appsettings.json", optional: true)
                     .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json");
-                    config.AddEnvironmentVariables();
+                    config.AddEnvironmentVariables();                    
 
                     if (args != null)
                     {

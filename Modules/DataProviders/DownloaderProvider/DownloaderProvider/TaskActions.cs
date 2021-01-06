@@ -145,5 +145,23 @@ namespace DownloaderProvider
                     attribute.Trim().ToUpper());
             }
         }
+
+        public CalculationJson GetCalculationJson(long taskTemplateId)
+        {
+            using (IDbConnection connection = new NpgsqlConnection(_connection))
+            {
+                var t = KarmaDownloaderFunctions.GetTaskTemplates(connection, taskTemplateId);
+                return ConverterDto.ConvertDto<DbCalculationJson, CalculationJson>(t);                
+            }
+        }
+
+        public SaverJson GetSaverJson(long saverTemplateId)
+        {
+            using (IDbConnection connection = new NpgsqlConnection(_connection))
+            {
+                var t = KarmaDownloaderFunctions.GetSaverTemplates(connection, saverTemplateId);
+                return ConverterDto.ConvertDto<DbSaverJson, SaverJson>(t);
+            }
+        }
     }
 }

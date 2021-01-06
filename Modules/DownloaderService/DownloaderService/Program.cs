@@ -28,10 +28,18 @@ namespace DownloaderService
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddOptions();
+                    services.Configure<ServiceConfig>(hostContext.Configuration.GetSection("Service"));
                     string karmaDownloader = hostContext.Configuration.GetSection("DataProviders").GetValue<string>("KarmaDownloader");
                     services.AddSingleton<ITaskActions>(new TaskActions(karmaDownloader));
                     services.AddSingleton<IServiceActions>(new ServiceActions(karmaDownloader));
                     services.AddHostedService<TimedHostedService>();
                 }).UseWindowsService();
+    }
+
+    public class ServiceConfig
+    {
+        public string ServiceName { get; set; }
+
+        public long Interval { get; set; }
     }
 }

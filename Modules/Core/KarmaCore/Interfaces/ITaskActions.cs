@@ -27,5 +27,9 @@ namespace KarmaCore.Interfaces
         decimal? GetNumber(long taskId, string attribute);
 
         DateTime? GetDate(long taskId, string attribute);
+
+        CalculationJson GetCalculationJson(long taskTemplateId);
+
+        SaverJson GetSaverJson(long saverTemplateId);
     }
 }

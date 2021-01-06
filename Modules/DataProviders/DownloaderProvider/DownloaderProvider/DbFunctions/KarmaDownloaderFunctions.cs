@@ -403,5 +403,31 @@ namespace DownloaderProvider.DbFunctions
             return dbConnection.Query<DbKarmaService>(function,
                 commandType: CommandType.StoredProcedure);
         }
+
+        public static DbCalculationJson GetTaskTemplates(IDbConnection dbConnection,
+            long taskTemplateId)
+        {
+            string function = "murr_downloader.get_task_template";
+
+            return dbConnection.QueryFirstOrDefault<DbCalculationJson>(function,
+                new
+                {
+                    in_task_template_id = taskTemplateId,
+                },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public static DbSaverJson GetSaverTemplates(IDbConnection dbConnection,
+            long saverTemplateId)
+        {
+            string function = "murr_downloader.get_saver_template";
+
+            return dbConnection.QueryFirstOrDefault<DbSaverJson>(function,
+                new 
+                {
+                    in_saver_template_id = saverTemplateId
+                },
+                commandType:CommandType.StoredProcedure);
+        }
     }
 }

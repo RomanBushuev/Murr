@@ -4,8 +4,13 @@ using System.Text;
 
 namespace KarmaCore.Interfaces
 {
-    public interface IXmlSaver
+    public interface ISaver
     {
-        public bool Save();        
+        public bool Save();
+    }
+
+    public interface IXmlSaver : ISaver
+    {
+        
     }
 }

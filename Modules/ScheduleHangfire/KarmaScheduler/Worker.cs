@@ -101,9 +101,10 @@ namespace KarmaScheduler
                         if (Utils.MakeNextDate(nextDate, currentDate))
                         {
                             SetMessage($"Прочитали процедуру {procedureTask.ProcedureTitle}");
-                            //запустить процедуру
-                            var keyValuePairs = Utils.ConvertToParams(procedureTask.ProcedureParams);
+                            //получили параметры из json
+                            var paramValues = Utils.ConvertJsonToParams(procedureTask.ProcedureParams);
 
+                            //параметр и его тип
                             var paramTypes = new Dictionary<string, string>();
                             foreach (var procedure in procedures
                                 .Where(z => $"{z.ProcedureSchema}.{z.ProcedureName}" == procedureTask.ProcedureTitle))
@@ -111,19 +112,21 @@ namespace KarmaScheduler
                                 paramTypes[procedure.ParameterName] = procedure.DataType;
                             }
 
-                            var resultKeyValues = new Dictionary<string, object>();
+                            //параметры для процедуры
+                            var procedureParams = new Dictionary<string, object>();
                             foreach (var paramType in paramTypes)
                             {
-                                var param = keyValuePairs[paramType.Key];
+                                var param = paramValues[paramType.Key];
+                                //Тип параметра не сходится с тем, который указан у нас
                                 var isChange = Utils.IsUseTemplate(paramType.Value, param.GetType().ToString());
                                 if (isChange)
                                 {
                                     var result = Utils.ChangeParmas(param.ToString());
-                                    resultKeyValues[paramType.Key] = result;
+                                    procedureParams[paramType.Key] = result;
                                 }
                                 else
                                 {
-                                    resultKeyValues[paramType.Key] = paramType.Value;
+                                    procedureParams[paramType.Key] = paramType.Value;
                                 }
                             }
 
@@ -131,7 +134,7 @@ namespace KarmaScheduler
                                 .ProcedureSchema;
 
                             SetMessage($"Запустили процедуру {procedureTask.ProcedureTitle}");
-                            bool isExecuted = KarmaSchedulerFunctions.RunFunction(connection, procedureTask.ProcedureTitle, resultKeyValues);
+                            bool isExecuted = KarmaSchedulerFunctions.RunFunction(connection, procedureTask.ProcedureTitle, procedureParams);
 
                             //изменил значение
                             var lastDate = nextDate;

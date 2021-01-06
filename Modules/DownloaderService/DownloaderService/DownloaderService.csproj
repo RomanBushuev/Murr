@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\KarmaCore\KarmaCore.csproj" />
     <ProjectReference Include="..\..\DataProviders\DownloaderProvider\DownloaderProvider\DownloaderProvider.csproj" />
+    <ProjectReference Include="..\..\DataProviders\SaverProvider\XmlSaver\XmlSaver\XmlSaver.csproj" />
   </ItemGroup>
 
   <ItemGroup>

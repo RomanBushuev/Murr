@@ -30,7 +30,10 @@ namespace DownloaderProvider.DbFunctions
             {
                 FluentMapper.Initialize(config =>
                 {
+                    config.AddMap(new DbCalculationJsonMap());
                     config.AddMap(new DbKarmaDownloadJobMap());
+                    config.AddMap(new DbKarmaServiceMap());
+                    config.AddMap(new DbSaverJsonMap());
                 });
                 instance._isInitialized = true;
             }
