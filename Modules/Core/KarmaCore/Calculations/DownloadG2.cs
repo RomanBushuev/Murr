@@ -1,33 +1,34 @@
-﻿using CbrServices;
-using KarmaCore;
+﻿using CbrSecuritiesInfo;
 using KarmaCore.BaseTypes;
 using KarmaCore.Entities;
 using KarmaCore.Enumerations;
 using KarmaCore.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml;
+using CbrSecuritiesInfo;
 
 namespace KarmaCore.Calculations
 {
-    public class DownloadForeignExchange : Calculation, IXmlResult
+    public class DownloadG2 : Calculation, IXmlResult
     {
         private XmlDocument _xmlDocument = null;
         public const string RunDateTime = "RunDateTime";
         public XmlDocument Document { get { return _xmlDocument; } set { _xmlDocument = value; } }
-        public override TaskTypes TaskTypes => TaskTypes.DownloadCurrenciesCbrf;
+        public override TaskTypes TaskTypes => TaskTypes.DownloadG2CurveCbrf;
 
         public override void Run()
         {
-            Notify($"Задача загрузки иностранных валют начата");
-            DailyInfoSoapClient client = new DailyInfoSoapClient(DailyInfoSoapClient.EndpointConfiguration.DailyInfoSoap);
+            Notify($"Задача загрузки кривой G2 из ЦБ начата");
+            var client = new SecInfoSoapClient(SecInfoSoapClient.EndpointConfiguration.SecInfoSoap);
             DateTime dateTime = _paramDescriptors.ConvertDate(RunDateTime);
-            var temp = client.GetCursOnDateXMLAsync(dateTime);
+            var temp = client.GCurveAsync(dateTime);
             XmlDocument xmlDocument = new XmlDocument();
             var xmlNode = temp.Result;
-            xmlDocument.LoadXml($"<Currencies><ValidDate>{dateTime.ToString("yyyy-MM-dd")}</ValidDate>{xmlNode.InnerXml}</Currencies>");
+            xmlDocument.LoadXml($"<G2><ValidDate>{dateTime.ToString("yyyy-MM-dd")}</ValidDate>{xmlNode}</G2>");
             _xmlDocument = xmlDocument;
-            Notify($"Задача загрузки иностранных валют закончена");
+            Notify($"Задача загрузки кривой G2 из ЦБ закончена");
         }
 
         public override IReadOnlyCollection<ParamDescriptor> GetParamDescriptors()

@@ -48,5 +48,104 @@ namespace TestFullSolutions.CbrServices
                 Assert.IsTrue(isSaved);
             }
         }
+
+        [TestMethod]
+        public void TestDownloadG2()
+        {
+            Calculation calculation = new DownloadG2();
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            { 
+                Ident = DownloadG2.RunDateTime,
+                Value = new DateTime(2017, 11, 15),
+                ParamType = ParamType.DateTime
+            });
+
+            calculation.Run();
+
+            if(calculation as IXmlResult != null)
+            {
+                IXmlResult xmlResult = (IXmlResult)calculation;
+
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                string newPath = Path.GetDirectoryName(path);
+
+                string guid = $"{Guid.NewGuid()}.xml";
+                XmlSaver.XmlSaver xmlSaver = new XmlSaver.XmlSaver();
+                xmlSaver.Connection = newPath + "\\TempFiles\\" + guid;
+                xmlSaver.IsReplaced = true;
+                xmlSaver.XmlResult = xmlResult;
+                bool isSaved = xmlSaver.Save();
+
+                Assert.IsTrue(isSaved);
+            }
+        }
+
+        [TestMethod]
+        public void TestDownloadMosPrime()
+        {
+            Calculation calculation = new DownloadMosprime();
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            {
+                Ident = DownloadMosprime.RunDateTime,
+                Value = new DateTime(2020, 11, 10),
+                ParamType = ParamType.DateTime
+            });
+
+            calculation.Run();
+
+            if (calculation as IXmlResult != null)
+            {
+                IXmlResult xmlResult = (IXmlResult)calculation;
+
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                string newPath = Path.GetDirectoryName(path);
+
+                string guid = $"{Guid.NewGuid()}.xml";
+                XmlSaver.XmlSaver xmlSaver = new XmlSaver.XmlSaver();
+                xmlSaver.Connection = newPath + "\\TempFiles\\" + guid;
+                xmlSaver.IsReplaced = true;
+                xmlSaver.XmlResult = xmlResult;
+                bool isSaved = xmlSaver.Save();
+
+                Assert.IsTrue(isSaved);
+            }
+        }
+
+        [TestMethod]
+        public void TestDownloadKeyRate()
+        {
+            Calculation calculation = new DownloadKeyRate();
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            {
+                Ident = DownloadMosprime.RunDateTime,
+                Value = new DateTime(2020, 11, 10),
+                ParamType = ParamType.DateTime
+            });
+
+            calculation.Run();
+
+            if (calculation as IXmlResult != null)
+            {
+                IXmlResult xmlResult = (IXmlResult)calculation;
+
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                string newPath = Path.GetDirectoryName(path);
+
+                string guid = $"{Guid.NewGuid()}.xml";
+                XmlSaver.XmlSaver xmlSaver = new XmlSaver.XmlSaver();
+                xmlSaver.Connection = newPath + "\\TempFiles\\" + guid;
+                xmlSaver.IsReplaced = true;
+                xmlSaver.XmlResult = xmlResult;
+                bool isSaved = xmlSaver.Save();
+
+                Assert.IsTrue(isSaved);
+            }
+        }
     }
 }

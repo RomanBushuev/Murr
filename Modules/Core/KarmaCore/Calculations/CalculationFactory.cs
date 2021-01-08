@@ -19,6 +19,16 @@ namespace KarmaCore.Calculations
                 }
                 return calculation;
             }
+            if(json.TaskType == (long)TaskTypes.DownloadMosPrimeCbrf)
+            {
+                Calculation calculation = new DownloadMosprime();
+                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
+                foreach (var val in values)
+                {
+                    calculation.SetParamDescriptors(val);
+                }
+                return calculation;
+            }
 
             return null;
         }

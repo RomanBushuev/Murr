@@ -4,3 +4,5 @@ New-Service -Name "HangBushuev" -BinaryPathName C:\Users\homan\source\repos\Wind
 net core
 sc.exe create HSS BinPath=C:\Users\homan\Documents\repo\Murr\RunningServices\KarmaSchedular\KarmaScheduler.exe
 
+sc.exe create KDS BinPath=C:\Users\homan\Documents\repo\Murr\RunningServices\DownloaderService\DownloaderService.exe
+

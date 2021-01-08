@@ -49,6 +49,17 @@ namespace ScheduleProvider.DbFunctions
                 .First();
         }
 
+        public static long CreateCbrMosprimeDownload(IDbConnection dbConnection,
+            CbrForeignParam param)
+        {
+            string function = "murr_downloader.add_cbr_mosprime";
+
+            return dbConnection.Query<long>(function,
+                new { in_datetime = param.DateTime },
+                commandType: CommandType.StoredProcedure)
+                .First();
+        }
+
         /// <summary>
         /// Получаем задачи-процедуры
         /// </summary>

@@ -20,7 +20,7 @@ namespace ScheduleProvider
             DateTime currentDate,
             string template)
         {
-            if(dateTime.HasValue)
+            if (dateTime.HasValue)
             {
                 if (MakeNextDate(dateTime, currentDate))
                 {
@@ -35,7 +35,9 @@ namespace ScheduleProvider
             }
             else
             {
-                return currentDate;
+                var schedule = CrontabSchedule.Parse(template);
+                var nextDate = schedule.GetNextOccurrence(currentDate);
+                return nextDate;
             }
         }
 

@@ -47,7 +47,7 @@ namespace TestFullSolutions.KarmaScheduler
             DateTime currentDate = new DateTime(2020, 11, 17, 12, 01, 00);
             string template = "* * * * *";
             var result = Utils.GetNextDateTime(date, currentDate, template);
-            Assert.AreEqual(result, currentDate);
+            Assert.AreEqual(result, currentDate.AddMinutes(1));
 
             //меньше на минуту
             date = new DateTime(2020, 11, 17, 12, 00, 00);
@@ -67,6 +67,26 @@ namespace TestFullSolutions.KarmaScheduler
             date = new DateTime(2020, 11, 17, 12, 00, 30);
             result = Utils.GetNextDateTime(date, currentDate, template);
             Assert.AreEqual(result, currentDate.AddMinutes(1));
+        }
+
+        [TestMethod]
+        public void TestUtilsGetNextDateTime2()
+        {
+            DateTime? last = null;
+            DateTime? next = null;
+            DateTime currentDate = new DateTime(2021, 01, 08, 22, 12, 46);
+            string template = "0 21 * * *";
+            var result = Utils.GetNextDateTime(next, currentDate, template);
+            Assert.AreEqual(new DateTime(2021, 01, 09, 21, 0, 0), result);
+            last = next;
+            next = result;
+            currentDate = currentDate.AddSeconds(10);
+            result = Utils.GetNextDateTime(next, currentDate, template);
+            Assert.AreEqual(new DateTime(2021, 01, 09, 21, 0, 0), result);
+
+            currentDate = new DateTime(2021, 01, 09, 21, 0, 10);
+            result = Utils.GetNextDateTime(new DateTime(2021, 01, 09, 21, 0, 0), currentDate, template);
+            Assert.AreEqual(new DateTime(2021, 01, 10, 21, 0, 0), result);
         }
     }
 }
