@@ -315,24 +315,48 @@ namespace TestFullSolutions.PostgresqlFunctions
         {
             string npgConnection = GetStringConnection();
 
+            long[] templates = null;
             //формируем задачи
             using (IDbConnection connection = new NpgsqlConnection(npgConnection))
             {
                 connection.Open();
+
+
                 using (IDbTransaction transaction = connection.BeginTransaction())
                 {
                     DateTime date = new DateTime(2020, 12, 07);
-                    KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date });
-                    KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) });
-                    KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) });
-                    KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) });
-                    KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) });
+                    templates = new[]
+                    {
+                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date }),
+                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) }),
+                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) }),
+                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) }),
+                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) }),
 
-                    KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date });
-                    KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) });
-                    KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) });
-                    KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) });
-                    KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) });
+                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date }),
+                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) }),
+                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) }),
+                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) }),
+                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) }),
+
+                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new CbrForeignParam { DateTime = date }),
+                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) }),
+                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) }),
+                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) }),
+                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) }),
+
+                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new CbrForeignParam { DateTime = date }),
+                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) }),
+                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) }),
+                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) }),
+                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) }),
+
+                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new CbrForeignParam { DateTime = date }),
+                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) }),
+                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) }),
+                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) }),
+                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) }),
+                    };
 
                     transaction.Commit();
                 }
@@ -360,7 +384,7 @@ namespace TestFullSolutions.PostgresqlFunctions
                 return;
             }
 
-            for (var i = 0; i < 10; ++i)
+            for (var i = 0; i < templates.Count(); ++i)
             {
                 //проверим, что сервис рабочий
                 if (services.First(z => z.ServiceTitle == _serviceName).ServiceStatus != ServiceStatuses.Running)
@@ -369,33 +393,42 @@ namespace TestFullSolutions.PostgresqlFunctions
                     return;
                 }
 
+                decimal? value = serviceActions.GetNumber(_serviceName, currentTaskId);                
 
-                decimal? value = serviceActions.GetNumber(_serviceName, currentTaskId);
                 //если работа есть, то проверили попытку выполнить данную работу
-                if (value.HasValue && value != -1.0m)
+                if (value.HasValue && 
+                    value != -1.0m)
                 {
                     long numberTaskId = long.Parse(value.Value.ToString());
-                    //увеличить attemptions 
-                    decimal? attemption = taskActions.GetNumber(numberTaskId, attemptions);
-
-                    if (!attemption.HasValue)
+                    var tasks = taskActions.GetKarmaDownloadJob();
+                    if (tasks.FirstOrDefault(z => z.TaskId == numberTaskId) == null)
                     {
-                        taskActions.SetAttribute(numberTaskId, attemptions, 1.0m);
+                        value = null;
                     }
                     else
                     {
-                        taskActions.SetAttribute(numberTaskId, attemptions, attemption.Value + 1);
-                    }
+                        //увеличить attemptions 
+                        decimal? attemption = taskActions.GetNumber(numberTaskId, attemptions);
 
-                    //если кол-во > 3 то берем другую задачу
-                    attemption = taskActions.GetNumber(numberTaskId, attemptions);
+                        if (!attemption.HasValue)
+                        {
+                            taskActions.SetAttribute(numberTaskId, attemptions, 1.0m);
+                        }
+                        else
+                        {
+                            taskActions.SetAttribute(numberTaskId, attemptions, attemption.Value + 1);
+                        }
 
-                    if (attemption > 3.0m)
-                    {
-                        serviceActions.SetAttribute(_serviceName, currentTaskId, -1.0m);
-                        value = null;
-                        //задачу поставить в статус выполнена 
-                        taskActions.ErrorJob(numberTaskId);
+                        //если кол-во > 3 то берем другую задачу
+                        attemption = taskActions.GetNumber(numberTaskId, attemptions);
+
+                        if (attemption > 3.0m)
+                        {
+                            serviceActions.SetAttribute(_serviceName, currentTaskId, -1.0m);
+                            value = null;
+                            //задачу поставить в статус выполнена 
+                            taskActions.ErrorJob(numberTaskId);
+                        }
                     }
                 }
 

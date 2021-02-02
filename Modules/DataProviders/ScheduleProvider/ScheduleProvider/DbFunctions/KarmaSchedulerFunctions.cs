@@ -37,7 +37,12 @@ namespace ScheduleProvider.DbFunctions
             }
         }
 
-
+        /// <summary>
+        /// Формирование задачи для загрузки курсов
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
         public static long CreateCbrForeignExchangeDownload(IDbConnection dbConnection,
             CbrForeignParam param)
         {
@@ -49,6 +54,12 @@ namespace ScheduleProvider.DbFunctions
                 .First();
         }
 
+        /// <summary>
+        /// Формирование задачи на загрузку mosprime
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
         public static long CreateCbrMosprimeDownload(IDbConnection dbConnection,
             CbrForeignParam param)
         {
@@ -59,6 +70,52 @@ namespace ScheduleProvider.DbFunctions
                 commandType: CommandType.StoredProcedure)
                 .First();
         }
+
+        /// <summary>
+        /// Загрузка задачи на загрузку ключевой ставки
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public static long CreateCbrKeyRateDownload(IDbConnection dbConnection,
+            CbrForeignParam param)
+        {
+            string function = "murr_downloader.add_cbr_keyrate";
+
+            return dbConnection.Query<long>(function,
+                new { in_datetime = param.DateTime },
+                commandType: CommandType.StoredProcedure)
+                .First();
+        }
+
+        /// <summary>
+        /// Загрузка задачи на загрузку руонии
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public static long CreateCbrRuoniaDownload(IDbConnection dbConnection,
+            CbrForeignParam param)
+        {
+            string function = "murr_downloader.add_cbr_ruonia";
+
+            return dbConnection.Query<long>(function,
+                new { in_datetime = param.DateTime },
+                commandType: CommandType.StoredProcedure)
+                .First();
+        }
+
+        public static long CreateCbrRoisFixDownload(IDbConnection dbConnection,
+            CbrForeignParam param)
+        {
+            string function = "murr_downloader.add_cbr_roisfix";
+
+            return dbConnection.Query<long>(function,
+                new { in_datetime = param.DateTime },
+                commandType: CommandType.StoredProcedure)
+                .First();
+        }
+
 
         /// <summary>
         /// Получаем задачи-процедуры

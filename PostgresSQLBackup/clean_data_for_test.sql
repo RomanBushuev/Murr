@@ -6,6 +6,19 @@ update murr_downloader.default_saver_templates
 set default_path = 'C:\Yandex\YandexDisk\Murr_test\Cbr\MosPrime'
 where default_saver_template_id = 1162;
 
+update murr_downloader.default_saver_templates
+set default_path = 'C:\Yandex\YandexDisk\Murr_test\Cbr\Keyrate'
+where default_saver_template_id = 1617;
+
+update murr_downloader.default_saver_templates
+set default_path = 'C:\Yandex\YandexDisk\Murr_test\Cbr\Ruonia'
+where default_saver_template_id = 1618;
+
+update murr_downloader.default_saver_templates
+set default_path = 'C:\Yandex\YandexDisk\Murr_test\Cbr\Roisfix'
+where default_saver_template_id = 1619;
+
+
 delete from murr_downloader.services;
 delete from murr_downloader.services_service_attributes;
 delete from murr_downloader.service_attribute_date_strings;
