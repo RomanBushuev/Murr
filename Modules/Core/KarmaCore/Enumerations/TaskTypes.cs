@@ -26,6 +26,9 @@ namespace KarmaCore.Enumerations
         DownloadRuoniaCbrf = 5,
 
         [MurrDbAttribute("DOWNLOAD ROISFIX CBRF")]
-        DownloadRoisFixCbrf = 6
+        DownloadRoisFixCbrf = 6,
+
+        [MurrDbAttribute("DOWNLOAD MOEX INSTRUMENTS")]
+        DownloadMoexInstruments = 7
     }
 }

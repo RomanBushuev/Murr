@@ -83,6 +83,26 @@ namespace TestFullSolutions.CbrServices
         }
 
         [TestMethod]
+        public void TestDownloadMoexShares()
+        {
+            Calculation calculation = new DownloadMoexInstruments();
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            { 
+                Ident = DownloadMoexInstruments.RunDateTime,
+                Value = new DateTime(2021, 02, 09),
+                ParamType = ParamType.DateTime
+            });
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            {
+                Ident = DownloadMoexInstruments.TypeInstrument,
+                Value = "shares",
+                ParamType = ParamType.String
+            });
+
+            calculation.Run();
+        }
+
+        [TestMethod]
         public void TestDownloadMosPrime()
         {
             Calculation calculation = new DownloadMosprime();

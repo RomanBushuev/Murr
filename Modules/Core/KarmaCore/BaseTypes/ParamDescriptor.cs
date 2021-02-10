@@ -70,6 +70,19 @@ namespace KarmaCore.BaseTypes
             }
         }
 
+        public static string ConvertStr(this IEnumerable<ParamDescriptor> paramDescriptors, string ident)
+        {
+            var param = paramDescriptors.FirstOrDefault(z => z.Ident == ident);
+            if (param != null)
+            {
+                return param.ConvertStr();
+            }
+            else
+            {
+                throw new KarmaCoreException($"Не найден параметр {ident}");
+            }
+        }
+
 
         public static string SerializeJson(this IEnumerable<ParamDescriptor> paramDescriptors)
         {
