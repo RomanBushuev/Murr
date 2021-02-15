@@ -14,7 +14,7 @@ using KarmaCore.Calculations;
 namespace TestFullSolutions.CbrServices
 {
     [TestClass]
-    public class TestCbrService
+    public class TestDownloads
     {
         [TestMethod]
         public void TestDownloadRuonia()
@@ -94,8 +94,86 @@ namespace TestFullSolutions.CbrServices
             });
             calculation.SetParamDescriptors(new ParamDescriptor()
             {
-                Ident = DownloadMoexInstruments.TypeInstrument,
+                Ident = DownloadMoexInstruments.InstrumentType,
                 Value = "shares",
+                ParamType = ParamType.String
+            });
+
+            calculation.Run();
+
+            if (calculation as IXmlResult != null)
+            {
+                IXmlResult xmlResult = (IXmlResult)calculation;
+
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                string newPath = Path.GetDirectoryName(path);
+
+                string guid = $"{Guid.NewGuid()}.xml";
+                XmlSaver.XmlSaver xmlSaver = new XmlSaver.XmlSaver();
+                xmlSaver.Connection = newPath + "\\TempFiles\\" + guid;
+                xmlSaver.IsReplaced = true;
+                xmlSaver.XmlResult = xmlResult;
+                bool isSaved = xmlSaver.Save();
+
+                Assert.IsTrue(isSaved);
+            }
+        }
+
+        [TestMethod]
+        public void TestDownloadMoexBonds()
+        {
+            Calculation calculation = new DownloadMoexInstruments();
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            {
+                Ident = DownloadMoexInstruments.RunDateTime,
+                Value = new DateTime(2021, 02, 09),
+                ParamType = ParamType.DateTime
+            });
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            {
+                Ident = DownloadMoexInstruments.InstrumentType,
+                Value = "bonds",
+                ParamType = ParamType.String
+            });
+
+            calculation.Run();
+
+            if (calculation as IXmlResult != null)
+            {
+                IXmlResult xmlResult = (IXmlResult)calculation;
+
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                string newPath = Path.GetDirectoryName(path);
+
+                string guid = $"{Guid.NewGuid()}.xml";
+                XmlSaver.XmlSaver xmlSaver = new XmlSaver.XmlSaver();
+                xmlSaver.Connection = newPath + "\\TempFiles\\" + guid;
+                xmlSaver.IsReplaced = true;
+                xmlSaver.XmlResult = xmlResult;
+                bool isSaved = xmlSaver.Save();
+
+                Assert.IsTrue(isSaved);
+            }
+        }
+
+        [TestMethod]
+        public void TestDownloadMoexIndex()
+        {
+            Calculation calculation = new DownloadMoexInstruments();
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            {
+                Ident = DownloadMoexInstruments.RunDateTime,
+                Value = new DateTime(2021, 02, 09),
+                ParamType = ParamType.DateTime
+            });
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            {
+                Ident = DownloadMoexInstruments.InstrumentType,
+                Value = "index",
                 ParamType = ParamType.String
             });
 

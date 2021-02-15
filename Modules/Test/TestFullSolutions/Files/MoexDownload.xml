@@ -1,0 +1,64 @@
+﻿<document>
+  <data id="history">
+    <metadata>
+      <columns>
+        <column name="BOARDID" type="string" bytes="12" max_size="0"/>
+        <column name="TRADEDATE" type="date" bytes="10" max_size="0"/>
+        <column name="SHORTNAME" type="string" bytes="189" max_size="0"/>
+        <column name="SECID" type="string" bytes="36" max_size="0"/>
+        <column name="NUMTRADES" type="double"/>
+        <column name="VALUE" type="double"/>
+        <column name="OPEN" type="double"/>
+        <column name="LOW" type="double"/>
+        <column name="HIGH" type="double"/>
+        <column name="LEGALCLOSEPRICE" type="double"/>
+        <column name="WAPRICE" type="double"/>
+        <column name="CLOSE" type="double"/>
+        <column name="VOLUME" type="double"/>
+        <column name="MARKETPRICE2" type="double"/>
+        <column name="MARKETPRICE3" type="double"/>
+        <column name="ADMITTEDQUOTE" type="double"/>
+        <column name="MP2VALTRD" type="double"/>
+        <column name="MARKETPRICE3TRADESVALUE" type="double"/>
+        <column name="ADMITTEDVALUE" type="double"/>
+        <column name="WAVAL" type="double"/>
+        <column name="TRADINGSESSION" type="int32"/>
+      </columns>
+    </metadata>
+    <rows>
+      <row BOARDID="TQBR"
+           TRADEDATE="2021-02-09" 
+           SHORTNAME="АбрауДюрсо" 
+           SECID="ABRD" 
+           NUMTRADES="291" 
+           VALUE="2673610"
+           OPEN="199"
+           LOW="196"
+           HIGH="199"
+           LEGALCLOSEPRICE="197"
+           WAPRICE="197"
+           CLOSE="196.5"
+           VOLUME="13560"
+           MARKETPRICE2="197"
+           MARKETPRICE3="197"
+           ADMITTEDQUOTE="197"
+           MP2VALTRD="2673610"
+           MARKETPRICE3TRADESVALUE="2673610"
+           ADMITTEDVALUE="2673610"
+           WAVAL="0"
+           TRADINGSESSION="3"/>
+    </rows>
+  </data>
+  <data id="history.cursor">
+    <metadata>
+      <columns>
+        <column name="INDEX" type="int64"/>
+        <column name="TOTAL" type="int64"/>
+        <column name="PAGESIZE" type="int64"/>
+      </columns>
+    </metadata>
+    <rows>
+      <row INDEX="0" TOTAL="525" PAGESIZE="1"/>
+    </rows>
+  </data>
+</document>
