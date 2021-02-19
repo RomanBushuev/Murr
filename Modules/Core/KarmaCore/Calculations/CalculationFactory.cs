@@ -64,6 +64,17 @@ namespace KarmaCore.Calculations
                 return calculation;
             }
 
+            if(json.TaskType == (long)TaskTypes.DownloadMoexInstruments)
+            {
+                Calculation calculation = new DownloadMoexInstruments();
+                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
+                foreach(var val in values)
+                {
+                    calculation.SetParamDescriptors(val);
+                }
+                return calculation;
+            }
+
             return null;
         }
     }

@@ -116,6 +116,17 @@ namespace ScheduleProvider.DbFunctions
                 .First();
         }
 
+        public static long CreateMoexShares(IDbConnection dbConnection,
+            MoexInstrumentParam param)
+        {
+            string function = "murr_downloader.add_moex_instruments";
+
+            return dbConnection.Query<long>(function,
+                new { in_datetime = param.DateTime, in_type_instruments = param.InstrumentType },
+                commandType: CommandType.StoredProcedure)
+                .First();
+        }
+
 
         /// <summary>
         /// Получаем задачи-процедуры
@@ -190,7 +201,7 @@ namespace ScheduleProvider.DbFunctions
         /// <param name="function"></param>
         /// <param name="values"></param>
         /// <returns></returns>
-        public static bool RunFunction(IDbConnection dbConnection,
+        public static (bool isExecuted, Exception exception) RunFunction(IDbConnection dbConnection,
             string function,
             Dictionary<string, object> values)
         {
@@ -206,11 +217,11 @@ namespace ScheduleProvider.DbFunctions
                     command.Parameters.AddWithValue(val.Key, val.Value);
                 }                
                 command.ExecuteNonQuery();
-                return true;
+                return (true, null);
             }
-            catch
+            catch(Exception ex)
             {
-                return false;
+                return (false, ex);
             }
         }
     }

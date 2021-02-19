@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
 using ScheduleProvider.DbFunctions;
 using System.Data;
 using Npgsql;
@@ -11,34 +10,33 @@ using System.Diagnostics;
 using ScheduleProvider;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Options;
 
 namespace KarmaScheduler
 {
     public class Worker : IHostedService, IDisposable
     {
         private readonly ILogger<Worker> _logger;
-        private IConfiguration _configuration;
 
         private Timer _timer;
-        private readonly int _interval = 10;
+        private long _interval = 10;
         private string _serviceName = null;
+        private ServiceConfig _settings;
 
         public Worker(ILogger<Worker> logger,
-            IConfiguration configuration)
+            IOptions<ServiceConfig> smtpSettings)
         {
             _logger = logger;
-            _configuration = configuration;
+            _settings = smtpSettings.Value;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Timed Hosted Service running");
-            _logger.LogInformation($">>>>>>>>>> {_configuration.GetValue<string>("Configuration")}");
-            _serviceName = _configuration.GetValue<string>("ServiceName");
-
-            SetMessage("Start service");
-            SetMessage($"Configuration: {_configuration.GetValue<string>("Configuration")}");
+            _serviceName = _settings.ServiceName;
+            _interval = _settings.Interval;
             SetMessage($"ServiceName: {_serviceName}");
+            SetMessage($"{_settings.Configuration}");
 
             _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(_interval));
             
@@ -67,7 +65,7 @@ namespace KarmaScheduler
 
         private string GetStringConnection()
         {
-            var npgConnection = _configuration["DataProviders:KarmaDownloader"];
+            var npgConnection = _settings.KarmaDownloader;
             return npgConnection;
         }
 
@@ -126,7 +124,7 @@ namespace KarmaScheduler
                                 }
                                 else
                                 {
-                                    procedureParams[paramType.Key] = paramType.Value;
+                                    procedureParams[paramType.Key] = param;
                                 }
                             }
 
@@ -134,7 +132,7 @@ namespace KarmaScheduler
                                 .ProcedureSchema;
 
                             SetMessage($"Запустили процедуру {procedureTask.ProcedureTitle}");
-                            bool isExecuted = KarmaSchedulerFunctions.RunFunction(connection, procedureTask.ProcedureTitle, procedureParams);
+                            var isExecuted = KarmaSchedulerFunctions.RunFunction(connection, procedureTask.ProcedureTitle, procedureParams);
 
                             //изменил значение
                             var lastDate = nextDate;

@@ -6,3 +6,4 @@ sc.exe create HSS BinPath=C:\Users\homan\Documents\repo\Murr\RunningServices\Kar
 
 sc.exe create KDS BinPath=C:\Users\homan\Documents\repo\Murr\RunningServices\DownloaderService\DownloaderService.exe
 
+sc.exe delete HangBushuev

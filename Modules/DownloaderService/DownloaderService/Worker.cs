@@ -55,6 +55,7 @@ namespace DownloaderService
 
         private void DoWork(object state)
         {
+            SetMessage("Run DoWork");
             _timer?.Change(Timeout.Infinite, 0);
             try
             {

@@ -9,14 +9,7 @@ namespace KarmaScheduler
     {
         public static void Main(string[] args)
         {
-            try
-            {
-                CreateHostBuilder(args).Build().Run();
-            }
-            catch (Exception ex)
-            {
-                ;
-            }
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
@@ -24,8 +17,7 @@ namespace KarmaScheduler
             return Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    config.AddJsonFile("appsettings.json", optional: true)
-                    .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json");
+                    config.AddJsonFile("appsettings.json", optional: true);
                     config.AddEnvironmentVariables();                    
 
                     if (args != null)
@@ -36,10 +28,23 @@ namespace KarmaScheduler
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddOptions();
+                    services.Configure<ServiceConfig>(hostContext.Configuration.GetSection("Service"));
                     services.AddHostedService<Worker>();
                 }).UseWindowsService();
         }
+    }
 
-        //public static IConfiguration StaticConfig { get; private set; }
+    public class ServiceConfig
+    {
+        public string ServiceName { get; set; }
+
+        public long Interval { get; set; }
+
+        public string Configuration { get; set; }
+
+        public string KarmaAdmin { get; set; }
+
+        public string KarmaDownloader { get; set; }
     }
 }

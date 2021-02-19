@@ -9,4 +9,11 @@ namespace ScheduleProvider.Mappings
     {
         public DateTime DateTime { get; set; }
     }
+
+    public class MoexInstrumentParam
+    {
+        public DateTime DateTime { get; set; }
+
+        public string InstrumentType { get; set; }
+    }
 }

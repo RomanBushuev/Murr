@@ -179,8 +179,8 @@ namespace TestFullSolutions.PostgresqlFunctions
                 Assert.IsTrue(value >= preciosionNow.AddSeconds(-1) && value <= preciosionNow.AddSeconds(+1));
 
                 string schema = procedures.FirstOrDefault(z => z.ProcedureName == function).ProcedureSchema;
-                bool isExecuted = KarmaSchedulerFunctions.RunFunction(other, $"{schema}.{function}", resultKeyValues);
-                Assert.IsTrue(isExecuted);
+                var isExecuted = KarmaSchedulerFunctions.RunFunction(other, $"{schema}.{function}", resultKeyValues);
+                Assert.IsTrue(isExecuted.isExecuted);
             }
         }
 
