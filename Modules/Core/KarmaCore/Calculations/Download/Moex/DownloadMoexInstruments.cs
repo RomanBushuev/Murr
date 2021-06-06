@@ -30,13 +30,13 @@ namespace KarmaCore.Calculations
             if(typeInstrument == "shares")
             {
                 DownloadMoexShare();
+                Notify("Задача на загрузку акций из MOEX закончена");
             }
             if(typeInstrument == "bonds")
             {
                 DownloadMoexBonds();
-            }
-
-            Notify("Задача на загрузку акций из MOEX закончена");
+                Notify("Задача на загрузку облигаций из MOEX закончена");
+            }            
         }
 
         private void DownloadMoexBonds()

@@ -14,4 +14,9 @@ namespace KarmaCore.Interfaces
     {
         XmlDocument Document { get; set; }
     }
+
+    public interface IMoexResult : IResult
+    {
+
+    }
 }

@@ -9,7 +9,6 @@ using KarmaCore.Entities;
 using KarmaCore.Enumerations;
 using KarmaCore.Interfaces;
 using KarmaCore.Utils;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -157,7 +156,7 @@ namespace DownloaderService
             if (karmaDownloadJob.SaverTemplateId.HasValue)
             {
                 var saverJson = _taskActions.GetSaverJson(karmaDownloadJob.SaverTemplateId.Value);
-                var saver = SaverFactory.GetXmlSaver(saverJson, calculation);
+                var saver = SaverFactory.GetSaver(saverJson, calculation);
                 saver.Save();
             }
 

@@ -470,7 +470,7 @@ namespace TestFullSolutions.PostgresqlFunctions
                 if (karmaDownloadJob.SaverTemplateId.HasValue)
                 {
                     var saverJson = taskActions.GetSaverJson(karmaDownloadJob.SaverTemplateId.Value);
-                    var saver = SaverFactory.GetXmlSaver(saverJson, calculation);
+                    var saver = SaverFactory.GetSaver(saverJson, calculation);
                     saver.Save();
                 }
 

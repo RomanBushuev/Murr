@@ -9,7 +9,7 @@ namespace XmlSaver
 {
     public class SaverFactory
     {
-        public static ISaver GetXmlSaver(SaverJson json, IResult result)
+        public static ISaver GetSaver(SaverJson json, IResult result)
         {
             if(json.SaverType == (long)SaverTypes.Xml)
             {

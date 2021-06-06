@@ -21,11 +21,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saver", "Saver", "{58C63F52
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlSaver", "..\Modules\DataProviders\SaverProvider\XmlSaver\XmlSaver\XmlSaver.csproj", "{2A822ABD-5C3E-4D7A-AAE3-344BA26CBB26}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScheduleHangfire", "ScheduleHangfire", "{FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schedule", "Schedule", "{FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleProvider", "..\Modules\DataProviders\ScheduleProvider\ScheduleProvider\ScheduleProvider.csproj", "{8034BE6F-7999-4083-9E16-016461F51897}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KarmaScheduler", "..\Modules\ScheduleHangfire\KarmaScheduler\KarmaScheduler.csproj", "{5B804221-459E-4023-8317-0C155553E951}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{8A00D4A8-D318-40B0-9AF3-6F9081FC4AC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoexDataProvider", "..\Modules\DataProviders\DataProvider\MoexDataProvider\MoexDataProvider\MoexDataProvider.csproj", "{A960949A-BCEF-4786-8A77-C87678651E1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +65,10 @@ Global
 		{5B804221-459E-4023-8317-0C155553E951}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B804221-459E-4023-8317-0C155553E951}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B804221-459E-4023-8317-0C155553E951}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A960949A-BCEF-4786-8A77-C87678651E1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A960949A-BCEF-4786-8A77-C87678651E1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A960949A-BCEF-4786-8A77-C87678651E1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A960949A-BCEF-4786-8A77-C87678651E1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +81,7 @@ Global
 		{2A822ABD-5C3E-4D7A-AAE3-344BA26CBB26} = {58C63F52-8EFD-4939-80B7-3F48992CF7E2}
 		{8034BE6F-7999-4083-9E16-016461F51897} = {FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}
 		{5B804221-459E-4023-8317-0C155553E951} = {FB50ED1B-AF16-4DAE-83B8-E98F025D7CC9}
+		{A960949A-BCEF-4786-8A77-C87678651E1F} = {8A00D4A8-D318-40B0-9AF3-6F9081FC4AC1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01DF47AB-5A7B-4DC3-B568-0056AE70A9EA}

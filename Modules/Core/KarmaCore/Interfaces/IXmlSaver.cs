@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KarmaCore.BaseTypes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,5 +13,9 @@ namespace KarmaCore.Interfaces
     public interface IXmlSaver : ISaver
     {
         
+    }
+
+    public interface IMoexSaver : ISaver
+    {
     }
 }
