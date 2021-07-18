@@ -29,6 +29,9 @@ namespace KarmaCore.Enumerations
         DownloadRoisFixCbrf = 6,
 
         [MurrDbAttribute("DOWNLOAD MOEX INSTRUMENTS")]
-        DownloadMoexInstruments = 7
+        DownloadMoexInstruments = 7,
+
+        [MurrDbAttribute("SAVE CURRENCIES CBRF")]
+        SaveForeignExchange = 8,
     }
 }

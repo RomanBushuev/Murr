@@ -1,13 +1,26 @@
-﻿using KarmaCore.BaseTypes;
+﻿using KarmaCore;
+using KarmaCore.BaseTypes;
+using KarmaCore.Calculations;
+using KarmaCore.Calculations.Saver;
 using KarmaCore.Entities;
 using KarmaCore.Enumerations;
+using KarmaCore.Interfaces;
 using System.Collections.Generic;
 
-namespace KarmaCore.Calculations
+namespace DownloaderProvider
 {
-    public class CalculationFactory
+    public class CalculationFactory : ICalculationFactory
     {
-        public static Calculation GetCalculation(CalculationJson json)
+        private ICbrXmlRepository _cbrXmlRepository;
+        private IMarkerRepository _markerRepository;
+        public CalculationFactory(ICbrXmlRepository cbrXmlRepository,
+            IMarkerRepository markerRepository)
+        {
+            _cbrXmlRepository = cbrXmlRepository;
+            _markerRepository = markerRepository;
+        }        
+
+        public Calculation GetCalculation(CalculationJson json)
         {
             if (json.TaskType == (long)TaskTypes.DownloadCurrenciesCbrf)
             {
@@ -64,11 +77,22 @@ namespace KarmaCore.Calculations
                 return calculation;
             }
 
-            if(json.TaskType == (long)TaskTypes.DownloadMoexInstruments)
+            if (json.TaskType == (long)TaskTypes.DownloadMoexInstruments)
             {
                 Calculation calculation = new DownloadMoexInstruments();
                 List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
-                foreach(var val in values)
+                foreach (var val in values)
+                {
+                    calculation.SetParamDescriptors(val);
+                }
+                return calculation;
+            }
+
+            if (json.TaskType == (long)TaskTypes.SaveForeignExchange)
+            {
+                Calculation calculation = new SaveForeignExchange(_cbrXmlRepository, _markerRepository);
+                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
+                foreach (var val in values)
                 {
                     calculation.SetParamDescriptors(val);
                 }

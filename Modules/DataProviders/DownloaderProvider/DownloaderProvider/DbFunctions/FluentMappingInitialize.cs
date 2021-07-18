@@ -1,8 +1,5 @@
 ﻿using Dapper.FluentMap;
 using DownloaderProvider.DatabaseEntities.Mappings;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DownloaderProvider.DbFunctions
 {
@@ -34,6 +31,7 @@ namespace DownloaderProvider.DbFunctions
                     config.AddMap(new DbKarmaDownloadJobMap());
                     config.AddMap(new DbKarmaServiceMap());
                     config.AddMap(new DbSaverJsonMap());
+                    config.AddMap(new DbDataSourceMap());
                 });
                 instance._isInitialized = true;
             }

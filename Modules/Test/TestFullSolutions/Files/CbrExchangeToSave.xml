@@ -1,0 +1,241 @@
+<Currencies>
+  <ValidDate>2021-07-17</ValidDate>
+  <ValuteCursOnDate>
+    <Vname>Австралийский доллар                                                                                                                                                                                                                                          </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>55.1421</Vcurs>
+    <Vcode>36</Vcode>
+    <VchCode>AUD</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Азербайджанский манат                                                                                                                                                                                                                                         </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>43.6525</Vcurs>
+    <Vcode>944</Vcode>
+    <VchCode>AZN</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Фунт стерлингов Соединенного королевства                                                                                                                                                                                                                      </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>102.7119</Vcurs>
+    <Vcode>826</Vcode>
+    <VchCode>GBP</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Армянский драм                                                                                                                                                                                                                                                </Vname>
+    <Vnom>100</Vnom>
+    <Vcurs>14.8972</Vcurs>
+    <Vcode>51</Vcode>
+    <VchCode>AMD</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Белорусский рубль                                                                                                                                                                                                                                             </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>29.2913</Vcurs>
+    <Vcode>933</Vcode>
+    <VchCode>BYN</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Болгарский лев                                                                                                                                                                                                                                                </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>44.7698</Vcurs>
+    <Vcode>975</Vcode>
+    <VchCode>BGN</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Бразильский реал                                                                                                                                                                                                                                              </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>14.5087</Vcurs>
+    <Vcode>986</Vcode>
+    <VchCode>BRL</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Венгерский форинт                                                                                                                                                                                                                                             </Vname>
+    <Vnom>100</Vnom>
+    <Vcurs>24.3701</Vcurs>
+    <Vcode>348</Vcode>
+    <VchCode>HUF</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Гонконгский доллар                                                                                                                                                                                                                                            </Vname>
+    <Vnom>10</Vnom>
+    <Vcurs>95.4660</Vcurs>
+    <Vcode>344</Vcode>
+    <VchCode>HKD</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Датская крона                                                                                                                                                                                                                                                 </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>11.7731</Vcurs>
+    <Vcode>208</Vcode>
+    <VchCode>DKK</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Доллар США                                                                                                                                                                                                                                                    </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>74.1656</Vcurs>
+    <Vcode>840</Vcode>
+    <VchCode>USD</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Евро                                                                                                                                                                                                                                                          </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>87.5673</Vcurs>
+    <Vcode>978</Vcode>
+    <VchCode>EUR</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Индийская рупия                                                                                                                                                                                                                                               </Vname>
+    <Vnom>100</Vnom>
+    <Vcurs>99.4344</Vcurs>
+    <Vcode>356</Vcode>
+    <VchCode>INR</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Казахстанский тенге                                                                                                                                                                                                                                           </Vname>
+    <Vnom>100</Vnom>
+    <Vcurs>17.3712</Vcurs>
+    <Vcode>398</Vcode>
+    <VchCode>KZT</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Канадский доллар                                                                                                                                                                                                                                              </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>58.9645</Vcurs>
+    <Vcode>124</Vcode>
+    <VchCode>CAD</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Киргизский сом                                                                                                                                                                                                                                                </Vname>
+    <Vnom>100</Vnom>
+    <Vcurs>87.4703</Vcurs>
+    <Vcode>417</Vcode>
+    <VchCode>KGS</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Китайский юань                                                                                                                                                                                                                                                </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>11.4673</Vcurs>
+    <Vcode>156</Vcode>
+    <VchCode>CNY</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Молдавский лей                                                                                                                                                                                                                                                </Vname>
+    <Vnom>10</Vnom>
+    <Vcurs>41.2375</Vcurs>
+    <Vcode>498</Vcode>
+    <VchCode>MDL</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Норвежская крона                                                                                                                                                                                                                                              </Vname>
+    <Vnom>10</Vnom>
+    <Vcurs>84.1873</Vcurs>
+    <Vcode>578</Vcode>
+    <VchCode>NOK</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Польский злотый                                                                                                                                                                                                                                               </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>19.0961</Vcurs>
+    <Vcode>985</Vcode>
+    <VchCode>PLN</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Румынский лей                                                                                                                                                                                                                                                 </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>17.7629</Vcurs>
+    <Vcode>946</Vcode>
+    <VchCode>RON</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>СДР (специальные права заимствования)                                                                                                                                                                                                                         </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>105.6548</Vcurs>
+    <Vcode>960</Vcode>
+    <VchCode>XDR</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Сингапурский доллар                                                                                                                                                                                                                                           </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>54.7590</Vcurs>
+    <Vcode>702</Vcode>
+    <VchCode>SGD</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Таджикский сомони                                                                                                                                                                                                                                             </Vname>
+    <Vnom>10</Vnom>
+    <Vcurs>65.0290</Vcurs>
+    <Vcode>972</Vcode>
+    <VchCode>TJS</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Турецкая лира                                                                                                                                                                                                                                                 </Vname>
+    <Vnom>10</Vnom>
+    <Vcurs>87.2106</Vcurs>
+    <Vcode>949</Vcode>
+    <VchCode>TRY</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Новый туркменский манат                                                                                                                                                                                                                                       </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>21.2205</Vcurs>
+    <Vcode>934</Vcode>
+    <VchCode>TMT</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Узбекский сум                                                                                                                                                                                                                                                 </Vname>
+    <Vnom>10000</Vnom>
+    <Vcurs>69.6347</Vcurs>
+    <Vcode>860</Vcode>
+    <VchCode>UZS</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Украинская гривна                                                                                                                                                                                                                                             </Vname>
+    <Vnom>10</Vnom>
+    <Vcurs>27.2409</Vcurs>
+    <Vcode>980</Vcode>
+    <VchCode>UAH</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Чешская крона                                                                                                                                                                                                                                                 </Vname>
+    <Vnom>10</Vnom>
+    <Vcurs>34.2820</Vcurs>
+    <Vcode>203</Vcode>
+    <VchCode>CZK</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Шведская крона                                                                                                                                                                                                                                                </Vname>
+    <Vnom>10</Vnom>
+    <Vcurs>85.4895</Vcurs>
+    <Vcode>752</Vcode>
+    <VchCode>SEK</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Швейцарский франк                                                                                                                                                                                                                                             </Vname>
+    <Vnom>1</Vnom>
+    <Vcurs>80.6323</Vcurs>
+    <Vcode>756</Vcode>
+    <VchCode>CHF</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Южноафриканский рэнд                                                                                                                                                                                                                                          </Vname>
+    <Vnom>10</Vnom>
+    <Vcurs>51.3225</Vcurs>
+    <Vcode>710</Vcode>
+    <VchCode>ZAR</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Вон Республики Корея                                                                                                                                                                                                                                          </Vname>
+    <Vnom>1000</Vnom>
+    <Vcurs>65.0059</Vcurs>
+    <Vcode>410</Vcode>
+    <VchCode>KRW</VchCode>
+  </ValuteCursOnDate>
+  <ValuteCursOnDate>
+    <Vname>Японская иена                                                                                                                                                                                                                                                 </Vname>
+    <Vnom>100</Vnom>
+    <Vcurs>67.3498</Vcurs>
+    <Vcode>392</Vcode>
+    <VchCode>JPY</VchCode>
+  </ValuteCursOnDate>
+</Currencies>

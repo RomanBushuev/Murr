@@ -10,6 +10,7 @@ using KarmaCore.Interfaces;
 using System.Reflection;
 using System.IO;
 using KarmaCore.Calculations;
+using KarmaCore.Calculations.Saver;
 
 namespace TestFullSolutions.CbrServices
 {
@@ -289,6 +290,12 @@ namespace TestFullSolutions.CbrServices
 
                 Assert.IsTrue(isSaved);
             }
+        }
+
+        [TestMethod]
+        public void TestSaverForeignExchange()
+        {
+            
         }
     }
 }

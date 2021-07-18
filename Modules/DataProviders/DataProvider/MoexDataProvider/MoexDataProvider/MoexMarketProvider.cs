@@ -7,26 +7,8 @@ using System.Text;
 
 namespace MoexDataProvider
 {
-    public class MoexMarketProvider : IMarketProvider
+    public class MoexMarketProvider 
     {
-        public ScalarDate GetScalarDate(string ident, ScalarAttribute scalarAttribute)
-        {
-            throw new NotImplementedException();
-        }
 
-        public ScalarEnum GetScalarEnum(string ident, ScalarAttribute scalarAttribute)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ScalarNum GetScalarNum(string ident, ScalarAttribute scalarAttribute)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ScalarStr GetScalarStr(string ident, ScalarAttribute scalarAttribute)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -28,6 +28,22 @@ namespace TestFullSolutions.Core
             Assert.IsTrue(File.Exists(fullpath));
             var xmlDocument = XDocument.Load(fullpath);
             var result = ParseXmlStructure.GetDocument(xmlDocument);
+            Assert.AreEqual(2, result.Datas.Count);
+            Assert.AreEqual("TQBR", result.Datas.First().Rows.Rowss.OfType<MoexShareDataRow>().First().Boardid);
+        }
+
+        [TestMethod]
+        public void ParseCbrExchangeFileToSave()
+        {
+            string moexDocument = @"\Files\CbrExchangeToSave.xml";
+            string fullpath = root + moexDocument;
+            Assert.IsTrue(File.Exists(fullpath));
+            var xmlDocument = XDocument.Load(fullpath);
+            var result = ParseXmlStructure.GetCurrencies(xmlDocument);
+            Assert.AreEqual(new DateTime(2021, 07, 17), result.ValidDate);
+            Assert.AreEqual(34, result.ValuteCursOnDates.Count);
+            Assert.IsTrue(result.ValuteCursOnDates.Any(z => z.VchCode == "AUD"));
+            Assert.IsTrue(result.ValuteCursOnDates.Any(z => z.VchCode == "JPY"));
         }
 
         [TestMethod]

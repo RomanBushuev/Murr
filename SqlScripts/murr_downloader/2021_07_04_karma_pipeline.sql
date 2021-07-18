@@ -5,6 +5,7 @@ create table murr_downloader.pipeline_tasks
 	next_task_id bigint,
 	created_date_time timestamp without time zone,
 	update_date_time timestamp without time zone,
+	is_done boolean,
 	constraint pk_pipeline_task_id primary key(pipeline_task_id, start_task_id),
 	constraint fk_tasks_pipeline_tasks_start_task_id FOREIGN KEY (start_task_id)
 		REFERENCES murr_downloader.tasks (task_id) MATCH SIMPLE
@@ -55,8 +56,3 @@ CREATE TRIGGER trigger_murr_copy
     AFTER UPDATE OF task_status_id ON murr_downloader.tasks
     FOR EACH ROW
     EXECUTE PROCEDURE murr_downloader.tasks_copy();
-
-CREATE OR REPLACE FUNCTION murr_data.insert_next_task_id_in_pipeline(
-	in_pipeline_id bigint,
-	in_new_task
-

@@ -26,15 +26,18 @@ namespace DownloaderService
         private string attemptions = "ATTEMPTIONS";
         private ITaskActions _taskActions;
         private IServiceActions _serviceActions;
+        private ICalculationFactory _calculationFactory;
         private ServiceConfig _settings;
         public TimedHostedService(ILogger<TimedHostedService> logger,
             ITaskActions taskActions,
             IServiceActions serviceActions,
+            ICalculationFactory calculationFactory,
             IOptions<ServiceConfig> smtpSettings)
         {
             _logger = logger;
             _taskActions = taskActions;
             _serviceActions = serviceActions;
+            _calculationFactory = calculationFactory;
             _settings = smtpSettings.Value;
         }
 
@@ -150,7 +153,7 @@ namespace DownloaderService
             SetMessage($"Сервис:{_serviceName} начал работу над {karmaDownloadJob.TaskId}");
 
             var calculationJson = _taskActions.GetCalculationJson(karmaDownloadJob.TaskTemplateId);
-            var calculation = CalculationFactory.GetCalculation(calculationJson);
+            var calculation = _calculationFactory.GetCalculation(calculationJson);
             calculation.Run();
 
             if (karmaDownloadJob.SaverTemplateId.HasValue)

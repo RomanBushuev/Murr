@@ -1,60 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace KarmaCore.Utils
 {
-    public static class ParseXmlStructure
+    public static partial class ParseXmlStructure
     {
-        public static string ParseToXml<T>(T instance)
-        {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-
-            MemoryStream ms = new MemoryStream();
-
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.OmitXmlDeclaration = true;
-            settings.Encoding = new UnicodeEncoding(bigEndian: false, byteOrderMark: true);
-            XmlWriter writer = XmlWriter.Create(ms, settings);
-            xmlSerializer.Serialize(writer, instance, ns);
-
-            string str = Encoding.Unicode.GetString(ms.ToArray());
-            return str;
-        }
-
-        public static XElement GetXElement(XDocument xDocument, string attriubte)
-        {
-            return xDocument.Element(attriubte);
-        }
-
-        public static XElement GetXElement(XElement xElement, string attribute)
-        {
-            return xElement.Element(attribute);
-        }
-
-        public static IEnumerable<XElement> GetXElements(XElement xElement, string attribute)
-        {
-            return xElement.Elements(attribute);
-        }   
-        
-        public static XElement GetXElement(XElement xDocument, List<string> attriubtes)
-        {
-            XElement element = null;
-            foreach (var attriubte in attriubtes)
-            {
-                element = GetXElement(xDocument, attriubte);
-            }
-            return element;
-        }
-
         public static Document GetDocument(XDocument xDocument)
         {
             var element = GetXElement(xDocument, "document");
@@ -97,15 +50,15 @@ namespace KarmaCore.Utils
                 return null;
 
             List<Row> rows = null;
-            if (xElement.Elements("row").FirstOrDefault().Attribute("MATDATE")!= null)
+            if (xElement.Elements("row").FirstOrDefault().Attribute("MATDATE") != null)
             {
                 rows = xElement.Elements("row").Select(z => GetMoexBondData(z)).ToList<Row>();
             }
-            else if(xElement.Elements("row").FirstOrDefault().Attribute("INDEX") != null)
+            else if (xElement.Elements("row").FirstOrDefault().Attribute("INDEX") != null)
             {
                 rows = xElement.Elements("row").Select(z => GetRowMoexMetaRow(z)).ToList<Row>();
             }
-            else if(xElement.Elements("row").FirstOrDefault().Attribute("BOARDID") != null)
+            else if (xElement.Elements("row").FirstOrDefault().Attribute("BOARDID") != null)
             {
                 rows = xElement.Elements("row").Select(z => GetMoexData(z)).ToList<Row>();
             }
@@ -121,7 +74,7 @@ namespace KarmaCore.Utils
         public static MoexMetaRow GetRowMoexMetaRow(XElement xElement)
         {
             MoexMetaRow rowMoexMetaRow = new MoexMetaRow()
-            { 
+            {
                 Index = int.Parse(xElement.Attribute("INDEX").Value),
                 PageSize = int.Parse(xElement.Attribute("PAGESIZE").Value),
                 Total = int.Parse(xElement.Attribute("TOTAL").Value)
@@ -161,7 +114,7 @@ namespace KarmaCore.Utils
 
                 return rowMoexData;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
@@ -211,7 +164,7 @@ namespace KarmaCore.Utils
         public static Metadata GetMetadata(XElement xElement)
         {
             Metadata metadata = new Metadata()
-            { 
+            {
                 Columns = xElement.Element("columns") != null ? GetColumns(xElement.Element("columns")) : null,
             };
 
@@ -228,7 +181,6 @@ namespace KarmaCore.Utils
             return columns;
         }
 
-
         public static Column GetColumn(XElement xElement)
         {
             Column columns = new Column()
@@ -240,6 +192,6 @@ namespace KarmaCore.Utils
             };
 
             return columns;
-        }     
+        }
     }
 }

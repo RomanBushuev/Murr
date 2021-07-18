@@ -60,6 +60,10 @@ namespace DownloaderProvider
             CreateMap<SaverJson, DbSaverJson>()
                 .ForMember(m => m.JsonParameters, x => x.MapFrom(source => source.JsonParameters))
                 .ForMember(m => m.SaverType, x => x.MapFrom(source => source.SaverType));
+
+            CreateMap<DbFinDataSource, FinDataSource>()
+                .ForMember(m => m.FinDataSourceId, x => x.MapFrom(source => source.FinDataSourceId))
+                .ForMember(m => m.FinDataSourceIdent, x => x.MapFrom(source => source.FinDataSourceIdent));
         }
     }
 

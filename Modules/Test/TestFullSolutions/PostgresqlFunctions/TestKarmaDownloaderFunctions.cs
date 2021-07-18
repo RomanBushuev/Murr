@@ -17,6 +17,7 @@ using KarmaCore.Interfaces;
 using KarmaCore.Utils;
 using KarmaCore.Calculations;
 using XmlSaver;
+using AutoMapper;
 
 namespace TestFullSolutions.PostgresqlFunctions
 {
@@ -36,6 +37,21 @@ namespace TestFullSolutions.PostgresqlFunctions
 
             return npgConnection;
         }
+
+        private string GetStringConnectionKarmaSaver()
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            if (!config.GetSection("DataProviders").Exists())
+                throw new Exception("Отсутствует DataProviders");
+
+            var npgConnection = config["DataProviders:KarmaSaver"];
+
+            return npgConnection;
+        }
+
         [TestMethod]
         public void TestDownloadJobs()
         {
@@ -314,6 +330,7 @@ namespace TestFullSolutions.PostgresqlFunctions
         public void TestDownloadService()
         {
             string npgConnection = GetStringConnection();
+            var karmaSaverConnection = GetStringConnectionKarmaSaver();
 
             long[] templates = null;
             //формируем задачи
@@ -367,8 +384,14 @@ namespace TestFullSolutions.PostgresqlFunctions
             string currentTaskId = "CURRENT_TASK_ID";
             string attemptions = "ATTEMPTIONS";
 
+            var config = AutoMapperConfiguration.Configure();
+            IMapper mapper = config.CreateMapper();
             ITaskActions taskActions = new TaskActions(npgConnection);
             IServiceActions serviceActions = new ServiceActions(npgConnection);
+            ICalculationFactory calculationFactory = new CalculationFactory(new CbrRepository(),
+                new MarkerRepository(karmaSaverConnection, 
+                    new FinInstrumentRepository(mapper),
+                    new FinDataSourceRepository(mapper)));
 
             using (IDbConnection connection = new NpgsqlConnection(npgConnection))
             {
@@ -464,7 +487,7 @@ namespace TestFullSolutions.PostgresqlFunctions
                 SetMessage($"Сервис:{_serviceName} начал работу над {karmaDownloadJob.TaskId}");
 
                 var calculationJson = taskActions.GetCalculationJson(karmaDownloadJob.TaskTemplateId);
-                var calculation = CalculationFactory.GetCalculation(calculationJson);
+                var calculation = calculationFactory.GetCalculation(calculationJson);
                 calculation.Run();
 
                 if (karmaDownloadJob.SaverTemplateId.HasValue)

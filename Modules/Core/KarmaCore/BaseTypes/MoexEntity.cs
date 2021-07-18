@@ -8,8 +8,6 @@ namespace KarmaCore.BaseTypes
     public class MoexEntity
     {
         public string Ident { get; set; }
-
-        public MoexFinTypes MoexFinType { get; set; }
         
         public Dictionary<ScalarAttribute, ScalarDate> ScalarDate { get; set; }
 

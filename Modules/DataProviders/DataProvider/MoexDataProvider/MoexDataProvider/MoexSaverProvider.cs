@@ -6,12 +6,8 @@ using System.Text;
 
 namespace MoexDataProvider
 {
-    public class MoexSaverProvider : IMoexSaver
+    public class MoexSaverProvider
     {
-        public IReadOnlyCollection<MoexEntity> moexEntities { get; set; }
-        public bool Save()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
