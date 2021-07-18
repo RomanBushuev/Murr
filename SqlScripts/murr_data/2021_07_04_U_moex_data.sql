@@ -485,12 +485,12 @@ begin
     select fin_instrument_id into d_fin_instrument_id 
     from murr_data.fin_instruments
     where fin_ident = upper(in_fin_ident) 
-        and data_source_id = in_data_source_id;
+        and fin_data_source_id = in_data_source_id;
     
     if d_fin_instrument_id is null 
     then
-        insert into murr_data.fin_instruments(fin_ident, data_source_id)
-        values(upper(in_fin_ident), data_source_id)
+        insert into murr_data.fin_instruments(fin_ident, fin_data_source_id)
+        values(upper(in_fin_ident), in_data_source_id)
         returning fin_instrument_id into d_fin_instrument_id;
     end if;
     

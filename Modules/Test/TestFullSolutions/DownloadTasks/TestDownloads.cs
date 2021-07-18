@@ -11,6 +11,8 @@ using System.Reflection;
 using System.IO;
 using KarmaCore.Calculations;
 using KarmaCore.Calculations.Saver;
+using AutoMapper;
+using Microsoft.Extensions.Configuration;
 
 namespace TestFullSolutions.CbrServices
 {
@@ -295,7 +297,47 @@ namespace TestFullSolutions.CbrServices
         [TestMethod]
         public void TestSaverForeignExchange()
         {
-            
+            var karmaSaverConnection = GetStringConnectionKarmaSaver();
+            var config = AutoMapperConfiguration.Configure();
+            IMapper mapper = config.CreateMapper();            
+
+            Calculation calculation = new SaveForeignExchange(new CbrRepository(), new MarkerRepository(karmaSaverConnection,
+                    new FinInstrumentRepository(mapper),
+                    new FinDataSourceRepository(mapper)));
+
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            {
+                Ident = SaveForeignExchange.RunDateTime,
+                Value = new DateTime(2020, 11, 10),
+                ParamType = ParamType.DateTime
+            });
+
+            string root = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string moexDocument = @"\Files\CbrExchangeToSave.xml";
+            string fullpath = root + moexDocument;
+
+            calculation.SetParamDescriptors(new ParamDescriptor()
+            {
+                Ident = SaveForeignExchange.Document,
+                Value = fullpath,
+                ParamType = ParamType.String
+            });
+
+            calculation.Run();
+        }
+
+        private string GetStringConnectionKarmaSaver()
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            if (!config.GetSection("DataProviders").Exists())
+                throw new Exception("Отсутствует DataProviders");
+
+            var npgConnection = config["DataProviders:KarmaSaver"];
+
+            return npgConnection;
         }
     }
 }

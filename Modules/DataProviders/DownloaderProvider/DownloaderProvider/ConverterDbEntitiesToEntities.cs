@@ -63,7 +63,14 @@ namespace DownloaderProvider
 
             CreateMap<DbFinDataSource, FinDataSource>()
                 .ForMember(m => m.FinDataSourceId, x => x.MapFrom(source => source.FinDataSourceId))
-                .ForMember(m => m.FinDataSourceIdent, x => x.MapFrom(source => source.FinDataSourceIdent));
+                .ForMember(m => m.FinDataSourceIdent, x => x.MapFrom(source => source.FinDataSourceIdent))
+                .ReverseMap();
+
+            CreateMap<DbFinInstrument, FinInstrument>()
+                .ForMember(m => m.DataSourceId, x => x.MapFrom(source => source.DataSourceId))
+                .ForMember(m => m.Ident, x => x.MapFrom(source => source.Ident))
+                .ForMember(m => m.FinInstrumentId, x => x.MapFrom(source => source.FinInstrumentId))
+                .ReverseMap();
         }
     }
 

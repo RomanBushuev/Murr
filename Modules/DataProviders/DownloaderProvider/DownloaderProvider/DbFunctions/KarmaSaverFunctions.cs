@@ -30,7 +30,7 @@ namespace DownloaderProvider.DbFunctions
         /// <param name="connection"></param>
         /// <param name="finInstrument"></param>
         /// <returns></returns>
-        public static DbFinInstrument CreateOrGet (IDbConnection connection, DbFinInstrument finInstrument)
+        public static DbFinInstrument CreateOrGet(IDbConnection connection, DbFinInstrument finInstrument)
         {
             var function = "murr_data.insert_fin_instrument";
             var id = connection.QueryFirst<long>(function,

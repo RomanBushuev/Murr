@@ -5,9 +5,7 @@ using KarmaCore.Enumerations;
 using KarmaCore.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
-using CbrSecuritiesInfo;
 
 namespace KarmaCore.Calculations
 {

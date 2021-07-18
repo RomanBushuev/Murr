@@ -53,7 +53,7 @@ namespace KarmaCore.Calculations.Saver
                 });
                 _paramDescriptors.Add(new ParamDescriptor()
                 {
-                    Ident = RunDateTime,
+                    Ident = Document,
                     Description = "Документ",
                     ParamType = ParamType.String,
                     Value = string.Empty
