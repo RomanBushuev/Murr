@@ -1,12 +1,6 @@
-﻿using KarmaCore.BaseTypes.Logger;
-using KarmaCore.BaseTypes.MurrEvents;
-using KarmaCore.Enumerations;
-using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ScheduleProvider;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace TestFullSolutions.KarmaScheduler
 {

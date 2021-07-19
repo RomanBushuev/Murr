@@ -15,7 +15,6 @@ using KarmaCore.Entities;
 using ScheduleProvider;
 using KarmaCore.Interfaces;
 using KarmaCore.Utils;
-using KarmaCore.Calculations;
 using XmlSaver;
 using AutoMapper;
 

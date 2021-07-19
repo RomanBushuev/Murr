@@ -17,7 +17,7 @@ using Microsoft.Extensions.Configuration;
 namespace TestFullSolutions.CbrServices
 {
     [TestClass]
-    public class TestDownloads
+    public class TestCalculations
     {
         [TestMethod]
         public void TestDownloadRuonia()
