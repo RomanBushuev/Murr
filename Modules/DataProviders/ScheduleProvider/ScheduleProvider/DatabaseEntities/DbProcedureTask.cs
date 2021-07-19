@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ScheduleProvider.Mappings
 {
-    public class ProcedureTask
+    public class DbProcedureTask
     {
         public long ProcedureTaskId { get; set; }
 

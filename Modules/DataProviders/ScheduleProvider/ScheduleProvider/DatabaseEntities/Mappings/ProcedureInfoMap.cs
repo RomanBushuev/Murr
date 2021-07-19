@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ScheduleProvider.Mappings
 {
-    public class ProcedureInfoMap : EntityMap<ProcedureInfo>
+    public class ProcedureInfoMap : EntityMap<DbProcedureInfo>
     {
         public ProcedureInfoMap()
         {

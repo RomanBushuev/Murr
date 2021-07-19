@@ -9,7 +9,6 @@ namespace KarmaCore.Calculations.Saver
 {
     public class SaveForeignExchange : Calculation
     {
-        public const string RunDateTime = "RunDateTime";
         public const string Document = "Document";
 
         public override TaskTypes TaskTypes => TaskTypes.SaveForeignExchange;
@@ -44,13 +43,6 @@ namespace KarmaCore.Calculations.Saver
             else
             {
                 _paramDescriptors = new List<ParamDescriptor>();
-                _paramDescriptors.Add(new ParamDescriptor()
-                {
-                    Ident = RunDateTime,
-                    Description = "Время для запуска",
-                    ParamType = ParamType.DateTime,
-                    Value = DateTime.Today.Date
-                });
                 _paramDescriptors.Add(new ParamDescriptor()
                 {
                     Ident = Document,

@@ -5,15 +5,8 @@ using System.Text;
 
 namespace ScheduleProvider.Mappings
 {
-    public class CbrForeignParam 
+    public class DbCbrForeignParam 
     {
         public DateTime DateTime { get; set; }
-    }
-
-    public class MoexInstrumentParam
-    {
-        public DateTime DateTime { get; set; }
-
-        public string InstrumentType { get; set; }
     }
 }

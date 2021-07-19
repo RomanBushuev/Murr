@@ -34,7 +34,8 @@ namespace DownloaderService
                     string karmaSaver = hostContext.Configuration.GetSection("DataProviders").GetValue<string>("KarmaSaver");
                     services.AddSingleton<ITaskActions>(new TaskActions(karmaDownloader));
                     services.AddSingleton<IServiceActions>(new ServiceActions(karmaDownloader));
-                    services.AddSingleton<ICbrXmlRepository>(new CbrRepository());
+                    ICbrXmlRepository cbrXmlRepository = new CbrRepository();
+                    services.AddSingleton<ICbrXmlRepository>(cbrXmlRepository);
 
                     var config = AutoMapperConfiguration.Configure();
                     IMapper mapper = config.CreateMapper();
@@ -43,7 +44,9 @@ namespace DownloaderService
                     IFinInstrumentRepository finInstrumentRepository = new FinInstrumentRepository(mapper);
                     IFinDataSourceRepository finDataSourceRepository = new FinDataSourceRepository(mapper);
 
-                    services.AddSingleton<IMarkerRepository>(new MarkerRepository(karmaSaver, finInstrumentRepository, finDataSourceRepository));
+                    IMarkerRepository markerRepository = new MarkerRepository(karmaSaver, finInstrumentRepository, finDataSourceRepository);
+                    services.AddSingleton<IMarkerRepository>(markerRepository);
+                    services.AddSingleton<ICalculationFactory>(new CalculationFactory(cbrXmlRepository, markerRepository));
                     services.AddHostedService<TimedHostedService>();
                 }).UseWindowsService();
     }

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ScheduleProvider
 {
-    class ConverterDbEntitiesToEntities
+    public class ConverterDbEntitiesToEntities : Profile
     {
+        
     }
 }

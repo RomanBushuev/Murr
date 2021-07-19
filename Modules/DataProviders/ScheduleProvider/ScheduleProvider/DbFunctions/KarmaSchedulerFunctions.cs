@@ -42,7 +42,7 @@ namespace ScheduleProvider.DbFunctions
         /// <param name="param"></param>
         /// <returns></returns>
         public static long CreateCbrForeignExchangeDownload(IDbConnection dbConnection,
-            CbrForeignParam param)
+            DbCbrForeignParam param)
         {
             string function = "murr_downloader.add_cbr_foreign_exchange";
 
@@ -59,7 +59,7 @@ namespace ScheduleProvider.DbFunctions
         /// <param name="param"></param>
         /// <returns></returns>
         public static long CreateCbrMosprimeDownload(IDbConnection dbConnection,
-            CbrForeignParam param)
+            DbCbrForeignParam param)
         {
             string function = "murr_downloader.add_cbr_mosprime";
 
@@ -76,7 +76,7 @@ namespace ScheduleProvider.DbFunctions
         /// <param name="param"></param>
         /// <returns></returns>
         public static long CreateCbrKeyRateDownload(IDbConnection dbConnection,
-            CbrForeignParam param)
+            DbCbrForeignParam param)
         {
             string function = "murr_downloader.add_cbr_keyrate";
 
@@ -93,7 +93,7 @@ namespace ScheduleProvider.DbFunctions
         /// <param name="param"></param>
         /// <returns></returns>
         public static long CreateCbrRuoniaDownload(IDbConnection dbConnection,
-            CbrForeignParam param)
+            DbCbrForeignParam param)
         {
             string function = "murr_downloader.add_cbr_ruonia";
 
@@ -104,7 +104,7 @@ namespace ScheduleProvider.DbFunctions
         }
 
         public static long CreateCbrRoisFixDownload(IDbConnection dbConnection,
-            CbrForeignParam param)
+            DbCbrForeignParam param)
         {
             string function = "murr_downloader.add_cbr_roisfix";
 
@@ -115,7 +115,7 @@ namespace ScheduleProvider.DbFunctions
         }
 
         public static long CreateMoexShares(IDbConnection dbConnection,
-            MoexInstrumentParam param)
+            DbMoexInstrumentParam param)
         {
             string function = "murr_downloader.add_moex_instruments";
 
@@ -131,11 +131,11 @@ namespace ScheduleProvider.DbFunctions
         /// </summary>
         /// <param name="dbConnection"></param>
         /// <returns></returns>
-        public static IEnumerable<ProcedureTask> GetProcedureTasks(IDbConnection dbConnection)
+        public static IEnumerable<DbProcedureTask> GetProcedureTasks(IDbConnection dbConnection)
         {
             string function = "murr_downloader.get_procedure_tasks";
 
-            return dbConnection.Query<ProcedureTask>(function,
+            return dbConnection.Query<DbProcedureTask>(function,
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -146,7 +146,7 @@ namespace ScheduleProvider.DbFunctions
         /// <param name="procedureTask"></param>
         /// <returns></returns>
         public static long InsertProcedureTask(IDbConnection dbConnection,
-            ProcedureTask procedureTask)
+            DbProcedureTask procedureTask)
         {
             string function = "murr_downloader.insert_procedure_task";
             
@@ -170,7 +170,7 @@ namespace ScheduleProvider.DbFunctions
         /// <param name="dbConnection"></param>
         /// <param name="procedureTask"></param>
         public static void ChangeProcedureTask(IDbConnection dbConnection,
-            ProcedureTask procedureTask)
+            DbProcedureTask procedureTask)
         {
             string function = "murr_downloader.change_procedure_task";
 
@@ -184,11 +184,11 @@ namespace ScheduleProvider.DbFunctions
                 commandType: CommandType.StoredProcedure);
         }
 
-        public static IEnumerable<ProcedureInfo> GetProcedureInfos(IDbConnection dbConnection)
+        public static IEnumerable<DbProcedureInfo> GetProcedureInfos(IDbConnection dbConnection)
         {
             string function = "murr_downloader.get_inner_procedures";
 
-            return dbConnection.Query<ProcedureInfo>(function,
+            return dbConnection.Query<DbProcedureInfo>(function,
                 commandType: CommandType.StoredProcedure);
         }
 

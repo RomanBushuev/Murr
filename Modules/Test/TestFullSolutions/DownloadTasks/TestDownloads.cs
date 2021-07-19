@@ -305,13 +305,6 @@ namespace TestFullSolutions.CbrServices
                     new FinInstrumentRepository(mapper),
                     new FinDataSourceRepository(mapper)));
 
-            calculation.SetParamDescriptors(new ParamDescriptor()
-            {
-                Ident = SaveForeignExchange.RunDateTime,
-                Value = new DateTime(2020, 11, 10),
-                ParamType = ParamType.DateTime
-            });
-
             string root = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
             string moexDocument = @"\Files\CbrExchangeToSave.xml";
             string fullpath = root + moexDocument;

@@ -1,6 +1,6 @@
 ﻿namespace ScheduleProvider.Mappings
 {
-    public class ProcedureInfo
+    public class DbProcedureInfo
     {
         public string ProcedureSchema { get; set; }
 

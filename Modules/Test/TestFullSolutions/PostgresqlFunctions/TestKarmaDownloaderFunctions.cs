@@ -76,7 +76,7 @@ namespace TestFullSolutions.PostgresqlFunctions
                 connection.Open();
                 using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = DateTime.Now });
+                    long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new DbCbrForeignParam { DateTime = DateTime.Now });
                     var result = KarmaDownloaderFunctions.DownloadKarmaDownloadJobs(connection);
                     Assert.IsNotNull(result.FirstOrDefault(z => z.TaskId == taskId));
                     transaction.Rollback();
@@ -93,7 +93,7 @@ namespace TestFullSolutions.PostgresqlFunctions
                 connection.Open();
                 using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = DateTime.Now });
+                    long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new DbCbrForeignParam { DateTime = DateTime.Now });
                     var result = KarmaDownloaderFunctions.DownloadKarmaDownloadJobs(connection);
                     Assert.IsNotNull(result.FirstOrDefault(z => z.TaskId == taskId));
                     Assert.IsTrue(result.FirstOrDefault(z => z.TaskId == taskId).TaskStatusId == (long)TaskStatuses.Created);
@@ -118,7 +118,7 @@ namespace TestFullSolutions.PostgresqlFunctions
                 connection.Open();
                 using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = DateTime.Now });
+                    long taskId = KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new DbCbrForeignParam { DateTime = DateTime.Now });
 
                     DateTime dateTime = DateTime.Now;
                     KarmaDownloaderFunctions.InsertTaskNumeric(connection, taskId, attemptions, 2);
@@ -212,7 +212,7 @@ namespace TestFullSolutions.PostgresqlFunctions
                 connection.Open();                
                 using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    ProcedureTask procedureTask = new ProcedureTask()
+                    DbProcedureTask procedureTask = new DbProcedureTask()
                     {
                         ProcedureTitle = "murr_downloader.add_cbr_foreign_exchange",
                         ProcedureIsUse = true,
@@ -344,35 +344,35 @@ namespace TestFullSolutions.PostgresqlFunctions
                     DateTime date = new DateTime(2020, 12, 07);
                     templates = new[]
                     {
-                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date }),
-                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) }),
-                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) }),
-                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) }),
-                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) }),
+                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new DbCbrForeignParam { DateTime = date }),
+                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(1) }),
+                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(2) }),
+                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(3) }),
+                        KarmaSchedulerFunctions.CreateCbrForeignExchangeDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(4) }),
 
-                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date }),
-                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) }),
-                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) }),
-                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) }),
-                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) }),
+                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new DbCbrForeignParam { DateTime = date }),
+                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(1) }),
+                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(2) }),
+                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(3) }),
+                        KarmaSchedulerFunctions.CreateCbrMosprimeDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(4) }),
 
-                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new CbrForeignParam { DateTime = date }),
-                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) }),
-                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) }),
-                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) }),
-                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) }),
+                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new DbCbrForeignParam { DateTime = date }),
+                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(1) }),
+                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(2) }),
+                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(3) }),
+                        KarmaSchedulerFunctions.CreateCbrKeyRateDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(4) }),
 
-                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new CbrForeignParam { DateTime = date }),
-                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) }),
-                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) }),
-                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) }),
-                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) }),
+                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new DbCbrForeignParam { DateTime = date }),
+                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(1) }),
+                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(2) }),
+                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(3) }),
+                        KarmaSchedulerFunctions.CreateCbrRoisFixDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(4) }),
 
-                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new CbrForeignParam { DateTime = date }),
-                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new CbrForeignParam { DateTime = date.AddDays(1) }),
-                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new CbrForeignParam { DateTime = date.AddDays(2) }),
-                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new CbrForeignParam { DateTime = date.AddDays(3) }),
-                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new CbrForeignParam { DateTime = date.AddDays(4) }),
+                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new DbCbrForeignParam { DateTime = date }),
+                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(1) }),
+                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(2) }),
+                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(3) }),
+                        KarmaSchedulerFunctions.CreateCbrRuoniaDownload(connection, new DbCbrForeignParam { DateTime = date.AddDays(4) }),
                     };
 
                     transaction.Commit();
