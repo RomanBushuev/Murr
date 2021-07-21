@@ -48,6 +48,14 @@ namespace TestFullSolutions.Core
         }
 
         [TestMethod]
+        public void TestGetAttribute2()
+        {
+            ServiceStatuses status = ServiceStatuses.Running;
+            var attribute = status.ToDbAttribute();
+            Assert.AreEqual(status, attribute.ToEnum<ServiceStatuses>());
+        }
+
+        [TestMethod]
         public void SerializeAndDeserialize()
         {
             List<ParamDescriptor> paramDescriptors = new List<ParamDescriptor>()
