@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using Dapper;
 using DownloaderProvider.DatabaseEntities;
 using DownloaderProvider.DbFunctions;
 using KarmaCore.Entities;
 using KarmaCore.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 
 namespace DownloaderProvider
 {

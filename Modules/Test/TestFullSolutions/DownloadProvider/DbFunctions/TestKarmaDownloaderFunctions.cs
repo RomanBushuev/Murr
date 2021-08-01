@@ -18,7 +18,7 @@ using KarmaCore.Utils;
 using XmlSaver;
 using AutoMapper;
 
-namespace TestFullSolutions.PostgresqlFunctions
+namespace TestFullSolutions.DownloaderProvider.DbFunctions
 {
     [TestClass]
     public class TestKarmaDownloaderFunctions
@@ -168,7 +168,7 @@ namespace TestFullSolutions.PostgresqlFunctions
                 Dictionary<string, object> keyValuePairs = new Dictionary<string, object>() { ["in_datetime"] = "now" };
 
                 Dictionary<string, string> paramTypes = new Dictionary<string, string>();
-                foreach(var procedure in procedures.Where(z => z.ProcedureName == function))
+                foreach (var procedure in procedures.Where(z => z.ProcedureName == function))
                 {
                     paramTypes[procedure.ParameterName] = procedure.DataType;
                 }
@@ -208,7 +208,7 @@ namespace TestFullSolutions.PostgresqlFunctions
             string npgConnection = GetStringConnection();
             using (IDbConnection connection = new NpgsqlConnection(npgConnection))
             {
-                connection.Open();                
+                connection.Open();
                 using (IDbTransaction transaction = connection.BeginTransaction())
                 {
                     DbProcedureTask procedureTask = new DbProcedureTask()
@@ -231,7 +231,7 @@ namespace TestFullSolutions.PostgresqlFunctions
 
                     //изменили значение процедуру
                     procedureTask.ProcedureLastRun = null;
-                    procedureTask.ProcedureNextRun = new DateTime(2020, 11 , 17, 12 ,00 ,00);                    
+                    procedureTask.ProcedureNextRun = new DateTime(2020, 11, 17, 12, 00, 00);
                     KarmaSchedulerFunctions.ChangeProcedureTask(connection, procedureTask);
 
                     //прочитали процедуру
@@ -272,7 +272,7 @@ namespace TestFullSolutions.PostgresqlFunctions
             Assert.AreEqual(karmaDownloadJob.TaskTemplateId, 1);
 
             dbKarmaDownloadJob = ConverterDto.ConvertDto<KarmaDownloadJob, DbKarmaDownloadJob>(new KarmaDownloadJob()
-            { 
+            {
                 TaskStatuses = TaskStatuses.Done,
                 TaskId = 2,
                 TaskTemplateId = 2
@@ -299,7 +299,7 @@ namespace TestFullSolutions.PostgresqlFunctions
             string npgConnection = GetStringConnection();
             using (IDbConnection connection = new NpgsqlConnection(npgConnection))
             {
-                connection.Open();                
+                connection.Open();
                 var transaction = connection.BeginTransaction();
 
                 long serviceId = KarmaDownloaderFunctions.CreateService(connection, serviceName);
@@ -319,7 +319,7 @@ namespace TestFullSolutions.PostgresqlFunctions
                 Assert.AreEqual("Roman", actualAlias);
 
                 transaction.Rollback();
-            }                
+            }
         }
 
         /// <summary>
@@ -388,7 +388,7 @@ namespace TestFullSolutions.PostgresqlFunctions
             ITaskActions taskActions = new TaskActions(npgConnection);
             IServiceActions serviceActions = new ServiceActions(npgConnection);
             ICalculationFactory calculationFactory = new CalculationFactory(new CbrRepository(),
-                new MarkerRepository(karmaSaverConnection, 
+                new MarkerRepository(karmaSaverConnection,
                     new FinInstrumentRepository(mapper),
                     new FinDataSourceRepository(mapper)));
 
@@ -400,7 +400,7 @@ namespace TestFullSolutions.PostgresqlFunctions
             var services = serviceActions.GetKarmaServices();
 
             //проверим, что у сервиса есть
-            if(services.FirstOrDefault(z=>z.ServiceTitle == _serviceName) == null)
+            if (services.FirstOrDefault(z => z.ServiceTitle == _serviceName) == null)
             {
                 SetMessage($"Сервис:[{_serviceName}] не найден");
                 return;
@@ -415,10 +415,10 @@ namespace TestFullSolutions.PostgresqlFunctions
                     return;
                 }
 
-                decimal? value = serviceActions.GetNumber(_serviceName, currentTaskId);                
+                decimal? value = serviceActions.GetNumber(_serviceName, currentTaskId);
 
                 //если работа есть, то проверили попытку выполнить данную работу
-                if (value.HasValue && 
+                if (value.HasValue &&
                     value != -1.0m)
                 {
                     long numberTaskId = long.Parse(value.Value.ToString());
@@ -456,7 +456,7 @@ namespace TestFullSolutions.PostgresqlFunctions
 
                 KarmaDownloadJob karmaDownloadJob = null;
                 //получили все работы
-                if (!value.HasValue || (value.HasValue && value == -1.0m))
+                if (!value.HasValue || value.HasValue && value == -1.0m)
                 {
                     var tasks = taskActions.GetKarmaDownloadJob();
 
@@ -501,7 +501,7 @@ namespace TestFullSolutions.PostgresqlFunctions
             }
         }
 
-        private void SetMessage(string message, string postfix ="")
+        private void SetMessage(string message, string postfix = "")
         {
             Console.WriteLine($"[{postfix}]:{message}");
         }

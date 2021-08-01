@@ -176,7 +176,7 @@ namespace TestFullSolutions.CbrServices
             calculation.SetParamDescriptors(new ParamDescriptor()
             {
                 Ident = DownloadMoexInstruments.RunDateTime,
-                Value = new DateTime(2021, 02, 09),
+                Value = new DateTime(2021, 02, 07),
                 ParamType = ParamType.DateTime
             });
             calculation.SetParamDescriptors(new ParamDescriptor()

@@ -100,12 +100,12 @@ namespace KarmaCore.Calculations
                         total = moexMetaData.Total;
                     }
 
-                    if (result.Datas.First().Rows.Rowss.OfType<MoexShareDataRow>().Count() != 0)
+                    if (result.Datas.First().Rows?.Rowss?.OfType<MoexShareDataRow>()?.Count() > 0)
                     {
                         moexDatas.AddRange(result.Datas.First().Rows.Rowss.OfType<MoexShareDataRow>());
                     }
 
-                    if(result.Datas.First().Rows.Rowss.OfType<MoexBondDataRow>().Count() != 0)
+                    if(result.Datas.First().Rows?.Rowss?.OfType<MoexBondDataRow>()?.Count() > 0)
                     {
                         moexDatas.AddRange(result.Datas.First().Rows.Rowss.OfType<MoexBondDataRow>());
                     }
