@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="4.7.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Murzik.Entities\Murzik.Entities.csproj" />
+    <ProjectReference Include="..\Murzik.Interfaces\Murzik.Interfaces.csproj" />
+    <ProjectReference Include="..\Murzik.Utils\Murzik.Utils.csproj" />
+  </ItemGroup>
+
+</Project>

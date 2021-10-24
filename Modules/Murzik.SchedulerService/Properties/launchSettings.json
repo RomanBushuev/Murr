@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "Murzik.SchedulerService": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

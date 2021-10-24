@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nito.AsyncEx.Synchronous;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -93,4 +95,131 @@ namespace TestFullSolutions.Core
             test.Run();
         }
     }
+
+
+    public static class TestStatic
+    {
+        static int I = 1;
+        static object obj = new object();
+        static TestStatic()
+        {
+            Console.WriteLine("Initialized");
+        }
+
+        public static void Show()
+        {
+            Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} : {Task.CurrentId} : {I++}");
+
+            lock (obj)
+            {
+                Thread.Sleep(1000);
+                Console.WriteLine();
+                Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} : {Task.CurrentId} : {I++}");
+            }
+        }
+    }
+
+    [TestClass]
+    public class TT
+    {
+        [TestMethod]
+        public void T()
+        {
+            for (int i = 0; i < 4; ++i)
+            {
+                new Thread(() =>
+                {
+                    TestStatic.Show();
+                }).Start();
+            }
+
+            Thread.Sleep(5000);
+
+            for (int i = 0; i < 4; ++i)
+            {
+                Task.Run(() =>
+                {
+                    TestStatic.Show();
+                });
+            }
+
+            Thread.Sleep(5000);
+
+            
+        }
+
+    }
+
+    public static class Spliter
+    {
+        public static List<List<T>> SplitToSublists<T>(List<T> source)
+        {
+            return source
+                     .Select((x, i) => new { Index = i, Value = x })
+                     .GroupBy(x => x.Index / 10000)
+                     .Select(x => x.Select(v => v.Value).ToList())
+                     .ToList();
+        }
+
+        public static IEnumerable<IEnumerable<T>> SplitToEnumerables<T>(IEnumerable<T> source)
+        {
+            return source
+                     .Select((x, i) => new { Index = i, Value = x })
+                     .GroupBy(x => x.Index / 10000)
+                     .Select(x => x.Select(v => v.Value));
+        }
+    }
+
+    public class Roman
+    {
+        public string Text { get; set; }
+
+        public long Number { get; set; }
+    }
+
+
+    [TestClass]
+    public class TestData
+    {
+        [TestMethod]
+        public void Test1()
+        {
+            var data = Enumerable.Range(1, 2000000).Select(z => new Roman()
+            {
+                Number = z,
+                Text = $"Text {z}"
+            }).ToList();
+
+            long values = 0;
+            foreach (var part in Spliter.SplitToSublists(data))
+            {
+                foreach(var v in part)
+                {
+                    values += v.Number + v.Text.Length;
+                }
+            }
+            Console.WriteLine(values);
+        }
+
+        [TestMethod]
+        public void Test2()
+        {
+            var data = Enumerable.Range(1, 2000000).Select(z => new Roman()
+            {
+                Number = z,
+                Text = $"Text {z}"
+            });
+
+            long values = 0;
+            foreach (var part in Spliter.SplitToEnumerables(data))
+            {
+                foreach (var v in part)
+                {
+                    values += v.Number + v.Text.Length;
+                }
+            }
+            Console.WriteLine(values);
+        }
+    }
+
 }
