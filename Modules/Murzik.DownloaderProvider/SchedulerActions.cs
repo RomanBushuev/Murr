@@ -34,6 +34,8 @@ namespace Murzik.DownloaderProvider
                 return DateTime.Today;
             if (value == "yesterday")
                 return DateTime.Today.AddDays(-1);
+            if (value == "the day before yesterday")
+                return DateTime.Today.AddDays(-2);
             if (value == "tomorrow")
                 return DateTime.Today.AddDays(1);
             throw new Exception("Error in ChangeParmas");
@@ -76,7 +78,6 @@ namespace Murzik.DownloaderProvider
                             foreach (var paramType in paramTypes)
                             {
                                 var param = paramValues[paramType.Key];
-                                //Тип параметра не сходится с тем, который указан у нас
                                 var isChange = IsUseTemplate(paramType.Value, param.GetType().ToString());
                                 if (isChange)
                                 {
@@ -91,8 +92,7 @@ namespace Murzik.DownloaderProvider
                                 }
                             }
 
-                            string schema = procedures.FirstOrDefault(z => $"{z.ProcedureSchema}.{z.ProcedureName}" == procedureTask.ProcedureTitle)
-                                .ProcedureSchema;
+                            string schema = procedures.FirstOrDefault(z => $"{z.ProcedureSchema}.{z.ProcedureName}" == procedureTask.ProcedureTitle).ProcedureSchema;
 
                             _logger.Info($"Запустили процедуру {procedureTask.ProcedureTitle}");
                             var isExecuted = KarmaSchedulerFunctions.RunFunction(connection, procedureTask.ProcedureTitle, procedureParams);
@@ -101,11 +101,13 @@ namespace Murzik.DownloaderProvider
 
                             procedureTask.ProcedureNextRun = futureNextDate;
                             procedureTask.ProcedureLastRun = lastDate;
-
+                            _logger.Info($"Изменяем даты в процедуре {procedureTask.ProcedureTaskId}:{procedureTask.ProcedureTitle}, следующая дата исполнения {procedureTask.ProcedureNextRun}");
                             KarmaSchedulerFunctions.ChangeProcedureTask(connection, procedureTask);
                             _logger.Info($"Закончили выполнять процедуру {procedureTask.ProcedureTitle}");
                         }
                     }
+                    transaction.Commit();
+                    _logger.Info("Транзакция выполнена");
                 }
             }
             return Task.CompletedTask;

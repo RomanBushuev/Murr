@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Murzik.DownloaderProvider.DbFunctions;
 using Murzik.Entities;
+using Murzik.Entities.Enumerations;
 using Murzik.Interfaces;
 using Npgsql;
 using System;
@@ -55,7 +56,6 @@ namespace Murzik.DownloaderProvider
             }
         }
 
-
         public void SetAttribute(string serviceName, string attribute, DateTime date, string text)
         {
             using (IDbConnection connection = new NpgsqlConnection(_connection))
@@ -104,6 +104,30 @@ namespace Murzik.DownloaderProvider
             {
                 var result = KarmaDownloaderFunctions.DownloadKarmaServices(connection);
                 return result.Select(z => _mapper.Map<KarmaService>(z)).ToList();
+            }
+        }
+
+        public long CreateService(string serviceName)
+        {
+            using (IDbConnection connection = new NpgsqlConnection(_connection))
+            {
+                return KarmaDownloaderFunctions.CreateService(connection, serviceName);
+            }
+        }
+
+        public void StopService(string serviceName)
+        {
+            using (IDbConnection connection = new NpgsqlConnection(_connection))
+            {
+                KarmaDownloaderFunctions.ChangeServiceStatus(connection, serviceName, (long)ServiceStatuses.Stopping);
+            }
+        }
+
+        public void StartService(string serviceName)
+        {
+            using (IDbConnection connection = new NpgsqlConnection(_connection))
+            {
+                KarmaDownloaderFunctions.ChangeServiceStatus(connection, serviceName, (long)ServiceStatuses.Running);
             }
         }
     }

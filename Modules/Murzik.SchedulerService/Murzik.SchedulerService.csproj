@@ -9,9 +9,11 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
     <PackageReference Include="NLog" Version="4.7.11" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Murzik.DownloaderProvider\Murzik.DownloaderProvider.csproj" />
     <ProjectReference Include="..\Murzik.Entities\Murzik.Entities.csproj" />
     <ProjectReference Include="..\Murzik.Interfaces\Murzik.Interfaces.csproj" />
   </ItemGroup>

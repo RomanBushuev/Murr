@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Murzik.DownloaderProvider.DbEntities;
 using Murzik.DownloaderProvider.DbFunctions;
 using Murzik.Entities;
 using Murzik.Entities.Enumerations;
@@ -159,6 +160,16 @@ namespace Murzik.DownloaderProvider
                 if(job is not null && job.SaverTemplateId.HasValue)
                     return _mapper.Map<SaverJson>(KarmaDownloaderFunctions.GetSaverTemplates(connection, job.SaverTemplateId.Value));
                 return null;
+            }
+        }
+
+        public void UpdateSaverJson(long taskId, SaverJson saverJson)
+        {
+            using (IDbConnection connection = new NpgsqlConnection(_connection))
+            {
+                var dbSaverJson = _mapper.Map<DbSaverJson>(saverJson);
+                var job = KarmaDownloaderFunctions.DownloadKarmaDownloadJobs(connection).FirstOrDefault(z => z.TaskId == taskId);
+                KarmaDownloaderFunctions.UpdateSaverTemplates(connection, job.SaverTemplateId.Value, saverJson);
             }
         }
 

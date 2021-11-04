@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
-using Murzik.Entities.MoexNew;
+using Murzik.Entities.MoexNew.Bond;
+using Murzik.Entities.MoexNew.Share;
 using Murzik.MoexProvider;
-using Murzik.MoexProvider.XmlEntities;
+using Murzik.MoexProvider.XmlEntities.Bond;
+using Murzik.MoexProvider.XmlEntities.Share;
 using Murzik.Utils;
 using System;
+using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -11,10 +14,9 @@ namespace Tests.Murzik.MoexProvider
 {
     public class TestMappingXmlEntities
     {
+        private readonly string _root = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
         private IMapper _mapper;
         public readonly DateTime ConstDateTime = new DateTime(2021, 10, 06);
-
-        
         public TestMappingXmlEntities()
         {
             _mapper = AutoMapperConfiguration.Configure().CreateMapper();
@@ -23,9 +25,9 @@ namespace Tests.Murzik.MoexProvider
         [Fact]
         public void TestMapDocumentToDocumentXml()
         {
-            var document = new Document()
+            var document = new BondDocument()
             {
-                HistoryData = new HistoryData()
+                HistoryData = new BondHistoryData()
                 {
                     Rows = new BondDataRow[]
                     {
@@ -72,11 +74,11 @@ namespace Tests.Murzik.MoexProvider
                         }
                     }
                 },
-                HistoryCursorData = new HistoryCursorData()
+                HistoryCursorData = new BondHistoryCursorData()
                 {
-                    Rows = new HistoryBondDataRow[]
+                    Rows = new BondHistoryBondDataRow[]
                     {
-                        new HistoryBondDataRow
+                        new BondHistoryBondDataRow
                         {
                             Index = 10,
                             PageSize = 100,
@@ -85,15 +87,101 @@ namespace Tests.Murzik.MoexProvider
                     }
                 }
             };
-            var documentXml = _mapper.Map<DocumentXml>(document);
+            var documentXml = _mapper.Map<BondDocumentXml>(document);
             var str = documentXml.SerializeToXml();
-            var newDocuemnt = str.DeserializeFromXml<DocumentXml>();
+            var newDocuemnt = str.DeserializeFromXml<BondDocumentXml>();
             var firstRow = newDocuemnt.HistoryData.Rows.First();
 
             Assert.Null(firstRow.Accint);
             Assert.Equal(ConstDateTime, firstRow.MatDate);
             Assert.Null(firstRow.LastTradeDate);
             Assert.Equal(14.0m, firstRow.FaceValue);
+        }
+
+        [Fact]
+        public void TestBondHistoryDataXmlFile()
+        {
+            string moexDocument = @"\Files\MoexDownloadBond.xml";
+            string fullpath = _root + moexDocument;
+            var xml = File.ReadAllText(fullpath);
+            var newDocument = xml.DeserializeFromXml<BondDocumentXml>();
+
+            Assert.Equal("TQOD", newDocument.HistoryData.Rows.First().Boardid);
+            Assert.Equal(new DateTime(2021, 09, 30), newDocument.HistoryData.Rows.First().Tradedate);
+        }
+
+        [Fact]
+        public void TestMapShareDocumentToShareDocumentXml()
+        {
+            var document = new ShareDocument()
+            {
+                HistoryData = new ShareHistoryData()
+                {
+                    Rows = new ShareDataRow[]
+                    {
+                        new ShareDataRow
+                        {
+                            AdmittedQuote = null,
+                            AdmittedValue = 100.0m,
+                            Boardid = "txt",
+                            Close = null,
+                            High = null,
+                            Legalcloseprice = null,
+                            Low = null,
+                            Marketprice2 = null ,
+                            Marketprice3 = null,
+                            Marketprice3TradesValue = 123,
+                            MP2ValTrd = 123,
+                            Numtrades = 321,
+                            Open = null,
+                            Secid = "das",
+                            Shortname = "msg",
+                            Tradedate = ConstDateTime,
+                            TradingSession =3,
+                            Value = 321,
+                            Volume = 3214,
+                            Waprice =null,
+                            Waval = 321
+                        }
+                    }
+                },
+                HistoryCursorData = new ShareHistoryCursorData()
+                {
+                    Rows = new ShareHistoryBondDataRow[]
+                    {
+                        new ShareHistoryBondDataRow
+                        {
+                            Index = 10,
+                            PageSize = 100,
+                            Total = 2300
+                        }
+                    }
+                }
+
+            };
+
+            var documentXml = _mapper.Map<ShareDocumentXml>(document);
+            var str = documentXml.SerializeToXml();
+            var newDocuemnt = str.DeserializeFromXml<ShareDocumentXml>();
+            var firstRow = newDocuemnt.HistoryData.Rows.First();
+
+            Assert.Null(firstRow.AdmittedQuote);
+            Assert.Equal(ConstDateTime, firstRow.Tradedate);
+            Assert.Null(firstRow.Legalcloseprice);
+            Assert.Equal(321.0m, firstRow.Waval);
+
+        }
+
+        [Fact]
+        public void TestShareHistoryDataXmlFile()
+        {
+            string moexDocument = @"\Files\MoexDownloadShare.xml";
+            string fullpath = _root + moexDocument;
+            var xml = File.ReadAllText(fullpath);
+            var newDocument = xml.DeserializeFromXml<ShareDocumentXml>();
+
+            Assert.Equal("TQBR", newDocument.HistoryData.Rows.First().Boardid);
+            Assert.Equal(new DateTime(2021, 02, 09), newDocument.HistoryData.Rows.First().Tradedate);
         }
     }
 }

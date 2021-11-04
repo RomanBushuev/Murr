@@ -9,6 +9,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="NLog" Version="4.7.11" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,17 +24,16 @@
 
   <ItemGroup>
     <Folder Include="Murzik.AlgorithmServiceActions\" />
-    <Folder Include="Murzik.CbrDownloader\" />
     <Folder Include="Murzik.CsvSaver\" />
     <Folder Include="Murzik.DataProvider\" />
     <Folder Include="Murzik.DownloaderProvider\" />
     <Folder Include="Murzik.Logic\" />
     <Folder Include="Murzik.PipelineServiceActions\" />
     <Folder Include="Murzik.XmlSaver\" />
-    <Folder Include="Files\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Murzik.CbrDownloader\Murzik.CbrDownloader.csproj" />
     <ProjectReference Include="..\Murzik.Entities\Murzik.Entities.csproj" />
     <ProjectReference Include="..\Murzik.MoexProvider\Murzik.MoexProvider.csproj" />
     <ProjectReference Include="..\Murzik.Utils\Murzik.Utils.csproj" />

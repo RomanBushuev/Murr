@@ -7,26 +7,8 @@ using System.Xml.Serialization;
 
 namespace Murzik.Utils.ParseXml
 {
-    public static partial class ParseXmlStructure
+    public static class ParseXmlStructure
     {
-        public static string ParseToXml<T>(T instance)
-        {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-
-            MemoryStream ms = new MemoryStream();
-
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.OmitXmlDeclaration = true;
-            settings.Encoding = new UnicodeEncoding(bigEndian: false, byteOrderMark: true);
-            XmlWriter writer = XmlWriter.Create(ms, settings);
-            xmlSerializer.Serialize(writer, instance, ns);
-
-            string str = Encoding.Unicode.GetString(ms.ToArray());
-            return str;
-        }
-
         public static XElement GetXElement(XDocument xDocument, string attriubte)
         {
             return xDocument.Element(attriubte);

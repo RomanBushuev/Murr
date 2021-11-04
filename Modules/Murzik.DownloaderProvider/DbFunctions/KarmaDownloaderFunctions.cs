@@ -1,8 +1,12 @@
 ﻿using Dapper;
 using Murzik.DownloaderProvider.DbEntities;
+using Murzik.Entities;
+using Npgsql;
+using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using static Dapper.SqlMapper;
 
 namespace Murzik.DownloaderProvider.DbFunctions
 {
@@ -11,6 +15,24 @@ namespace Murzik.DownloaderProvider.DbFunctions
         static KarmaDownloaderFunctions()
         {
             KarmaDownloaderMapping.Initialize();
+        }
+
+        internal class JsonParameter : ICustomQueryParameter
+        {
+            private readonly string _value;
+
+            public JsonParameter(string value)
+            {
+                _value = value;
+            }
+
+            public void AddParameter(IDbCommand command, string name)
+            {
+                var parameter = new NpgsqlParameter(name, NpgsqlDbType.Jsonb);
+                parameter.Value = _value;
+
+                command.Parameters.Add(parameter);
+            }
         }
 
         /// <summary>
@@ -183,6 +205,25 @@ namespace Murzik.DownloaderProvider.DbFunctions
                     in_service_name = serviceName,
                     in_service_attribute = serviceAttribute,
                     in_service_value = serviceValue
+                },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        /// <summary>
+        /// Изменения шаблона
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="saverTempalateId"></param>
+        /// <param name="saverJson"></param>
+        internal static void UpdateSaverTemplates(IDbConnection dbConnection, long saverTempalateId, SaverJson saverJson)
+        {
+            string function = "murr_downloader.update_saver_template";
+
+            dbConnection.Execute(function,
+                new
+                {
+                    in_saver_template_id = saverTempalateId,
+                    in_saver_json = saverJson.JsonParameters
                 },
                 commandType: CommandType.StoredProcedure);
         }
@@ -426,6 +467,21 @@ namespace Murzik.DownloaderProvider.DbFunctions
                 new
                 {
                     in_saver_template_id = saverTemplateId
+                },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public static void ChangeServiceStatus(IDbConnection dbConnection,
+            string serviceName, 
+            long serviceStatusId)
+        {
+            string function = "murr_downloader.change_service_status";
+
+            dbConnection.Execute(function,
+                new
+                {
+                    in_service_title = serviceName,
+                    in_new_service_status_id = serviceStatusId
                 },
                 commandType: CommandType.StoredProcedure);
         }

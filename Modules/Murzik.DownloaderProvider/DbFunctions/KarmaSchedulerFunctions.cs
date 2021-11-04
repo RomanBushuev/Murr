@@ -18,7 +18,7 @@ namespace Murzik.DownloaderProvider.DbFunctions
             KarmaSchedulerMapping.Initialize();
         }
 
-        public class JsonParameter : ICustomQueryParameter
+        internal class JsonParameter : ICustomQueryParameter
         {
             private readonly string _value;
 

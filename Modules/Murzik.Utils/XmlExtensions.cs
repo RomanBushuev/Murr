@@ -17,8 +17,6 @@ namespace Murzik.Utils
                 Encoding = Encoding.UTF8
             };
 
-            //settings.OmitXmlDeclaration = true;
-
             XmlSerializer xsSubmit = new XmlSerializer(typeof(T));
             using (var sw = new Utf8StringWriter())
             {
@@ -31,17 +29,28 @@ namespace Murzik.Utils
             }
         }
 
+        public static string SerializeToClearXml<T>(this T instance) where T : class
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.OmitXmlDeclaration = true;
+
+            XmlSerializer xsSubmit = new XmlSerializer(typeof(T));
+            using (StringWriter sw = new StringWriter())
+            using (XmlWriter writer = XmlWriter.Create(sw, settings))
+            {
+                // removes namespace
+                var xmlns = new XmlSerializerNamespaces();
+                xmlns.Add(string.Empty, string.Empty);
+
+                xsSubmit.Serialize(writer, instance, xmlns);
+                return sw.ToString();
+            }
+        }
+
         public static T DeserializeFromXml<T>(this string str)
         {
-            XmlWriterSettings settings = new XmlWriterSettings()
-            {
-                Indent = true,
-                OmitXmlDeclaration = false,
-                Encoding = Encoding.UTF8
-            };
-
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (TextReader reader = new StringReader(str))
+            var serializer = new XmlSerializer(typeof(T));
+            using (var reader = new StringReader(str))
             {
                 return (T)serializer.Deserialize(reader);
             }

@@ -1,26 +1,29 @@
 ﻿using AutoMapper;
-using Murzik.Entities.Moex;
-using Murzik.Entities.MoexNew;
+using Murzik.Entities.MoexNew.Bond;
+using Murzik.Entities.MoexNew.Share;
 using Murzik.Interfaces;
-using Murzik.MoexProvider.XmlEntities;
+using Murzik.MoexProvider.XmlEntities.Bond;
+using Murzik.MoexProvider.XmlEntities.Share;
 using Murzik.Utils;
-using Murzik.Utils.ParseXml;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Murzik.MoexProvider
 {
     public class MoexDownloader : IMoexDownloader
     {
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public MoexDownloader(IMapper mapper)
+        public MoexDownloader(IMapper mapper,
+            ILogger logger)
         {
             _mapper = mapper;
+            _logger = logger;            
         }
 
         public async Task<IReadOnlyCollection<BondDataRow>> DownloadBondDataRow(DateTime date)
@@ -28,43 +31,41 @@ namespace Murzik.MoexProvider
             var page = 0;
             var size = 100;
             long? total = null;
-            var moexDatas = new List<BondDataRow>();
+            var moexData = new List<BondDataRow>();
             using (var client = new HttpClient())
             {
                 while (true)
                 {
                     var start = page * size;
                     var url = $"https://iss.moex.com/iss/history/engines/stock/markets/bonds/securities.xml?date={date.ToString("yyyy-MM-dd")}&start={start}";
+                    _logger.Info($"Отправка запроса {url}");
                     var content = await client.GetStringAsync(url);
-                    var documentXml = content.DeserializeFromXml<DocumentXml>();
-                    var document = _mapper.Map<Entities.MoexNew.Document>(documentXml);
+                    var documentXml = content.DeserializeFromXml<BondDocumentXml>();
+                    var document = _mapper.Map<BondDocument>(documentXml);
 
                     if (total == null)
-                        total = document.HistoryCursorData.Rows.First().Total;
-
-                    
+                        total = document.HistoryCursorData.Rows.First().Total;                    
 
                     if (document.HistoryData.Rows.Any())
-                    {
-                        moexDatas.AddRange(document.HistoryData.Rows);
-                    }
+                        moexData.AddRange(document.HistoryData.Rows);
 
                     page++;
                     if (page * size > total)
                     {
-                        return moexDatas;
+                        _logger.Info($"Закончили отправлять запросы на {url}. Кол-во данных: {moexData.Count()}. Кол-во Total: {total}");
+                        return moexData;
                     }
                     await Task.Delay(1000);
                 }
             }
         }
 
-        public async Task<IReadOnlyCollection<MoexShareDataRow>> DownloadShareDataRow(DateTime date)
+        public async Task<IReadOnlyCollection<ShareDataRow>> DownloadShareDataRow(DateTime date)
         {
             var page = 0;
             var size = 100;
-            int? total = null;
-            var moexDatas = new List<MoexShareDataRow>();
+            long? total = null;
+            var moexData = new List<ShareDataRow>();
             using (var client = new HttpClient())
             {
                 while (true)
@@ -72,24 +73,22 @@ namespace Murzik.MoexProvider
                     var start = page * size;
                     var url = $"https://iss.moex.com/iss/history/engines/stock/markets/shares/securities.xml?date={date.ToString("yyyy-MM-dd")}&start={start}";
                     var content = await client.GetStringAsync(url);
-                    var xmlDocument = XDocument.Parse(content);
-                    var result = ParseXmlStructure.GetDocument(xmlDocument);
-                    if (total == null)
-                    {
-                        var moexMetaData = result.Datas.Last().Rows.Rowss.Last() as MoexMetaRow;
-                        total = moexMetaData.Total;
-                    }
+                    var docuemntXml = content.DeserializeFromXml<ShareDocumentXml>();
+                    var document = _mapper.Map<ShareDocument>(docuemntXml);
 
-                    if (result.Datas.First().Rows?.Rowss?.OfType<MoexShareDataRow>()?.Count() > 0)
-                    {
-                        moexDatas.AddRange(result.Datas.First().Rows.Rowss.OfType<MoexShareDataRow>());
-                    }
+                    if (total == null)
+                        total = document.HistoryCursorData.Rows.First().Total;
+
+                    if (document.HistoryData.Rows.Any())
+                        moexData.AddRange(document.HistoryData.Rows);
 
                     page++;
-                    if (page * size > total)
+                    if(page * size > total)
                     {
-                        return moexDatas;
+                        _logger.Info($"Закончили отправлять запросы на {url}. Кол-во данных: {moexData.Count()}. Кол-во Total: {total}");
+                        return moexData;
                     }
+
                     await Task.Delay(1000);
                 }
             }

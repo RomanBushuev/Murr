@@ -1,12 +1,13 @@
-﻿using Murzik.Entities.Moex;
+﻿using Murzik.Entities.MoexNew.Bond;
+using Murzik.Entities.MoexNew.Share;
 using System.Collections.Generic;
 
 namespace Murzik.Interfaces
 {
     public interface ICsvSaver
     {
-        public void Save(IReadOnlyCollection<MoexShareDataRow> moexShares, string connection);
+        void Save(IReadOnlyCollection<ShareDataRow> shares, string connection);
 
-        public void Save(IReadOnlyCollection<MoexBondDataRow> moexBonds, string connection);
+        void Save(IReadOnlyCollection<BondDataRow> bonds, string connection);
     }
 }

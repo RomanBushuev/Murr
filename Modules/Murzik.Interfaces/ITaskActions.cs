@@ -33,5 +33,7 @@ namespace Murzik.Interfaces
         DateTime? GetDate(long taskId, string attribute);
 
         CalculationJson GetCalculationJson(long taskTemplateId);
+
+        void UpdateSaverJson(long taskId, SaverJson saverJson);
     }
 }

@@ -1,5 +1,5 @@
-﻿using Murzik.Entities.Moex;
-using Murzik.Entities.MoexNew;
+﻿using Murzik.Entities.MoexNew.Bond;
+using Murzik.Entities.MoexNew.Share;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +10,6 @@ namespace Murzik.Interfaces
     {
         public Task<IReadOnlyCollection<BondDataRow>> DownloadBondDataRow(DateTime date);
 
-        public Task<IReadOnlyCollection<MoexShareDataRow>> DownloadShareDataRow(DateTime date);
+        public Task<IReadOnlyCollection<ShareDataRow>> DownloadShareDataRow(DateTime date);
     }
 }

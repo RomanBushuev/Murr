@@ -1,0 +1,98 @@
+<document>
+	<data id="history">
+		<metadata>
+			<columns>
+				<column name="BOARDID" type="string" bytes="12" max_size="0"/>
+				<column name="TRADEDATE" type="date" bytes="10" max_size="0"/>
+				<column name="SHORTNAME" type="string" bytes="189" max_size="0"/>
+				<column name="SECID" type="string" bytes="36" max_size="0"/>
+				<column name="NUMTRADES" type="double"/>
+				<column name="VALUE" type="double"/>
+				<column name="LOW" type="double"/>
+				<column name="HIGH" type="double"/>
+				<column name="CLOSE" type="double"/>
+				<column name="LEGALCLOSEPRICE" type="double"/>
+				<column name="ACCINT" type="double"/>
+				<column name="WAPRICE" type="double"/>
+				<column name="YIELDCLOSE" type="double"/>
+				<column name="OPEN" type="double"/>
+				<column name="VOLUME" type="double"/>
+				<column name="MARKETPRICE2" type="double"/>
+				<column name="MARKETPRICE3" type="double"/>
+				<column name="ADMITTEDQUOTE" type="double"/>
+				<column name="MP2VALTRD" type="double"/>
+				<column name="MARKETPRICE3TRADESVALUE" type="double"/>
+				<column name="ADMITTEDVALUE" type="double"/>
+				<column name="MATDATE" type="date" bytes="10" max_size="0"/>
+				<column name="DURATION" type="double"/>
+				<column name="YIELDATWAP" type="double"/>
+				<column name="IRICPICLOSE" type="double"/>
+				<column name="BEICLOSE" type="double"/>
+				<column name="COUPONPERCENT" type="double"/>
+				<column name="COUPONVALUE" type="double"/>
+				<column name="BUYBACKDATE" type="date" bytes="10" max_size="0"/>
+				<column name="LASTTRADEDATE" type="date" bytes="10" max_size="0"/>
+				<column name="FACEVALUE" type="double"/>
+				<column name="CURRENCYID" type="string" bytes="9" max_size="0"/>
+				<column name="CBRCLOSE" type="double"/>
+				<column name="YIELDTOOFFER" type="double"/>
+				<column name="YIELDLASTCOUPON" type="double"/>
+				<column name="OFFERDATE" type="date" bytes="10" max_size="0"/>
+				<column name="FACEUNIT" type="string" bytes="9" max_size="0"/>
+				<column name="TRADINGSESSION" type="int32"/>
+			</columns>
+		</metadata>
+		<rows>
+			<row BOARDID="TQOD" 
+           TRADEDATE="2021-09-30" 
+					 SHORTNAME="UBANK11/22"
+					 SECID="AMUNIBB2AER2" 
+					 NUMTRADES="0" 
+					 VALUE="0" 
+					 LOW=""
+					 HIGH=""
+					 CLOSE="" 
+					 LEGALCLOSEPRICE="102.3" 
+					 ACCINT=""
+					 WAPRICE=""
+					 YIELDCLOSE=""
+					 OPEN=""
+					 VOLUME="0"
+					 MARKETPRICE2=""
+					 MARKETPRICE3="102.0117"
+					 ADMITTEDQUOTE="102.3"
+					 MP2VALTRD="0"
+					 MARKETPRICE3TRADESVALUE="514572.52"
+					 ADMITTEDVALUE="0"
+					 MATDATE="2022-11-15"
+					 DURATION=""
+					 YIELDATWAP=""
+					 IRICPICLOSE=""
+					 BEICLOSE=""
+					 COUPONPERCENT="5.25"
+					 COUPONVALUE="1.31"
+					 BUYBACKDATE="" 
+					 LASTTRADEDATE="2021-09-29"
+					 FACEVALUE="100"
+					 CURRENCYID="USD"
+					 CBRCLOSE=""
+					 YIELDTOOFFER=""
+					 YIELDLASTCOUPON="" 
+					 OFFERDATE=""
+					 FACEUNIT="USD" 
+					 TRADINGSESSION="3"/>
+		</rows>
+	</data>
+	<data id="history.cursor">
+		<metadata>
+			<columns>
+				<column name="INDEX" type="int64"/>
+				<column name="TOTAL" type="int64"/>
+				<column name="PAGESIZE" type="int64"/>
+			</columns>
+		</metadata>
+		<rows>
+			<row INDEX="0" TOTAL="2428" PAGESIZE="100"/>
+		</rows>
+	</data>
+</document>

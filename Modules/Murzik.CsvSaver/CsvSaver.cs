@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
-using Murzik.Entities.Moex;
+using Murzik.Entities.MoexNew.Bond;
+using Murzik.Entities.MoexNew.Share;
 using Murzik.Interfaces;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,21 +10,21 @@ namespace Murzik.CsvSaver
 {
     public class CsvSaver : ICsvSaver
     {
-        public void Save(IReadOnlyCollection<MoexShareDataRow> moexShares, string connection)
+        public void Save(IReadOnlyCollection<ShareDataRow> shares, string connection)
         {
             using (var writer = new StreamWriter(connection))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
-                csv.WriteRecords(moexShares);
+                csv.WriteRecords(shares);
             }
         }
 
-        public void Save(IReadOnlyCollection<MoexBondDataRow> moexBonds, string connection)
+        public void Save(IReadOnlyCollection<BondDataRow> bonds, string connection)
         {
             using (var writer = new StreamWriter(connection))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
-                csv.WriteRecords(moexBonds);
+                csv.WriteRecords(bonds);
             }
         }
     }

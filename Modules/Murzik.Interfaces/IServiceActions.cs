@@ -21,5 +21,11 @@ namespace Murzik.Interfaces
         DateTime? GetDate(string serviceName, string attribute);
 
         IReadOnlyCollection<KarmaService> GetKarmaServices();
+
+        long CreateService(string serviceName);
+
+        void StopService(string serviceName);
+
+        void StartService(string serviceName);
     }
 }

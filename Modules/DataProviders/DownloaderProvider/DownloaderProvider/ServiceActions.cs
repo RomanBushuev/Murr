@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 
 namespace DownloaderProvider
 {
@@ -110,6 +109,16 @@ namespace DownloaderProvider
                 connection.Open();
                 var result = KarmaDownloaderFunctions.DownloadKarmaServices(connection);
                 return ConverterDto.ConvertDto<DbKarmaService, KarmaService>(result).ToList();
+            }
+        }
+
+        public long Initialize(string service)
+        {
+            using (var connection = new NpgsqlConnection(_connection))
+            {
+                connection.Open();
+                var result = KarmaDownloaderFunctions.CreateService(connection, service);
+                return result;
             }
         }
     }

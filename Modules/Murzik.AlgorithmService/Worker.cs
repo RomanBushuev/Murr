@@ -12,13 +12,13 @@ namespace Murzik.AlgorithmService
     public class Worker : IHostedService
     {
         private ILogger _logger;
-        private IAlgorithmServiceActions _algorithmServerActions;
-        private ServiceConfig _settings;
+        private IAlgorithmServiceProvider _algorithmServerActions;
+        private SchedulerServiceConfige _settings;
         private Timer _timer;
 
         public Worker(ILogger logger,
-            IAlgorithmServiceActions algorithmServerActions,
-            IOptions<ServiceConfig> settings)
+            IAlgorithmServiceProvider algorithmServerActions,
+            IOptions<SchedulerServiceConfige> settings)
         {
             _logger = logger;
             _algorithmServerActions = algorithmServerActions;

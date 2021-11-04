@@ -21,5 +21,7 @@ namespace KarmaCore.Interfaces
         DateTime? GetDate(string serviceName, string attribute);
 
         List<KarmaService> GetKarmaServices();
+
+        long Initialize(string service);
     }
 }

@@ -13,22 +13,27 @@ namespace Murzik.SchedulerService
     {
         private readonly ILogger _logger;
         private readonly ISchedulerActions _schedulerActions;
-        private readonly ServiceConfig _settings;
+        private readonly IServiceActions _serviceActions;
+        private readonly SchedulerServiceConfige _settings;
         private Timer _timer;
 
         public Worker(ILogger logger,
-            IOptions<ServiceConfig> serviceConfig,
-            ISchedulerActions schedulerActions)
+            IOptions<SchedulerServiceConfige> serviceConfig,
+            ISchedulerActions schedulerActions,
+            IServiceActions serviceActions)
         {
             _logger = logger;
             _settings = serviceConfig.Value;
             _schedulerActions = schedulerActions;
+            _serviceActions = serviceActions;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.Info($"Сервис палнировщика задач запущен {_settings.ServiceName}");
             _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(_settings.Interval));
+            _serviceActions.CreateService(_settings.ServiceName);
+            _serviceActions.StartService(_settings.ServiceName);
             return Task.CompletedTask;
         }
 
@@ -36,6 +41,7 @@ namespace Murzik.SchedulerService
         {
             _logger.Info($"Сервис палнировщика задач остановлен {_settings.ServiceName}");
             _timer?.Change(Timeout.Infinite, 0);
+            _serviceActions.StopService(_settings.ServiceName);
             return Task.CompletedTask;
         }
 

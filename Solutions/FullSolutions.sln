@@ -87,7 +87,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Murzik.MoexProvider", "..\M
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Murzik.CsvSaver", "Murzik.CsvSaver", "{76E5356E-6C38-4A65-BD95-E5101C5BFA4B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Murzik.CsvSaver", "..\Modules\Murzik.CsvSaver\Murzik.CsvSaver.csproj", "{9706A7B2-D1D6-421C-823A-76BD9B39194D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Murzik.CsvProvider", "..\Modules\Murzik.CsvSaver\Murzik.CsvProvider.csproj", "{9706A7B2-D1D6-421C-823A-76BD9B39194D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Murzik.Tests", "Murzik.Tests", "{BB8D2D65-39A7-4F10-B469-2283C1D96442}"
 EndProject

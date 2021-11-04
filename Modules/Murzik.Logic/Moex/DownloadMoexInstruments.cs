@@ -1,6 +1,7 @@
 ﻿using Murzik.Entities;
 using Murzik.Entities.Enumerations;
-using Murzik.Entities.Moex;
+using Murzik.Entities.MoexNew.Bond;
+using Murzik.Entities.MoexNew.Share;
 using Murzik.Interfaces;
 using Murzik.Utils;
 using NLog;
@@ -93,13 +94,13 @@ namespace Murzik.Logic.Moex
             }
         }
 
-        private async Task<IReadOnlyCollection<MoexShareDataRow>> DownloadShares(DateTime date)
+        private async Task<IReadOnlyCollection<ShareDataRow>> DownloadShares(DateTime date)
         {
             var shares = await _moexProvider.DownloadShareDataRow(date);
             return shares;
         }
 
-        private async Task<IReadOnlyCollection<MoexBondDataRow>> DownloadBonds(DateTime date)
+        private async Task<IReadOnlyCollection<BondDataRow>> DownloadBonds(DateTime date)
         {
             var bonds = await _moexProvider.DownloadBondDataRow(date);
             return bonds;
