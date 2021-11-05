@@ -51,11 +51,16 @@ namespace Murzik.DownloaderProvider
             //saver template
             CreateMap<DbSaverJson, SaverJson>()
                 .ForMember(m => m.JsonParameters, x => x.MapFrom(source => source.JsonParameters))
-                .ForMember(m => m.SaverType, x => x.MapFrom(source => source.SaverType));
+                .ForMember(m => (long)m.SaverType,
+                    x => x.MapFrom(source => (SaverTypes)source.SaverType));
+                //.ForMember(m => m.SaverType, x => x.MapFrom(source => source.SaverType));
+                //.ForMember(m => m., x => x.MapFrom(source => source.));
 
             CreateMap<SaverJson, DbSaverJson>()
                 .ForMember(m => m.JsonParameters, x => x.MapFrom(source => source.JsonParameters))
-                .ForMember(m => m.SaverType, x => x.MapFrom(source => source.SaverType));
+                .ForMember(m => (SaverTypes)m.SaverType,
+                    x => x.MapFrom(source => (long)source.SaverType))
+                /*.ForMember(m => m.SaverType, x => x.MapFrom(source => source.SaverType))*/;
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Murzik.DownloaderProvider.DbEntities.Mappings
         {
             Map(p => p.TaskTemplate).ToColumn("task_parameters");
             Map(p => p.TaskType).ToColumn("task_type_id");
+            Map(p => p.TaskTemplateFolderId).ToColumn("task_template_folder_id");
         }
     }
 }

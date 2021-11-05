@@ -1,6 +1,7 @@
 ﻿using Murzik.Entities;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Murzik.Interfaces
 {
@@ -22,10 +23,12 @@ namespace Murzik.Interfaces
 
         IReadOnlyCollection<KarmaService> GetKarmaServices();
 
-        long CreateService(string serviceName);
+        long CreateService(string serviceName, string serviceVersion);
 
         void StopService(string serviceName);
 
-        void StartService(string serviceName);
+        void StartService(string serviceName);        
+
+        Task SetHealthCheckAsync(long serviceId, DateTime dateTime);
     }
 }

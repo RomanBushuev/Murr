@@ -1,6 +1,6 @@
 ﻿namespace Murzik.Entities
 {
-    public class SchedulerServiceConfige
+    public class AlgorithmServiceConfige
     {
         /// <summary>
         /// Наименование сервиса

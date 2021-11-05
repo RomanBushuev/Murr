@@ -4,6 +4,6 @@ namespace Murzik.Interfaces
 {
     public interface IAlgorithmServiceProvider
     {
-        Task CheckJob();
+        Task CheckJob(string serviceName);
     }
 }

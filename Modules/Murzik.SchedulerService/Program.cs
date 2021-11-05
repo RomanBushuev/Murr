@@ -36,10 +36,11 @@ namespace Murzik.SchedulerService
                     ILogger logger = LogManager.GetCurrentClassLogger();
                     services.AddSingleton(logger);
                     services.Configure<SchedulerServiceConfige>(hostContext.Configuration.GetSection("SchedulerServiceConfige"));
-                    var service = hostContext.Configuration.GetSection("SchedulerServiceConfige").Get<SchedulerServiceConfige>();
+                    var dataProvider = hostContext.Configuration.GetSection("DataProvider").Get<DataProvider>();
+
                     var schedulerMapper = AutoMapperConfiguration.Configure().CreateMapper();
-                    services.AddSingleton<ISchedulerActions>(new SchedulerActions(service.KarmaDownloader, schedulerMapper, logger));
-                    services.AddSingleton<IServiceActions>(new ServiceActions(service.KarmaDownloader, schedulerMapper));
+                    services.AddSingleton<ISchedulerActions>(new SchedulerActions(dataProvider.KarmaDownloader, schedulerMapper, logger));
+                    services.AddSingleton<IServiceActions>(new ServiceActions(dataProvider.KarmaDownloader, schedulerMapper));
                     services.AddHostedService<Worker>();
                 }).UseWindowsService();
         }

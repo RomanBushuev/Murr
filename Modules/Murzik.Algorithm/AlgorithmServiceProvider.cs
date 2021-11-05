@@ -14,7 +14,6 @@ namespace Murzik.Algorithm
         private readonly IServiceActions _serviceActions;
         private readonly ICalculationFactory _calculationFactory;
         private readonly ILogger _logger;
-        private readonly string _serviceName;
 
         private string currentTaskId = "CURRENT_TASK_ID";
         private string attemptions = "ATTEMPTIONS";
@@ -22,31 +21,31 @@ namespace Murzik.Algorithm
         public AlgorithmServiceProvider(ITaskActions taskActions,
             IServiceActions serviceActions,
             ILogger logger,
-            string serviceName)
+            ICalculationFactory calculationFactory)
         {
             _taskActions = taskActions;
             _serviceActions = serviceActions;
             _logger = logger;
-            _serviceName = serviceName;
+            _calculationFactory = calculationFactory;
         }
 
-        public Task CheckJob()
-        {
+        public Task CheckJob(string serviceName)
+        {             
             var services = _serviceActions.GetKarmaServices();
 
-            if (services.FirstOrDefault(z => z.ServiceTitle == _serviceName) == null)
+            if (services.FirstOrDefault(z => z.ServiceTitle == serviceName) == null)
             {
-                _logger.Info($"Сервис:[{_serviceName}] не найден");
+                _logger.Info($"Сервис:[{serviceName}] не найден");
                 return Task.CompletedTask;
             }
 
-            if (services.First(z => z.ServiceTitle == _serviceName).ServiceStatus != ServiceStatuses.Running)
+            if (services.First(z => z.ServiceTitle == serviceName).ServiceStatus != ServiceStatuses.Running)
             {
-                _logger.Info($"Сервис:[{_serviceName}] имеет статус {services.First(z => z.ServiceTitle == _serviceName).ServiceStatus.ToDbAttribute()}");
+                _logger.Info($"Сервис:[{serviceName}] имеет статус {services.First(z => z.ServiceTitle == serviceName).ServiceStatus.ToDbAttribute()}");
                 return Task.CompletedTask;
             }
 
-            decimal? value = _serviceActions.GetNumber(_serviceName, currentTaskId);
+            decimal? value = _serviceActions.GetNumber(serviceName, currentTaskId);
             //если работа есть, то проверили попытку выполнить данную работу
             if (value.HasValue && value != -1.0m)
             {
@@ -68,7 +67,7 @@ namespace Murzik.Algorithm
 
                 if (attemption > 3.0m)
                 {
-                    _serviceActions.SetAttribute(_serviceName, currentTaskId, -1.0m);
+                    _serviceActions.SetAttribute(serviceName, currentTaskId, -1.0m);
                     value = null;
                     //задачу поставить в статус выполнена 
                     _taskActions.ErrorJob(numberTaskId);
@@ -90,7 +89,7 @@ namespace Murzik.Algorithm
                         if (result == 1)
                         {
                             karmaDownloadJob = task;
-                            _serviceActions.SetAttribute(_serviceName, currentTaskId, karmaDownloadJob.TaskId);
+                            _serviceActions.SetAttribute(serviceName, currentTaskId, karmaDownloadJob.TaskId);
                             _taskActions.SetAttribute(task.TaskId, attemptions, 1.0m);
                             break;
                         }
@@ -100,17 +99,18 @@ namespace Murzik.Algorithm
 
             if (karmaDownloadJob == null)
             {
-                _serviceActions.SetAttribute(_serviceName, currentTaskId, -1.0m);
+                _serviceActions.SetAttribute(serviceName, currentTaskId, -1.0m);
                 return Task.CompletedTask;
             }
 
-            _logger.Info($"Сервис:{_serviceName} начал работу над {karmaDownloadJob.TaskId}");
+            _logger.Info($"Сервис:{serviceName} начал работу над {karmaDownloadJob.TaskId}");
 
             var calculationJson = _taskActions.GetCalculationJson(karmaDownloadJob.TaskTemplateId);
             var calculation = _calculationFactory.GetCalculation(calculationJson);
+            calculation.TaskId = karmaDownloadJob.TaskId;
             calculation.Run();
 
-            _serviceActions.SetAttribute(_serviceName, currentTaskId, -1.0m);
+            _serviceActions.SetAttribute(serviceName, currentTaskId, -1.0m);
             _taskActions.EndJob(karmaDownloadJob.TaskId);
 
             return Task.CompletedTask;

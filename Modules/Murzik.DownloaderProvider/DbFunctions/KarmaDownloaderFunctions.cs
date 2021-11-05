@@ -6,6 +6,7 @@ using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using static Dapper.SqlMapper;
 
 namespace Murzik.DownloaderProvider.DbFunctions
@@ -149,7 +150,8 @@ namespace Murzik.DownloaderProvider.DbFunctions
         }
 
         public static long CreateService(IDbConnection dbConnection,
-            string serviceName)
+            string serviceName,
+            string serviceVersion)
         {
             string function = "murr_downloader.add_service";
 
@@ -157,6 +159,7 @@ namespace Murzik.DownloaderProvider.DbFunctions
                 new
                 {
                     in_service_name = serviceName,
+                    in_service_version = serviceVersion
                 },
                 commandType: CommandType.StoredProcedure);
         }
@@ -482,6 +485,21 @@ namespace Murzik.DownloaderProvider.DbFunctions
                 {
                     in_service_title = serviceName,
                     in_new_service_status_id = serviceStatusId
+                },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public static async Task SetHealthCheckAsync(IDbConnection dbConnection,
+             long serviceId,
+             DateTime dateTime)
+        {
+            string function = "murr_downloader.update_health_check";
+
+            await dbConnection.ExecuteAsync(function,
+                new
+                {
+                    in_service_id = serviceId,
+                    in_service_time = dateTime
                 },
                 commandType: CommandType.StoredProcedure);
         }

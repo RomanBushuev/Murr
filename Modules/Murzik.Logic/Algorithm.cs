@@ -13,8 +13,8 @@ namespace Murzik.Logic
 {
     public abstract class Algorithm : IAlgorithm
     {
+        public long TaskId { get; set; }
         protected List<ParamDescriptor> _paramDescriptors = null;
-        protected long TaskId { get; set; }
         protected CancellationTokenSource TaskTokenSource = new();
         protected CancellationToken TaskToken = new(false);
         protected CancellationTokenSource IsAliveTokenSource;

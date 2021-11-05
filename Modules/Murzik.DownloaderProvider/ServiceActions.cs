@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Murzik.DownloaderProvider
 {
@@ -107,11 +108,11 @@ namespace Murzik.DownloaderProvider
             }
         }
 
-        public long CreateService(string serviceName)
+        public long CreateService(string serviceName, string serviceVersion)
         {
             using (IDbConnection connection = new NpgsqlConnection(_connection))
             {
-                return KarmaDownloaderFunctions.CreateService(connection, serviceName);
+                return KarmaDownloaderFunctions.CreateService(connection, serviceName, serviceVersion);
             }
         }
 
@@ -128,6 +129,14 @@ namespace Murzik.DownloaderProvider
             using (IDbConnection connection = new NpgsqlConnection(_connection))
             {
                 KarmaDownloaderFunctions.ChangeServiceStatus(connection, serviceName, (long)ServiceStatuses.Running);
+            }
+        }
+
+        public async Task SetHealthCheckAsync(long serviceId, DateTime dateTime)
+        {
+            using (IDbConnection connection = new NpgsqlConnection(_connection))
+            {
+                await KarmaDownloaderFunctions.SetHealthCheckAsync(connection, serviceId, dateTime);
             }
         }
     }
