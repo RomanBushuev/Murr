@@ -49,7 +49,7 @@ namespace Murzik.AlgorithmService
             _logger.Info($"Сервис выполнения алгоритмов остановлен {_settings.ServiceName}");
             _workTimer?.Change(Timeout.Infinite, 0);
             _healthCheckTimer?.Change(Timeout.Infinite, 0);
-            _serviceActions.StopService(_settings.ServiceName);
+            _serviceActions.FinishedService(_settings.ServiceName);
             return Task.CompletedTask;
         }
 
@@ -75,7 +75,7 @@ namespace Murzik.AlgorithmService
         private async void HealtCheck(object state)
         {
             var date = DateTime.Now;
-            _logger.Info($"Отправка HealthCheck {_serviceId}:{date}");
+            _logger.Info($"Отправка HealthCheck для сервиса {_serviceId}:{date}");
             _healthCheckTimer?.Change(Timeout.Infinite, 0);
             try
             {

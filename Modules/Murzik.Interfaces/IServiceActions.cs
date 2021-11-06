@@ -27,7 +27,9 @@ namespace Murzik.Interfaces
 
         void StopService(string serviceName);
 
-        void StartService(string serviceName);        
+        void StartService(string serviceName);
+
+        void FinishedService(string serviceName);
 
         Task SetHealthCheckAsync(long serviceId, DateTime dateTime);
     }

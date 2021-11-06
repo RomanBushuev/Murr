@@ -132,12 +132,20 @@ namespace Murzik.DownloaderProvider
             }
         }
 
+        public void FinishedService(string serviceName)
+        {
+            using (IDbConnection connection = new NpgsqlConnection(_connection))
+            {
+                KarmaDownloaderFunctions.ChangeServiceStatus(connection, serviceName, (long)ServiceStatuses.Finisehd);
+            }
+        }
+
         public async Task SetHealthCheckAsync(long serviceId, DateTime dateTime)
         {
             using (IDbConnection connection = new NpgsqlConnection(_connection))
             {
                 await KarmaDownloaderFunctions.SetHealthCheckAsync(connection, serviceId, dateTime);
             }
-        }
+        }       
     }
 }

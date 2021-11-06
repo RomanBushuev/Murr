@@ -1,4 +1,5 @@
 ﻿using Murzik.Entities;
+using Murzik.Entities.Enumerations;
 using System;
 using System.Collections.Generic;
 
@@ -8,6 +9,8 @@ namespace Murzik.Interfaces
     {
         bool IsAlive(long taskId);
 
+        TaskStatuses GetStatus(long taskId);
+
         SaverJson GetSaverJson(long taskId);
 
         long RunJob(long taskId);
@@ -15,6 +18,8 @@ namespace Murzik.Interfaces
         long EndJob(long taskId);
 
         long ErrorJob(long taskId);
+
+        long Cancelling(long taskId);
 
         IReadOnlyCollection<KarmaDownloadJob> GetKarmaDownloadJob();
 

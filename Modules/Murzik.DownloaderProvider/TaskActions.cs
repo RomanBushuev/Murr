@@ -57,6 +57,36 @@ namespace Murzik.DownloaderProvider
             }
         }
 
+
+        public long Cancelling(long taskId)
+        {
+            using (IDbConnection connection = new NpgsqlConnection(_connection))
+            {
+                var result = KarmaDownloaderFunctions.ChangeTaskStatus(connection,
+                    taskId,
+                    (long)TaskStatuses.Creating,
+                    (long)TaskStatuses.Cancelling);
+
+                if(result == 0)
+                {
+                    result = KarmaDownloaderFunctions.ChangeTaskStatus(connection,
+                    taskId,
+                    (long)TaskStatuses.Created,
+                    (long)TaskStatuses.Cancelling);
+                }
+
+                if (result == 0)
+                {
+                    result = KarmaDownloaderFunctions.ChangeTaskStatus(connection,
+                    taskId,
+                    (long)TaskStatuses.Running,
+                    (long)TaskStatuses.Cancelling);
+                }
+
+                return result;
+            }
+        }
+
         public IReadOnlyCollection<KarmaDownloadJob> GetKarmaDownloadJob()
         {
             using (IDbConnection connection = new NpgsqlConnection(_connection))
@@ -179,6 +209,15 @@ namespace Murzik.DownloaderProvider
             {
                 var job = _mapper.Map<KarmaDownloadJob>(KarmaDownloaderFunctions.DownloadKarmaDownloadJobs(connection).FirstOrDefault(z => z.TaskId == taskId));
                 return job.TaskStatuses == TaskStatuses.Running;                    
+            }
+        }
+
+        public TaskStatuses GetStatus(long taskId)
+        {
+            using (IDbConnection connection = new NpgsqlConnection(_connection))
+            {
+                var job = _mapper.Map<KarmaDownloadJob>(KarmaDownloaderFunctions.DownloadKarmaDownloadJobs(connection).FirstOrDefault(z => z.TaskId == taskId));
+                return job.TaskStatuses;
             }
         }
     }

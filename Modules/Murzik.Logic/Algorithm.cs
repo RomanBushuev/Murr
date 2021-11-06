@@ -40,9 +40,9 @@ namespace Murzik.Logic
             {
                 while (true)
                 {
-                    Log.Info($"Опрашиваем задачу {TaskId}");
-                    var isAlive = TaskAction.IsAlive(TaskId);
-                    if(!isAlive)
+                    var isAlive = TaskAction.GetStatus(TaskId);
+                    Log.Info($"Сатус задачи {isAlive.ToDbAttribute()}");
+                    if (isAlive == TaskStatuses.Cancelling)
                     {
                         TaskTokenSource.Cancel();
                         IsAliveTokenSource.Cancel();
@@ -89,6 +89,26 @@ namespace Murzik.Logic
         {
             if (TaskToken.IsCancellationRequested)
                 TaskToken.ThrowIfCancellationRequested();
+        }
+
+        public void Finished()
+        {
+            Log.Info($"Задача {TaskId} завершена");
+            TaskAction.EndJob(TaskId);
+            IsAliveTokenSource.Cancel();
+        }
+
+        public void ErrorFinished()
+        {
+            try
+            {
+                Log.Info($"Задача {TaskId} завершена с ошибкой");
+                TaskAction.ErrorJob(TaskId);
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex);
+            }
         }
     }
 }

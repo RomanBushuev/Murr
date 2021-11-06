@@ -66,6 +66,7 @@ namespace Murzik.Logic.Cbr
                     Log.Info($"Задача {TaskId} : значения сохранены");
                 }
                 Log.Info($"Задача {TaskId} : Задачи завершена");
+                Finished();
             }
             catch (OperationCanceledException)
             {

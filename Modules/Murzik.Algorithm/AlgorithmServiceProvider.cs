@@ -29,20 +29,20 @@ namespace Murzik.Algorithm
             _calculationFactory = calculationFactory;
         }
 
-        public Task CheckJob(string serviceName)
+        public async Task CheckJob(string serviceName)
         {             
             var services = _serviceActions.GetKarmaServices();
 
             if (services.FirstOrDefault(z => z.ServiceTitle == serviceName) == null)
             {
                 _logger.Info($"Сервис:[{serviceName}] не найден");
-                return Task.CompletedTask;
+                return;
             }
 
             if (services.First(z => z.ServiceTitle == serviceName).ServiceStatus != ServiceStatuses.Running)
             {
                 _logger.Info($"Сервис:[{serviceName}] имеет статус {services.First(z => z.ServiceTitle == serviceName).ServiceStatus.ToDbAttribute()}");
-                return Task.CompletedTask;
+                return;
             }
 
             decimal? value = _serviceActions.GetNumber(serviceName, currentTaskId);
@@ -100,7 +100,7 @@ namespace Murzik.Algorithm
             if (karmaDownloadJob == null)
             {
                 _serviceActions.SetAttribute(serviceName, currentTaskId, -1.0m);
-                return Task.CompletedTask;
+                return;
             }
 
             _logger.Info($"Сервис:{serviceName} начал работу над {karmaDownloadJob.TaskId}");
@@ -108,12 +108,11 @@ namespace Murzik.Algorithm
             var calculationJson = _taskActions.GetCalculationJson(karmaDownloadJob.TaskTemplateId);
             var calculation = _calculationFactory.GetCalculation(calculationJson);
             calculation.TaskId = karmaDownloadJob.TaskId;
-            calculation.Run();
+            await calculation.Run();
 
             _serviceActions.SetAttribute(serviceName, currentTaskId, -1.0m);
-            _taskActions.EndJob(karmaDownloadJob.TaskId);
-
-            return Task.CompletedTask;
+            _logger.Info($"Сервис:[{serviceName}] закончил проверку работ и уходит в сон");
+            return;
         }
     }
 }

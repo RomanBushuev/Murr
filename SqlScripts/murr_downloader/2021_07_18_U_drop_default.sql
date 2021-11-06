@@ -225,3 +225,11 @@ GRANT EXECUTE ON FUNCTION murr_downloader.update_health_check(bigint, timestamp 
 REVOKE ALL ON FUNCTION murr_downloader.update_health_check(bigint, timestamp without time zone) FROM PUBLIC;
 	
 
+INSERT INTO murr_downloader.service_statuses(service_status_id, service_status_title, service_status_description)
+values(3, 'FINISHED', 'Остановлен физически');
+
+INSERT INTO murr_downloader.task_statuses(task_status_id, task_status_title, task_statuses_description)
+values(6, 'CANCELLING', 'Отмена');
+
+INSERT INTO murr_downloader.task_statuses(task_status_id, task_status_title, task_statuses_description)
+values(7, 'CANCELED', 'Отменено');

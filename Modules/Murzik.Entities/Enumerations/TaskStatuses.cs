@@ -20,10 +20,10 @@
         [MurrDb("ERROR")]
         Error = 5,
 
-        [MurrDb("STOPPING")]
-        Stopping = 6,
+        [MurrDb("CANCELLING")]
+        Cancelling = 6,
 
-        [MurrDb("STOP")]
-        Stop = 7
+        [MurrDb("CANCELED")]
+        Canceled = 7
     }
 }
