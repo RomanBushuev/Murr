@@ -40,5 +40,9 @@ namespace Murzik.Interfaces
         CalculationJson GetCalculationJson(long taskTemplateId);
 
         void UpdateSaverJson(long taskId, SaverJson saverJson);
+
+        long CreateTaskAction(TaskStatuses taskStatuses, string taskTemplateTitle, long taskTemplateFolderId, string jsonParameters, TaskTypes taskTypes);
+
+        void InsertPipelineTasks(long startTaskId, long nextTaskId);
     }
 }

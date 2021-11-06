@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Murzik.DownloaderProvider
+namespace Murzik.SaverMurrData
 {
     public class AutoMapperConfiguration
     {

@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="NLog" Version="4.7.11" />
@@ -36,7 +40,14 @@
     <ProjectReference Include="..\Murzik.CbrDownloader\Murzik.CbrDownloader.csproj" />
     <ProjectReference Include="..\Murzik.Entities\Murzik.Entities.csproj" />
     <ProjectReference Include="..\Murzik.MoexProvider\Murzik.MoexProvider.csproj" />
+    <ProjectReference Include="..\Murzik.SaverMurrData\Murzik.SaverMurrData.csproj" />
     <ProjectReference Include="..\Murzik.Utils\Murzik.Utils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

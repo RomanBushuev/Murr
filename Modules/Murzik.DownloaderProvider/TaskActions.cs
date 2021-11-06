@@ -220,5 +220,23 @@ namespace Murzik.DownloaderProvider
                 return job.TaskStatuses;
             }
         }
+
+        public long CreateTaskAction(TaskStatuses taskStatuses, string taskTemplateTitle, 
+            long taskTemplateFolderId, string jsonParameters, TaskTypes taskTypes)
+        {
+            using(var connection = new NpgsqlConnection(_connection))
+            {
+                return KarmaDownloaderFunctions.InsertTask(connection, taskTemplateTitle, taskTemplateFolderId,
+                    jsonParameters, (long)taskTypes, (long)taskStatuses);
+            }            
+        }
+
+        public void InsertPipelineTasks(long startTaskId, long nextTaskId)
+        {
+            using (var connection = new NpgsqlConnection(_connection))
+            {
+                KarmaDownloaderFunctions.InsertPipelineTasks(connection, startTaskId, nextTaskId);
+            }
+        }
     }
 }

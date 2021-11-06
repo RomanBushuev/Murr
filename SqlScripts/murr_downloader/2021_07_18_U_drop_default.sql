@@ -233,3 +233,41 @@ values(6, 'CANCELLING', 'Отмена');
 
 INSERT INTO murr_downloader.task_statuses(task_status_id, task_status_title, task_statuses_description)
 values(7, 'CANCELED', 'Отменено');
+
+
+CREATE OR REPLACE FUNCTION murr_downloader.insert_task(
+	in_task_template_title character varying,
+	in_task_template_folder_id bigint,
+	in_task_parameters jsonb,
+	in_task_type_id bigint,
+	in_task_status_id bigint
+	)
+		returns bigint
+as $$
+declare
+	d_task_tempate_id bigint;
+	d_task_id bigint;
+begin
+	insert into murr_downloader.task_templates(task_template_title, 
+		task_template_created_time, 
+		task_template_folder_id, 
+		task_parameters, 
+		task_type_id) values(in_task_template_title, now()::timestamp without time zone, in_task_template_folder_id, in_task_parameters, in_task_type_id)
+	returning task_template_id into d_task_tempate_id;
+	
+	insert into murr_downloader.tasks(task_template_id, task_created_time, task_status_id, saver_template_id)
+	values(d_task_tempate_id, now()::timestamp without time zone, in_task_status_id, null)
+	returning task_id into d_task_id;
+	return d_task_id;
+end
+$$ language plpgsql
+	SECURITY DEFINER;
+	
+ALTER FUNCTION murr_downloader.insert_task(character varying, bigint, jsonb, bigint, bigint)
+    OWNER TO karma_admin;
+
+GRANT EXECUTE ON FUNCTION murr_downloader.insert_task(character varying, bigint, jsonb, bigint, bigint) TO karma_admin;
+
+GRANT EXECUTE ON FUNCTION murr_downloader.insert_task(character varying, bigint, jsonb, bigint, bigint) TO karma_downloader;
+
+REVOKE ALL ON FUNCTION murr_downloader.insert_task(character varying, bigint, jsonb, bigint, bigint) FROM PUBLIC;

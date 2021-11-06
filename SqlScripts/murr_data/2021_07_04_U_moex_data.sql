@@ -172,7 +172,7 @@ values(1, 'SHORTNAME', 'SHORTNAME', 'Краткое наименование', 1
 (9, 'FACEVALUE', 'FACEVALUE', 'Номинал', 3),
 (10, 'CURRENCY', 'CURRENCY', 'Валюта', 1),
 (11, 'TRADED', 'TRADED', 'Наторговали объем на ставку', 4),
-(12, 'TYPE', 'TYPE', 'Тип инструмента', 4);
+(12, 'TYPE', 'TYPE', 'Тип инструмента', 1);
 
 insert into murr_data.fin_data_sources(fin_data_source_id, fin_data_source_ident)
 values(1, 'CBR');

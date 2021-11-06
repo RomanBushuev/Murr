@@ -255,6 +255,22 @@ namespace Murzik.DownloaderProvider.DbFunctions
                 commandType: CommandType.StoredProcedure);
         }
 
+        internal static long InsertTask(IDbConnection dbConnection, string taskTemplateTitle, long taskTemplateFolderId, string jsonParameters, long taskTypes, long taskStatuses)
+        {
+            string function = "murr_downloader.insert_task";
+
+            return dbConnection.QueryFirst<long>(function,
+                new
+                {
+                    in_task_template_title = taskTemplateTitle,
+                    in_task_template_folder_id = taskTemplateFolderId,
+                    in_task_parameters = new JsonParameter(jsonParameters),
+                    in_task_type_id = taskTypes,
+                    in_task_status_id = taskStatuses
+                },
+                commandType: CommandType.StoredProcedure);
+        }
+
         /// <summary>
         /// Добавляем значение числа к сервису по атрибуту
         /// </summary>
@@ -500,6 +516,21 @@ namespace Murzik.DownloaderProvider.DbFunctions
                 {
                     in_service_id = serviceId,
                     in_service_time = dateTime
+                },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        internal static void InsertPipelineTasks(IDbConnection dbConnection,
+            long startTaskId,
+            long nextTaskId)
+        {
+            string function = "murr_downloader.insert_pipeline_tasks";
+
+            dbConnection.Execute(function,
+                new
+                {
+                    in_start_task_id = startTaskId,
+                    in_next_task_id = nextTaskId
                 },
                 commandType: CommandType.StoredProcedure);
         }
