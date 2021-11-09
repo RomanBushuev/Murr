@@ -6,7 +6,7 @@
         /// <summary>
         /// Карма агент
         /// </summary>
-        public string KarmaAdmin { get; set; }
+        public string KarmaSaver { get; set; }
 
         /// <summary>
         /// Карма загрузчик

@@ -35,7 +35,7 @@ namespace Murzik.Tests.Murzik.SaverMurrData
                 .GetSection("DataProvider")
                 .Get<DataProvider>();
 
-            _saverMurrData = new SaverMurrProvider(_logger.Object, mapper, dataProvider.KarmaAdmin);
+            _saverMurrData = new SaverMurrProvider(_logger.Object, mapper, dataProvider.KarmaSaver);
         }
 
         [Fact]

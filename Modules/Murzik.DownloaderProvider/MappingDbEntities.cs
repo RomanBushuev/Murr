@@ -42,11 +42,13 @@ namespace Murzik.DownloaderProvider
             //calculation template
             CreateMap<DbCalculationJson, CalculationJson>()
                 .ForMember(m => m.JsonParameters, x => x.MapFrom(source => source.TaskTemplate))
-                .ForMember(m => m.TaskType, x => x.MapFrom(source => source.TaskType));
+                .ForMember(m => m.TaskType, x => x.MapFrom(source => source.TaskType))
+                .ForMember(m => m.TaskTemplateFolderId, x => x.MapFrom(source => source.TaskTemplateFolderId));
 
             CreateMap<CalculationJson, DbCalculationJson>()
                 .ForMember(m => m.TaskTemplate, x => x.MapFrom(source => source.JsonParameters))
-                .ForMember(m => m.TaskType, x => x.MapFrom(source => source.TaskType));
+                .ForMember(m => m.TaskType, x => x.MapFrom(source => source.TaskType))
+                .ForMember(m=> m.TaskTemplateFolderId, x=>x.MapFrom(source => source.TaskTemplateFolderId));
 
             //saver template
             CreateMap<DbSaverJson, SaverJson>()

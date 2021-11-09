@@ -11,5 +11,7 @@ namespace Murzik.Entities
         public string JsonParameters { get; set; }
 
         public long TaskType { get; set; }
+
+        public long TaskTemplateFolderId { get; set; }
     }
 }

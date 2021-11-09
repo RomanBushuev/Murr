@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Murzik.Interfaces\Murzik.Interfaces.csproj" />
+    <ProjectReference Include="..\Murzik.Utils\Murzik.Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup>

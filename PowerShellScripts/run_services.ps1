@@ -1,11 +1,5 @@
-net framework
 New-Service -Name "HangBushuev" -BinaryPathName C:\Users\homan\source\repos\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
 #удаление
 Stop-Service 'PromScheduler'; Get-CimInstance -ClassName Win32_Service -Filter "Name='PromScheduler'" | Remove-CimInstance
 
-net core
-sc.exe create HSS BinPath=C:\Users\homan\Documents\repo\Murr\RunningServices\KarmaSchedular\KarmaScheduler.exe
-
-sc.exe create KDS BinPath=C:\Users\homan\Documents\repo\Murr\RunningServices\DownloaderService\DownloaderService.exe
-
-sc.exe delete HangBushuev
+powershell -executionpolicy bypass -File .\re_run_test_algorithm_service.ps1

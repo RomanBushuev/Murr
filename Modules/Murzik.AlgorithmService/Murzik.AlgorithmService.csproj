@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Murzik.Interfaces\Murzik.Interfaces.csproj" />
     <ProjectReference Include="..\Murzik.Logic\Murzik.Logic.csproj" />
     <ProjectReference Include="..\Murzik.MoexProvider\Murzik.MoexProvider.csproj" />
+    <ProjectReference Include="..\Murzik.SaverMurrData\Murzik.SaverMurrData.csproj" />
     <ProjectReference Include="..\Murzik.XmlSaver\Murzik.XmlSaver.csproj" />
   </ItemGroup>
 </Project>

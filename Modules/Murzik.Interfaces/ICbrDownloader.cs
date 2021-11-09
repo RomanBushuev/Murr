@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Murzik.Entities.Cbr;
+using System;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -17,5 +18,7 @@ namespace Murzik.Interfaces
         public Task<XmlDocument> DownloadRoisfix(DateTime date);
 
         public Task<XmlDocument> DownloadRuonia(DateTime date);
+
+        Currencies DownloadCurrencies(string path);
     }
 }

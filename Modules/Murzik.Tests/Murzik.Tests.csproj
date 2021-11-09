@@ -31,7 +31,6 @@
     <Folder Include="Murzik.CsvSaver\" />
     <Folder Include="Murzik.DataProvider\" />
     <Folder Include="Murzik.DownloaderProvider\" />
-    <Folder Include="Murzik.Logic\" />
     <Folder Include="Murzik.PipelineServiceActions\" />
     <Folder Include="Murzik.XmlSaver\" />
   </ItemGroup>
@@ -39,6 +38,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Murzik.CbrDownloader\Murzik.CbrDownloader.csproj" />
     <ProjectReference Include="..\Murzik.Entities\Murzik.Entities.csproj" />
+    <ProjectReference Include="..\Murzik.Logic\Murzik.Logic.csproj" />
     <ProjectReference Include="..\Murzik.MoexProvider\Murzik.MoexProvider.csproj" />
     <ProjectReference Include="..\Murzik.SaverMurrData\Murzik.SaverMurrData.csproj" />
     <ProjectReference Include="..\Murzik.Utils\Murzik.Utils.csproj" />

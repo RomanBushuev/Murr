@@ -17,13 +17,17 @@ namespace Murzik.Logic
         private IMoexDownloader _moexDownloader;
         private IXmlSaver _xmlSave;
         private ICsvSaver _csvSaver;
+        private IConverterFactory _convertFactory;
+        private ISaverMurrData _saverMurrData;
 
         public CalculationFactory(ILogger logger,
             ITaskActions taskAction,
             ICbrDownloader cbrDownloader,
             IMoexDownloader moexDownloader,
             IXmlSaver xmlSaver,
-            ICsvSaver csvSaver)
+            ICsvSaver csvSaver,
+            IConverterFactory converterFactory,
+            ISaverMurrData saverMurrData)
         {
             _logger = logger;
             _taskAction = taskAction;
@@ -31,6 +35,8 @@ namespace Murzik.Logic
             _moexDownloader = moexDownloader;
             _xmlSave = xmlSaver;
             _csvSaver = csvSaver;
+            _convertFactory = converterFactory;
+            _saverMurrData = saverMurrData;
         }
 
         public IAlgorithm GetCalculation(CalculationJson json)
@@ -120,16 +126,20 @@ namespace Murzik.Logic
                 return calculation;
             }
 
-            //if (json.TaskType == (long)TaskTypes.SaveForeignExchange)
-            //{
-            //    var calculation = new SaveForeignExchange(_cbrXmlRepository, _markerRepository);
-            //    List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
-            //    foreach (var val in values)
-            //    {
-            //        calculation.SetParamDescriptors(val);
-            //    }
-            //    return calculation;
-            //}
+            if (json.TaskType == (long)TaskTypes.SaveForeignExchange)
+            {
+                var calculation = new SaveForeignExchange(_logger,
+                    _taskAction, 
+                    _convertFactory,
+                    _saverMurrData,
+                    _cbrDownloader);
+                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
+                foreach (var val in values)
+                {
+                    calculation.SetParamDescriptors(val);
+                }
+                return calculation;
+            }
 
             return null;
         }

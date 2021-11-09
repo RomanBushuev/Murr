@@ -9,6 +9,7 @@ using Murzik.Entities;
 using Murzik.Interfaces;
 using Murzik.Logic;
 using Murzik.MoexProvider;
+using Murzik.SaverMurrData;
 using NLog;
 using NLog.Extensions.Logging;
 
@@ -41,16 +42,19 @@ namespace Murzik.AlgorithmService
                     services.AddSingleton(logger);
                     services.Configure<AlgorithmServiceConfige>(hostContext.Configuration.GetSection("AlgorithmServiceConfige"));
                     var dataProvider = hostContext.Configuration.GetSection("DataProvider").Get<DataProvider>();
-
                     IMapper mapper = DownloaderProvider.AutoMapperConfiguration.Configure().CreateMapper();
                     IServiceActions serviceActions = new ServiceActions(dataProvider.KarmaDownloader, mapper);
                     ITaskActions taskActions = new TaskActions(dataProvider.KarmaDownloader, mapper);
-                    ICbrDownloader cbrDownloader = new CbrProvider(logger);
+                    IMapper cbrDownloaderMapper = CbrDownloader.AutoMapperConfiguration.Configure().CreateMapper();
+                    ICbrDownloader cbrDownloader = new CbrProvider(logger, cbrDownloaderMapper);
                     IMapper moexMapper = MoexProvider.AutoMapperConfiguration.Configure().CreateMapper();
                     IMoexDownloader moexDownloader = new MoexDownloader(moexMapper, logger);
                     IXmlSaver xmlSaver = new XmlSaver.XmlSaver();
                     ICsvSaver csvSaver = new CsvSaver.CsvSaver();
-                    ICalculationFactory calculationFactory = new CalculationFactory(logger, taskActions, cbrDownloader, moexDownloader, xmlSaver, csvSaver);
+                    IConverterFactory converterFactory = new ConverterFactory();
+                    IMapper saverMurrMapper = SaverMurrData.AutoMapperConfiguration.Configure().CreateMapper();
+                    ISaverMurrData saverMurrData = new SaverMurrProvider(logger, saverMurrMapper, dataProvider.KarmaSaver);
+                    ICalculationFactory calculationFactory = new CalculationFactory(logger, taskActions, cbrDownloader, moexDownloader, xmlSaver, csvSaver, converterFactory, saverMurrData);
                     services.AddSingleton<IAlgorithmServiceProvider>(new AlgorithmServiceProvider(taskActions, serviceActions, logger, calculationFactory));
                     var schedulerMapper = DownloaderProvider.AutoMapperConfiguration.Configure().CreateMapper();
                     services.AddSingleton<IServiceActions>(new ServiceActions(dataProvider.KarmaDownloader, schedulerMapper));

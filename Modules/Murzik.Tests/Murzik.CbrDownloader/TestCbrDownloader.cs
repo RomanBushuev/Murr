@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using AutoMapper;
+using Moq;
 using Murzik.CbrDownloader;
 using Murzik.Interfaces;
 using NLog;
@@ -10,13 +11,15 @@ namespace Murzik.Tests.Murzik.CbrDownloader
     public class TestCbrDownloader
     {
         private ICbrDownloader _cbrDownloader;
+        private IMapper _mapper;
         private Mock<ILogger> _logger;
         private DateTime constDate = new DateTime(2021, 10, 28);
 
         public TestCbrDownloader()
         {
             _logger = new Mock<ILogger>();
-            _cbrDownloader = new CbrProvider(_logger.Object);
+            _mapper = AutoMapperConfiguration.Configure().CreateMapper();
+            _cbrDownloader = new CbrProvider(_logger.Object, _mapper);
         }
 
         [Fact]

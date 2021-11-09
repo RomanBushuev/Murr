@@ -1,6 +1,10 @@
-﻿using CbrSecuritiesInfo;
+﻿using AutoMapper;
+using CbrSecuritiesInfo;
 using CbrServices;
+using Murzik.CbrDownloader.XmlEntities;
+using Murzik.Entities.Cbr;
 using Murzik.Interfaces;
+using Murzik.Utils;
 using NLog;
 using System;
 using System.Threading.Tasks;
@@ -11,10 +15,13 @@ namespace Murzik.CbrDownloader
     public class CbrProvider : ICbrDownloader
     {
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
-        public CbrProvider(ILogger logger)
+        public CbrProvider(ILogger logger,
+            IMapper mapper)
         {
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<XmlDocument> DownloadForeignExchange(DateTime date)
@@ -75,6 +82,13 @@ namespace Murzik.CbrDownloader
             var xmlDocument = new XmlDocument();
             xmlDocument.LoadXml($"<Ruonia><ValidDate>{date.ToString("yyyy-MM-dd")}</ValidDate>{temp.InnerXml}</Ruonia>");
             return xmlDocument;
+        }
+
+        public Currencies DownloadCurrencies(string path)
+        {
+            var xml = System.IO.File.ReadAllText(path);
+            var currenciesXml = xml.DeserializeFromXml<CurrenciesXml>();
+            return _mapper.Map<Currencies>(currenciesXml);
         }
     }
 }
