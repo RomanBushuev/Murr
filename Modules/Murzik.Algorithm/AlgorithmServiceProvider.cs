@@ -6,7 +6,7 @@ using NLog;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Murzik.Algorithm
+namespace Murzik.AlgorithmServiceActions
 {
     public class AlgorithmServiceProvider : IAlgorithmServiceProvider
     {

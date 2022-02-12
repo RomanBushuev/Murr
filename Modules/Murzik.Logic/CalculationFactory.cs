@@ -140,6 +140,19 @@ namespace Murzik.Logic
                 }
                 return calculation;
             }
+            if(json.TaskType == (long)TaskTypes.DownloadMoexCoupons)
+            {
+                var calculation = new DownloadMoexCoupons(_logger,
+                    _taskAction,
+                    _moexDownloader,
+                    _csvSaver);
+                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
+                foreach (var val in values)
+                {
+                    calculation.SetParamDescriptors(val);
+                }
+                return calculation;
+            }
 
             return null;
         }

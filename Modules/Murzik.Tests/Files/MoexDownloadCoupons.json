@@ -1,0 +1,28 @@
+[{
+        "charsetinfo": {
+            "name": "utf-8"
+        }
+    }, {
+        "coupons": [{
+                "isin": "XS1647482436",
+                "name": "PSB Finance S.A. 8.75",
+                "issuevalue": 500000000,
+                "coupondate": "2111-01-01",
+                "recorddate": null,
+                "startdate": "2018-08-01",
+                "initialfacevalue": 1000,
+                "facevalue": 1000,
+                "faceunit": "USD",
+                "value": null,
+                "valueprc": null,
+                "value_rub": null
+            }
+        ],
+        "coupons.cursor": [{
+                "INDEX": 0,
+                "TOTAL": 100,
+                "PAGESIZE": 1
+            }
+        ]
+    }
+]

@@ -68,7 +68,8 @@ namespace Murzik.DownloaderProvider
 
                             var paramTypes = new Dictionary<string, string>();
                             foreach(var procedure in procedures
-                                .Where(z => $"{z.ProcedureSchema}.{z.ProcedureName}" == procedureTask.ProcedureTitle))
+                                .Where(z => $"{z.ProcedureSchema}.{z.ProcedureName}" == procedureTask.ProcedureTitle 
+                                && z.ParameterName is not null))
                             {
                                 paramTypes[procedure.ParameterName] = procedure.DataType;
                             }

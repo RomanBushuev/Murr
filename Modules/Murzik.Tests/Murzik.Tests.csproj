@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="CsvHelper" Version="27.2.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
@@ -28,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Murzik.AlgorithmServiceActions\" />
-    <Folder Include="Murzik.CsvSaver\" />
     <Folder Include="Murzik.DataProvider\" />
     <Folder Include="Murzik.DownloaderProvider\" />
     <Folder Include="Murzik.PipelineServiceActions\" />
@@ -40,6 +40,7 @@
     <ProjectReference Include="..\Murzik.Entities\Murzik.Entities.csproj" />
     <ProjectReference Include="..\Murzik.Logic\Murzik.Logic.csproj" />
     <ProjectReference Include="..\Murzik.MoexProvider\Murzik.MoexProvider.csproj" />
+    <ProjectReference Include="..\Murzik.Parser\Murzik.Parser.csproj" />
     <ProjectReference Include="..\Murzik.SaverMurrData\Murzik.SaverMurrData.csproj" />
     <ProjectReference Include="..\Murzik.Utils\Murzik.Utils.csproj" />
   </ItemGroup>

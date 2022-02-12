@@ -46,6 +46,7 @@ namespace Murzik.Logic.Moex
                 {
                     Log.Info($"Задача {TaskId} : загрузка акций");
                     var shares = await DownloadShares(date);
+                    IsContinue();
                     Log.Info($"Задача {TaskId} : загрузка акций завершена");
 
                     var saverJson = TaskAction.GetSaverJson(TaskId);
@@ -63,6 +64,7 @@ namespace Murzik.Logic.Moex
                 {
                     Log.Info($"Задача {TaskId} : загрузка облигаций");
                     var bonds = await DownloadBonds(date);
+                    IsContinue();
                     Log.Info($"Задача {TaskId} : загрузка облигаций завершена");
 
                     var saverJson = TaskAction.GetSaverJson(TaskId);
@@ -76,8 +78,9 @@ namespace Murzik.Logic.Moex
                     }
                 }
 
-
+                IsContinue();
                 Log.Info($"Задача {TaskId} : Задача финансовых инструментов закончена");
+                Finished();
             }
             catch (OperationCanceledException)
             {

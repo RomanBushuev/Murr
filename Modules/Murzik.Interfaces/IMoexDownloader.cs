@@ -1,4 +1,5 @@
 ﻿using Murzik.Entities.MoexNew.Bond;
+using Murzik.Entities.MoexNew.Coupon;
 using Murzik.Entities.MoexNew.Share;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,7 @@ namespace Murzik.Interfaces
         public Task<IReadOnlyCollection<BondDataRow>> DownloadBondDataRow(DateTime date);
 
         public Task<IReadOnlyCollection<ShareDataRow>> DownloadShareDataRow(DateTime date);
+
+        public Task<IReadOnlyCollection<Coupon>> DownloadCoupons(long? pagesToDownload = null);
     }
 }

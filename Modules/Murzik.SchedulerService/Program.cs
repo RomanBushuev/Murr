@@ -1,10 +1,8 @@
-using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Murzik.DownloaderProvider;
 using Murzik.Entities;
-using Murzik.Interfaces;
 using NLog;
 using NLog.Extensions.Logging;
 
@@ -36,11 +34,7 @@ namespace Murzik.SchedulerService
                     ILogger logger = LogManager.GetCurrentClassLogger();
                     services.AddSingleton(logger);
                     services.Configure<SchedulerServiceConfige>(hostContext.Configuration.GetSection("SchedulerServiceConfige"));
-                    var dataProvider = hostContext.Configuration.GetSection("DataProvider").Get<DataProvider>();
-
-                    var schedulerMapper = AutoMapperConfiguration.Configure().CreateMapper();
-                    services.AddSingleton<ISchedulerActions>(new SchedulerActions(dataProvider.KarmaDownloader, schedulerMapper, logger));
-                    services.AddSingleton<IServiceActions>(new ServiceActions(dataProvider.KarmaDownloader, schedulerMapper));
+                    services.AddDownloaderServices(hostContext.Configuration);
                     services.AddHostedService<Worker>();
                 }).UseWindowsService();
         }

@@ -106,6 +106,11 @@ namespace Murzik.Utils
             List<ParamDescriptor> values = new List<ParamDescriptor>();
             foreach (var val in paramDescriptors)
             {
+                if(!dict.ContainsKey(val.Ident))
+                {
+                    values.Add(val);
+                    continue;
+                }
                 if (val.ParamType == ParamType.DateTime)
                 {
                     string str = dict[val.Ident];

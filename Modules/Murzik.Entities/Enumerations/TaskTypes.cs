@@ -28,5 +28,8 @@
 
         [MurrDb("SAVE CURRENCIES CBRF")]
         SaveForeignExchange = 8,
+
+        [MurrDb("DOWNLOAD MOEX COUPONS")]
+        DownloadMoexCoupons = 9
     }
 }

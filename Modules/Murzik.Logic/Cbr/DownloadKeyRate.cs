@@ -49,6 +49,7 @@ namespace Murzik.Logic.Cbr
                     Log.Info($"Задача {TaskId} : значения сохранены");
                 }
                 Log.Info($"Задача {TaskId} : Задача загрузки ключевой ставки из ЦБ закончена");
+                Finished();
             }
             catch (OperationCanceledException)
             {
