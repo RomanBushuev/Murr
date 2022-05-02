@@ -1,4 +1,5 @@
 ﻿using Murzik.Entities.Cbr;
+using Murzik.Entities.Cbr.Packs;
 using Murzik.Interfaces;
 using Murzik.Logic.Cbr;
 using System;

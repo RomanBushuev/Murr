@@ -30,6 +30,12 @@
         SaveForeignExchange = 8,
 
         [MurrDb("DOWNLOAD MOEX COUPONS")]
-        DownloadMoexCoupons = 9
+        DownloadMoexCoupons = 9,
+
+        [MurrDb("DOWNLOAD MOEX AMORTIZATIONS")]
+        DownloadMoexAmortizations = 10,
+
+        [MurrDb("DOWNLOAD MOEX OFFERS")]
+        DownloadMoexOffers = 11,
     }
 }

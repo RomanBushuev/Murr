@@ -99,13 +99,13 @@ namespace Murzik.Logic.Moex
 
         private async Task<IReadOnlyCollection<ShareDataRow>> DownloadShares(DateTime date)
         {
-            var shares = await _moexProvider.DownloadShareDataRow(date);
+            var shares = await _moexProvider.DownloadShareDataRowAsync(date);
             return shares;
         }
 
         private async Task<IReadOnlyCollection<BondDataRow>> DownloadBonds(DateTime date)
         {
-            var bonds = await _moexProvider.DownloadBondDataRow(date);
+            var bonds = await _moexProvider.DownloadBondDataRowAsync(date);
             return bonds;
         }
 

@@ -7,6 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Murzik.AlgorithmServiceActions\**" />
+    <Compile Remove="Murzik.DataProvider\**" />
+    <Compile Remove="Murzik.DownloaderProvider\**" />
+    <Compile Remove="Murzik.PipelineServiceActions\**" />
+    <Compile Remove="Murzik.XmlSaver\**" />
+    <EmbeddedResource Remove="Murzik.AlgorithmServiceActions\**" />
+    <EmbeddedResource Remove="Murzik.DataProvider\**" />
+    <EmbeddedResource Remove="Murzik.DownloaderProvider\**" />
+    <EmbeddedResource Remove="Murzik.PipelineServiceActions\**" />
+    <EmbeddedResource Remove="Murzik.XmlSaver\**" />
+    <None Remove="Murzik.AlgorithmServiceActions\**" />
+    <None Remove="Murzik.DataProvider\**" />
+    <None Remove="Murzik.DownloaderProvider\**" />
+    <None Remove="Murzik.PipelineServiceActions\**" />
+    <None Remove="Murzik.XmlSaver\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="CsvHelper" Version="27.2.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
@@ -25,14 +43,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Murzik.AlgorithmServiceActions\" />
-    <Folder Include="Murzik.DataProvider\" />
-    <Folder Include="Murzik.DownloaderProvider\" />
-    <Folder Include="Murzik.PipelineServiceActions\" />
-    <Folder Include="Murzik.XmlSaver\" />
   </ItemGroup>
 
   <ItemGroup>

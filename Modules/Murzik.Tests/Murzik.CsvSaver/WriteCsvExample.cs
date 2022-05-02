@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -40,7 +41,7 @@ namespace Murzik.Tests.Murzik.CsvSaver
         [Fact]
         public void WriteCsvTest()
         {
-            var csvPath = @"C:\Yandex\YandexDisk\test.csv";
+            var csvPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, "test.csv");
             var csvConfiguration = new CsvConfiguration(CultureInfo.GetCultureInfo("ru-RU"))
             {
                 Delimiter = ";"
@@ -77,7 +78,11 @@ namespace Murzik.Tests.Murzik.CsvSaver
             };
             csv.Context.RegisterClassMap<TestClassMap>();
             csv.WriteRecords(testClasses);
-            writer.Flush();
+            writer.Flush();            
+            csv.Dispose();
+            writer.Close();
+            writer.Dispose();
+            File.Delete(csvPath);
         }
     }
 }

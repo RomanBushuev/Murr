@@ -1,7 +1,7 @@
-$QSchedulerBase="C:\\Users\\homan\\Documents\\repo\\Murr\\Modules\\Murzik.SchedulerService\\bin\\Debug\\net5.0\\*"
-$QScheduler = "C:\\Users\\homan\\Documents\\repo\\Murr\\TestRunningServices\\Scheduler"
-$QSchedulerSettings = "C:\\Users\\homan\\Documents\\repo\\Murr\\PowerShellScripts\\TestSettings\\Scheduler\\*"
-dotnet build C:\Users\homan\Documents\repo\Murr\Solutions\FullSolutions.sln
+$QSchedulerBase="D:\\repo\\Murr\\Modules\\Murzik.SchedulerService\\bin\\Debug\\net5.0\\*"
+$QScheduler = "D:\\repo\\Murr\\TestRunningServices\\Scheduler"
+$QSchedulerSettings = "D:\\repo\\Murr\\PowerShellScripts\\TestSettings\\Scheduler\\*"
+dotnet build D:\repo\Murr\Solutions\FullSolutions.sln
 Stop-Service -Name "TestScheduler"
 Remove-Item -Path $QSchedulerBase -include *.pdb -Recurse
 Get-ChildItem -Path $QScheduler -Recurse| Foreach-object {Remove-Item -Recurse -Path $_.FullName}

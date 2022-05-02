@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Murzik.Entities.MoexNew.Amortization;
 using Murzik.Entities.MoexNew.Bond;
 using Murzik.Entities.MoexNew.Coupon;
+using Murzik.Entities.MoexNew.Offer;
 using Murzik.Entities.MoexNew.Share;
 using Murzik.Interfaces;
 using Murzik.MoexProvider.XmlEntities.Bond;
@@ -30,47 +32,13 @@ namespace Murzik.MoexProvider
             _jsonMoexParser = jsonMoexParser;
         }
 
-        public async Task<IReadOnlyCollection<BondDataRow>> DownloadBondDataRow(DateTime date)
-        {
-            var page = 0;
-            var size = 100;
-            long? total = null;
-            var moexData = new List<BondDataRow>();
-            using (var client = new HttpClient())
-            {
-                while (true)
-                {
-                    var start = page * size;
-                    var url = $"https://iss.moex.com/iss/history/engines/stock/markets/bonds/securities.xml?date={date.ToString("yyyy-MM-dd")}&start={start}";
-                    _logger.Info($"Отправка запроса {url}");
-                    var content = await client.GetStringAsync(url);
-                    var documentXml = content.DeserializeFromXml<BondDocumentXml>();
-                    var document = _mapper.Map<BondDocument>(documentXml);
-
-                    if (total == null)
-                        total = document.HistoryCursorData.Rows.First().Total;
-
-                    if (document.HistoryData.Rows.Any())
-                        moexData.AddRange(document.HistoryData.Rows);
-
-                    page++;
-                    if (page * size > total)
-                    {
-                        _logger.Info($"Закончили отправлять запросы на {url}. Кол-во данных: {moexData.Count()}. Кол-во Total: {total}");
-                        return moexData;
-                    }
-                    await Task.Delay(1000);
-                }
-            }
-        }
-
-        public async Task<IReadOnlyCollection<Coupon>> DownloadCoupons(long? attemptions = null)
+        public async Task<IReadOnlyCollection<Amortization>> DownloadAmortizationsAsync(long? amountOfPagesToDownload = null)
         {
             var currentAttemptions = 100;
             var page = 0;
             var size = 100;
             long? total = null;
-            var moexData = new List<Coupon>();
+            var moexData = new List<Amortization>();
             while (true)
             {
                 try
@@ -81,16 +49,16 @@ namespace Murzik.MoexProvider
                         {
                             {
                                 var start = page * size;
-                                var url = $"https://iss.moex.com/iss/statistics/engines/stock/markets/bonds/bondization.json?iss.only=coupons,coupons.cursor&sort_order=desc&iss.json=extended&iss.meta=off&lang=ru&limit=100&start={start}";
+                                var url = $"https://iss.moex.com/iss/statistics/engines/stock/markets/bonds/bondization.json?iss.only=amortizations,amortizations.cursor&sort_order=desc&iss.json=extended&iss.meta=off&lang=ru&limit=100&start={start}";
                                 _logger.Info($"Отправка запроса {url}");
                                 var content = await client.GetStringAsync(url);
-                                var couponInformation = _jsonMoexParser.ConvertFromRootJson(content);
+                                var couponInformation = _jsonMoexParser.ConvertToAmortizationInformationAndGetLast(content);
 
                                 if (total == null)
-                                    total = couponInformation.CouponCursors.First().Total;
+                                    total = couponInformation.AmortizationCursors.First().Total;
 
-                                if (couponInformation.Coupons.Any())
-                                    moexData.AddRange(couponInformation.Coupons);
+                                if (couponInformation.Amortizations.Any())
+                                    moexData.AddRange(couponInformation.Amortizations);
 
                                 page++;
                                 if (page * size > total)
@@ -99,10 +67,10 @@ namespace Murzik.MoexProvider
                                     return moexData;
                                 }
 
-                                if (attemptions.HasValue)
+                                if (amountOfPagesToDownload.HasValue)
                                 {
-                                    attemptions--;
-                                    if (attemptions <= 0)
+                                    amountOfPagesToDownload--;
+                                    if (amountOfPagesToDownload <= 0)
                                         return moexData;
                                 }
 
@@ -126,7 +94,165 @@ namespace Murzik.MoexProvider
             }
         }
 
-        public async Task<IReadOnlyCollection<ShareDataRow>> DownloadShareDataRow(DateTime date)
+        public async Task<IReadOnlyCollection<BondDataRow>> DownloadBondDataRowAsync(DateTime downloadDate)
+        {
+            var page = 0;
+            var size = 100;
+            long? total = null;
+            var moexData = new List<BondDataRow>();
+            using (var client = new HttpClient())
+            {
+                while (true)
+                {
+                    var start = page * size;
+                    var url = $"https://iss.moex.com/iss/history/engines/stock/markets/bonds/securities.xml?date={downloadDate.ToString("yyyy-MM-dd")}&start={start}";
+                    _logger.Info($"Отправка запроса {url}");
+                    var content = await client.GetStringAsync(url);
+                    var documentXml = content.DeserializeFromXml<BondDocumentXml>();
+                    var document = _mapper.Map<BondDocument>(documentXml);
+
+                    if (total == null)
+                        total = document.HistoryCursorData.Rows.First().Total;
+
+                    if (document.HistoryData.Rows.Any())
+                        moexData.AddRange(document.HistoryData.Rows);
+
+                    page++;
+                    if (page * size > total)
+                    {
+                        _logger.Info($"Закончили отправлять запросы на {url}. Кол-во данных: {moexData.Count()}. Кол-во Total: {total}");
+                        return moexData;
+                    }
+                    await Task.Delay(1000);
+                }
+            }
+        }
+
+        public async Task<IReadOnlyCollection<Coupon>> DownloadCouponsAsync(long? amountOfPagesToDownload = null)
+        {
+            var currentAttemptions = 100;
+            var page = 0;
+            var size = 100;
+            long? total = null;
+            var moexData = new List<Coupon>();
+            while (true)
+            {
+                try
+                {
+                    while (true)
+                    {
+                        using (var client = new HttpClient())
+                        {
+                            {
+                                var start = page * size;
+                                var url = $"https://iss.moex.com/iss/statistics/engines/stock/markets/bonds/bondization.json?iss.only=coupons,coupons.cursor&sort_order=desc&iss.json=extended&iss.meta=off&lang=ru&limit=100&start={start}";
+                                _logger.Info($"Отправка запроса {url}");
+                                var content = await client.GetStringAsync(url);
+                                var couponInformation = _jsonMoexParser.ConvertToCouponInformationAndGetLast(content);
+
+                                if (total == null)
+                                    total = couponInformation.CouponCursors.First().Total;
+
+                                if (couponInformation.Coupons.Any())
+                                    moexData.AddRange(couponInformation.Coupons);
+
+                                page++;
+                                if (page * size > total)
+                                {
+                                    _logger.Info($"Закончили отправлять запросы на {url}. Кол-во данных: {moexData.Count()}. Кол-во Total: {total}");
+                                    return moexData;
+                                }
+
+                                if (amountOfPagesToDownload.HasValue)
+                                {
+                                    amountOfPagesToDownload--;
+                                    if (amountOfPagesToDownload <= 0)
+                                        return moexData;
+                                }
+
+                                await Task.Delay(1000);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                    _logger.Info($"Осталось повторных попыток запросить данные: {currentAttemptions}");
+                    currentAttemptions--;
+                    await Task.Delay(new Random().Next(1, 10) * 1000);
+                    if (currentAttemptions <= 0)
+                    {
+                        _logger.Info($"Количество попыток на зпрос данных исчерпано, завершаем ошибкой");
+                        throw new Exception("Не удалось прочесть купоны по облигациям");
+                    }
+                }
+            }
+        }
+
+        public async Task<IReadOnlyCollection<Offer>> DownloadOffersAsync(long? amountOfPageToDownload = null)
+        {
+            var currentAttemptions = 100;
+            var page = 0;
+            var size = 100;
+            long? total = null;
+            var moexData = new List<Offer>();
+            while (true)
+            {
+                try
+                {
+                    while (true)
+                    {
+                        using (var client = new HttpClient())
+                        {
+                            {
+                                var start = page * size;
+                                var url = $"https://iss.moex.com/iss/statistics/engines/stock/markets/bonds/bondization.json?iss.only=offers,offers.cursor&sort_order=desc&iss.json=extended&iss.meta=off&lang=ru&limit=100&start={start}";
+                                _logger.Info($"Отправка запроса {url}");
+                                var content = await client.GetStringAsync(url);
+                                var couponInformation = _jsonMoexParser.ConvertToOfferInformationAndGetLast(content);
+
+                                if (total == null)
+                                    total = couponInformation.OfferCursors.First().Total;
+
+                                if (couponInformation.Offers.Any())
+                                    moexData.AddRange(couponInformation.Offers);
+
+                                page++;
+                                if (page * size > total)
+                                {
+                                    _logger.Info($"Закончили отправлять запросы на {url}. Кол-во данных: {moexData.Count()}. Кол-во Total: {total}");
+                                    return moexData;
+                                }
+
+                                if (amountOfPageToDownload.HasValue)
+                                {
+                                    amountOfPageToDownload--;
+                                    if (amountOfPageToDownload <= 0)
+                                        return moexData;
+                                }
+
+                                await Task.Delay(1000);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                    _logger.Info($"Осталось повторных попыток запросить данные: {currentAttemptions}");
+                    currentAttemptions--;
+                    await Task.Delay(new Random().Next(1, 10) * 1000);
+                    if (currentAttemptions <= 0)
+                    {
+                        _logger.Info($"Количество попыток на зпрос данных исчерпано, завершаем ошибкой");
+                        throw new Exception("Не удалось прочесть купоны по облигациям");
+                    }
+                }
+            }
+        }
+
+        public async Task<IReadOnlyCollection<ShareDataRow>> DownloadShareDataRowAsync(DateTime downloadDate)
         {
             var page = 0;
             var size = 100;
@@ -137,7 +263,7 @@ namespace Murzik.MoexProvider
                 while (true)
                 {
                     var start = page * size;
-                    var url = $"https://iss.moex.com/iss/history/engines/stock/markets/shares/securities.xml?date={date.ToString("yyyy-MM-dd")}&start={start}";
+                    var url = $"https://iss.moex.com/iss/history/engines/stock/markets/shares/securities.xml?date={downloadDate.ToString("yyyy-MM-dd")}&start={start}";
                     _logger.Info($"Отправка запроса {url}");
                     var content = await client.GetStringAsync(url);
                     var docuemntXml = content.DeserializeFromXml<ShareDocumentXml>();

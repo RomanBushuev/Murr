@@ -2,6 +2,9 @@
 
 namespace Murzik.Entities.MoexNew.Coupon
 {
+    /// <summary>
+    /// Купон
+    /// </summary>
     public class Coupon
     {
         public string Isin { get; set; }
@@ -21,8 +24,14 @@ namespace Murzik.Entities.MoexNew.Coupon
         /// </summary>
         public DateTime? CouponDate { get; set; }
 
+        /// <summary>
+        /// Дата записи
+        /// </summary>
         public DateTime? RecordDate { get; set; }
 
+        /// <summary>
+        /// Дата начала купона (не использовать)
+        /// </summary>
         public DateTime? StartDate { get; set; }
 
         /// <summary>

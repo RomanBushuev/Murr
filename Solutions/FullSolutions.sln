@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30320.27
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Murzik.Entities", "..\Modules\Murzik.Entities\Murzik.Entities.csproj", "{D9693EB3-6349-4658-88F5-A8BF35D75DAE}"
 EndProject
@@ -55,13 +55,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Murzik.SchedulerService", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Murzik.AlgorithmService", "Murzik.AlgorithmService", "{1C915765-83E0-44F8-8987-40D8313948C5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Murzik.PipelineService", "Murzik.PipelineService", "{91748078-5AED-4CE2-B454-0FB8EFDFC2BC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Murzik.AlgorithmService", "..\Modules\Murzik.AlgorithmService\Murzik.AlgorithmService.csproj", "{2A6C3FD2-7C66-4F00-9717-8B67004D1245}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Murzik.SchedulerService", "..\Modules\Murzik.SchedulerService\Murzik.SchedulerService.csproj", "{605C0885-A695-4F1C-BD2B-4E397E02CB42}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Murzik.PipelineServiceActions", "Murzik.PipelineServiceActions", "{0BFC430C-095E-459B-AAF1-CF2FCD2D25C1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Murzik.Tests", "..\Modules\Murzik.Tests\Murzik.Tests.csproj", "{2E5AB9EA-B132-49B5-B434-C071BAE2FC1E}"
 EndProject
@@ -71,7 +67,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Murzik.SaverMurrData", "Mur
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Murzik.Parser", "Murzik.Parser", "{0F39203E-FC6F-4525-BBDE-EAD9D5F12C08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Murzik.Parser", "..\Modules\Murzik.Parser\Murzik.Parser.csproj", "{5C8FE1B2-5F3C-4D61-A26F-D9AF733E60B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Murzik.Parser", "..\Modules\Murzik.Parser\Murzik.Parser.csproj", "{5C8FE1B2-5F3C-4D61-A26F-D9AF733E60B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -173,10 +169,8 @@ Global
 		{BB8D2D65-39A7-4F10-B469-2283C1D96442} = {72567F55-1F80-4FB0-ACC5-6FF407591AC9}
 		{E201447F-5915-4A88-924E-EADF639D553A} = {72567F55-1F80-4FB0-ACC5-6FF407591AC9}
 		{1C915765-83E0-44F8-8987-40D8313948C5} = {72567F55-1F80-4FB0-ACC5-6FF407591AC9}
-		{91748078-5AED-4CE2-B454-0FB8EFDFC2BC} = {72567F55-1F80-4FB0-ACC5-6FF407591AC9}
 		{2A6C3FD2-7C66-4F00-9717-8B67004D1245} = {1C915765-83E0-44F8-8987-40D8313948C5}
 		{605C0885-A695-4F1C-BD2B-4E397E02CB42} = {E201447F-5915-4A88-924E-EADF639D553A}
-		{0BFC430C-095E-459B-AAF1-CF2FCD2D25C1} = {72567F55-1F80-4FB0-ACC5-6FF407591AC9}
 		{2E5AB9EA-B132-49B5-B434-C071BAE2FC1E} = {BB8D2D65-39A7-4F10-B469-2283C1D96442}
 		{34E671AB-41C4-471F-B31D-2BE0DD519486} = {D6A9C87D-3CB6-462F-96AD-ECBBAE75984B}
 		{D6A9C87D-3CB6-462F-96AD-ECBBAE75984B} = {72567F55-1F80-4FB0-ACC5-6FF407591AC9}

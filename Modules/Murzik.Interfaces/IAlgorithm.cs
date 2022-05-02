@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Murzik.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Murzik.Interfaces
 {
@@ -7,5 +9,9 @@ namespace Murzik.Interfaces
         Task Run();
 
         long TaskId { get; set; }
+
+        IReadOnlyCollection<ParamDescriptor> GetParamDescriptors();
+
+        void SetParamDescriptors(ParamDescriptor paramDescriptor);
     }
 }

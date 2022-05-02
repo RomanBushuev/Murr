@@ -37,13 +37,13 @@ namespace Murzik.Logic.Moex
                 Log.Info($"Задача {TaskId} : Задача загрузки купонов из Moex");
                 IsContinue();
                 decimal attemps = _paramDescriptors.ConvertNum(Attempts);
-                long? pageAmountToDownload = null;
+                long? amountOfPageToDownload = null;
                 if (attemps != decimal.MinusOne)
                 {
-                    pageAmountToDownload = (long)attemps;
-                    Log.Info($"Количество страниц для загрузки {pageAmountToDownload}");
+                    amountOfPageToDownload = (long)attemps;
+                    Log.Info($"Количество страниц для загрузки {amountOfPageToDownload}");
                 }
-                var coupons = await _moexDownloader.DownloadCoupons(pageAmountToDownload);
+                var coupons = await _moexDownloader.DownloadCouponsAsync(amountOfPageToDownload);
                 Log.Info($"Задача {TaskId} : Количество загруженных купонов: {coupons.Count}");
                 var filepath = _csvSaver.Save(coupons, TaskId);
                 Log.Info($"Задача {TaskId} : Данные загружены в {filepath}");

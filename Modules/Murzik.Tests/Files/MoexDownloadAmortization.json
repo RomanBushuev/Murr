@@ -1,0 +1,33 @@
+[
+  {
+    "charsetinfo": {
+      "name": "utf-8"
+    }
+  },
+  {
+    "amortizations": [
+      {
+        "isin": "XS2075963293",
+        "name": "Eurasia Capital S.A. UNDT",
+        "issuevalue": 200000000,
+        "amortdate": "2111-01-01",
+        "facevalue": 1000,
+        "initialfacevalue": 1000,
+        "faceunit": "USD",
+        "valueprc": 100.00,
+        "value": 1000,
+        "value_rub": 95661.8,
+        "data_source": "maturity",
+        "secid": "XS2075963293",
+        "primary_boardid": "RPMO"
+      }
+    ],
+    "amortizations.cursor": [
+      {
+        "INDEX": 0,
+        "TOTAL": 100,
+        "PAGESIZE": 1
+      }
+    ]
+  }
+]

@@ -1,0 +1,34 @@
+[
+	{
+		"charsetinfo": {
+			"name": "utf-8"
+		}
+	},
+	{
+		"offers": [
+			{
+				"isin": "RU000A0JUCA9",
+				"name": "\"ФСК ЕЭС\"(ПАО)-обл. сер.34",
+				"issuevalue": 14000000000,
+				"offerdate": "2047-11-11",
+				"offerdatestart": "2047-10-28",
+				"offerdateend": "2047-11-01",
+				"facevalue": 1000,
+				"faceunit": "RUB",
+				"price": null,
+				"value": null,
+				"agent": null,
+				"offertype": "Оферта",
+				"secid": "RU000A0JUCA9",
+				"primary_boardid": "TQCB"
+			}			
+		],
+		"offers.cursor": [
+			{
+				"INDEX": 0,
+				"TOTAL": 100,
+				"PAGESIZE": 1
+			}
+		]
+	}
+]

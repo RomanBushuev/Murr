@@ -103,7 +103,7 @@ namespace Murzik.AlgorithmServiceActions
                 return;
             }
 
-            _logger.Info($"Сервис:{serviceName} начал работу над {karmaDownloadJob.TaskId}");
+            _logger.Info($"Сервис:[{serviceName}] начал работу над {karmaDownloadJob.TaskId}");
 
             var calculationJson = _taskActions.GetCalculationJson(karmaDownloadJob.TaskTemplateId);
             var calculation = _calculationFactory.GetCalculation(calculationJson);

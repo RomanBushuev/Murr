@@ -41,120 +41,103 @@ namespace Murzik.Logic
 
         public IAlgorithm GetCalculation(CalculationJson json)
         {
-            if (json.TaskType == (long)TaskTypes.DownloadCurrenciesCbrf)
+            IAlgorithm calculation = null;
+            switch (json.TaskType)
             {
-                var calculation = new DownloadForeignExchange(_logger,
-                    _taskAction,
-                    _cbrDownloader,
-                    _xmlSave);
-                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
-                foreach (var val in values)
-                {
-                    calculation.SetParamDescriptors(val);
-                }
-                return calculation;
+                case (long)TaskTypes.DownloadCurrenciesCbrf:
+                    {
+                        calculation = new DownloadForeignExchange(_logger,
+                            _taskAction,
+                            _cbrDownloader,
+                            _xmlSave);
+                        break;
+                    }
+                case (long)TaskTypes.DownloadMosPrimeCbrf:
+                    {
+                        calculation = new DownloadMosprime(_logger,
+                            _taskAction,
+                            _cbrDownloader,
+                            _xmlSave);
+                        break;
+                    }
+                case (long)TaskTypes.DownloadKeyRateCbrf:
+                    {
+                        calculation = new DownloadKeyRate(_logger,
+                            _taskAction,
+                            _cbrDownloader,
+                            _xmlSave);
+                        break;
+                    }
+                case (long)TaskTypes.DownloadRoisFixCbrf:
+                    {
+                        calculation = new DownloadRoisfix(_logger,
+                            _taskAction,
+                            _cbrDownloader,
+                            _xmlSave);
+                        break;
+                    }
+                case (long)TaskTypes.DownloadRuoniaCbrf:
+                    {
+                        calculation = new DownloadRuonia(_logger,
+                            _taskAction,
+                            _cbrDownloader,
+                            _xmlSave);
+                        break;
+                    }
+                case (long)TaskTypes.DownloadMoexInstruments:
+                    {
+                        calculation = new DownloadMoexInstruments(_logger,
+                            _taskAction,
+                            _moexDownloader,
+                            _xmlSave,
+                            _csvSaver);
+                        break;
+                    }
+                case (long)TaskTypes.SaveForeignExchange:
+                    {
+                        calculation = new SaveForeignExchange(_logger,
+                            _taskAction,
+                            _convertFactory,
+                            _saverMurrData,
+                            _cbrDownloader);
+                        break;
+                    }
+                case (long)TaskTypes.DownloadMoexCoupons:
+                    {
+                        calculation = new DownloadMoexCoupons(_logger,
+                            _taskAction,
+                            _moexDownloader,
+                            _csvSaver);
+                        break;
+                    }
+                case (long)TaskTypes.DownloadMoexAmortizations:
+                    {
+                        calculation = new DownloadMoexAmortizations(_logger,
+                            _taskAction,
+                            _moexDownloader,
+                            _csvSaver);
+                        break;
+                    }
+                case (long)TaskTypes.DownloadMoexOffers:
+                    {
+                        calculation = new DownloadMoexOffers(_logger,
+                            _taskAction,
+                            _moexDownloader,
+                            _csvSaver);
+                        break;
+                    }
+                default:
+                    {
+                        calculation = null;
+                        break;
+                    }
             }
 
-            if (json.TaskType == (long)TaskTypes.DownloadMosPrimeCbrf)
-            {
-                var calculation = new DownloadMosprime(_logger,
-                    _taskAction,
-                    _cbrDownloader,
-                    _xmlSave);
-                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
-                foreach (var val in values)
-                {
-                    calculation.SetParamDescriptors(val);
-                }
-                return calculation;
-            }
+            var values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
+            foreach (var val in values)
+                calculation.SetParamDescriptors(val);
 
-            if (json.TaskType == (long)TaskTypes.DownloadKeyRateCbrf)
-            {
-                var calculation = new DownloadKeyRate(_logger,
-                    _taskAction,
-                    _cbrDownloader,
-                    _xmlSave);
-                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
-                foreach (var val in values)
-                {
-                    calculation.SetParamDescriptors(val);
-                }
-                return calculation;
-            }
-
-            if (json.TaskType == (long)TaskTypes.DownloadRoisFixCbrf)
-            {
-                var calculation = new DownloadRoisfix(_logger,
-                    _taskAction,
-                    _cbrDownloader,
-                    _xmlSave);
-                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
-                foreach (var val in values)
-                {
-                    calculation.SetParamDescriptors(val);
-                }
-                return calculation;
-            }
-
-            if (json.TaskType == (long)TaskTypes.DownloadRuoniaCbrf)
-            {
-                var calculation = new DownloadRuonia(_logger,
-                    _taskAction,
-                    _cbrDownloader,
-                    _xmlSave);
-                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
-                foreach (var val in values)
-                {
-                    calculation.SetParamDescriptors(val);
-                }
-                return calculation;
-            }
-
-            if (json.TaskType == (long)TaskTypes.DownloadMoexInstruments)
-            {
-                var calculation = new DownloadMoexInstruments(_logger,
-                    _taskAction,
-                    _moexDownloader,
-                    _xmlSave,
-                    _csvSaver);
-                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
-                foreach (var val in values)
-                {
-                    calculation.SetParamDescriptors(val);
-                }
-                return calculation;
-            }
-
-            if (json.TaskType == (long)TaskTypes.SaveForeignExchange)
-            {
-                var calculation = new SaveForeignExchange(_logger,
-                    _taskAction, 
-                    _convertFactory,
-                    _saverMurrData,
-                    _cbrDownloader);
-                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
-                foreach (var val in values)
-                {
-                    calculation.SetParamDescriptors(val);
-                }
-                return calculation;
-            }
-            if(json.TaskType == (long)TaskTypes.DownloadMoexCoupons)
-            {
-                var calculation = new DownloadMoexCoupons(_logger,
-                    _taskAction,
-                    _moexDownloader,
-                    _csvSaver);
-                List<ParamDescriptor> values = ParamDescriptorExtensions.DeserializeJson(json.JsonParameters, calculation.GetParamDescriptors());
-                foreach (var val in values)
-                {
-                    calculation.SetParamDescriptors(val);
-                }
-                return calculation;
-            }
-
-            return null;
+            return calculation;
         }
     }
 }

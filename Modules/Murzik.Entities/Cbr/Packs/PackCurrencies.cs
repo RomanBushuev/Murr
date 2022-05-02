@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Murzik.Entities.Cbr
+namespace Murzik.Entities.Cbr.Packs
 {
     public class PackCurrencies
     {

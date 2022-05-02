@@ -1,5 +1,5 @@
 ﻿using Murzik.Entities;
-using Murzik.Entities.Cbr;
+using Murzik.Entities.Cbr.Packs;
 using Murzik.Entities.Enumerations;
 using Murzik.Interfaces;
 using Murzik.Utils;
