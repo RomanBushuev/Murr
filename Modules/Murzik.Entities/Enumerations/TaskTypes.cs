@@ -37,5 +37,8 @@
 
         [MurrDb("DOWNLOAD MOEX OFFERS")]
         DownloadMoexOffers = 11,
+
+        [MurrDb("DOWNLOAD MOEX INSTRUMENT DESCIPRTION")]
+        DownloadMoexInstrumentDescription = 12,
     }
 }

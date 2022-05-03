@@ -6,6 +6,7 @@ using Murzik.CbrDownloader;
 using Murzik.CsvProvider;
 using Murzik.DownloaderProvider;
 using Murzik.Entities;
+using Murzik.Entities.MoexNew;
 using Murzik.Logic;
 using Murzik.MoexProvider;
 using Murzik.Parser;
@@ -42,12 +43,12 @@ namespace Murzik.AlgorithmService
                     ILogger logger = LogManager.GetCurrentClassLogger();
                     services.AddSingleton(logger);
                     services.Configure<AlgorithmServiceConfige>(hostContext.Configuration.GetSection("AlgorithmServiceConfige"));
-                    var dataProvider = hostContext.Configuration.GetSection("DataProvider").Get<DataProvider>();
+                    services.Configure<MoexSettings>(hostContext.Configuration.GetSection("MoexSettings"));
 
                     services.AddDownloaderServices(hostContext.Configuration);
                     services.AddParserServices();
                     services.AddCbrServices();
-                    services.AddMoexServices();
+                    services.AddMoexServices(hostContext.Configuration);
                     services.AddXmlSaverServices();
                     services.AddCsvSaverServices(hostContext.Configuration);
                     services.AddSaverMurrDataServices(hostContext.Configuration);

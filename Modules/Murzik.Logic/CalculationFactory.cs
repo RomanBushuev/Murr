@@ -126,6 +126,13 @@ namespace Murzik.Logic
                             _csvSaver);
                         break;
                     }
+                case (long)TaskTypes.DownloadMoexInstrumentDescription:
+                    {
+                        calculation = new DownloadMoexInstrumentDescription(_logger,
+                            _taskAction,
+                            _moexDownloader);
+                        break;
+                    }
                 default:
                     {
                         calculation = null;

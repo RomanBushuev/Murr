@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Options;
+using Murzik.Entities.MoexNew;
 using Murzik.Entities.MoexNew.Amortization;
 using Murzik.Entities.MoexNew.Bond;
 using Murzik.Entities.MoexNew.Coupon;
@@ -11,7 +13,10 @@ using Murzik.Utils;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -22,14 +27,17 @@ namespace Murzik.MoexProvider
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IJsonMoexParser _jsonMoexParser;
+        private MoexSettings _moexSettings;
 
         public MoexDownloader(IMapper mapper,
             ILogger logger,
-            IJsonMoexParser jsonMoexParser)
+            IJsonMoexParser jsonMoexParser,
+            IOptions<MoexSettings> moexSettings)
         {
             _mapper = mapper;
             _logger = logger;
             _jsonMoexParser = jsonMoexParser;
+            _moexSettings = moexSettings.Value;
         }
 
         public async Task<IReadOnlyCollection<Amortization>> DownloadAmortizationsAsync(long? amountOfPagesToDownload = null)
@@ -188,7 +196,7 @@ namespace Murzik.MoexProvider
                     }
                 }
             }
-        }
+        }       
 
         public async Task<IReadOnlyCollection<Offer>> DownloadOffersAsync(long? amountOfPageToDownload = null)
         {
@@ -286,5 +294,73 @@ namespace Murzik.MoexProvider
                 }
             }
         }
+
+        public async Task<string> DownloadShareDescriptionAsync()
+        {
+            var path = Path.Combine(_moexSettings.FolderPath, "ShareDescription", $"{DateTime.Today:yyyy.MM.dd}");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var file = Path.Combine(path, $"{DateTime.Today:yyyy.MM.dd}.zip");
+            _logger.Info($"Загрузка описательных данных по акциям будет произведена в: {file}");
+            var url = "https://iss.moex.com/iss/downloads/securitygroups/stock_shares/collections/stock_shares_all/securities_stock_shares_all.csv.zip";
+            using var client = new WebClient();
+            await client.DownloadFileTaskAsync(url, file);
+            ZipFile.ExtractToDirectory(file, path, true);
+
+            var files = Directory.GetFiles(path).Where(z => z != file);
+            if (files.Count() > 1)
+                _logger.Warn($"Количество файлов при загрузке по {url} больше одного : {string.Join(",", files)}");
+            else if (files.Count() == 1)
+                File.Delete(file);
+
+            _logger.Info($"Загрузка описательных данных по акциям произведена");
+            return files.FirstOrDefault();
+        }
+
+        public async Task<string> DownloadBondDescriptionAsync()
+        {
+            var path = Path.Combine(_moexSettings.FolderPath, "BondDescription", $"{DateTime.Today:yyyy.MM.dd}");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            var file = Path.Combine(path, $"{DateTime.Today:yyyy.MM.dd}.zip");
+            _logger.Info($"Загрузка описательных данных по облигациям будет произведена в: {file}");
+            var url = "https://iss.moex.com/iss/downloads/securitygroups/stock_bonds/collections/stock_bonds_all/securities_stock_bonds_all.csv.zip";
+            using var client = new WebClient();
+            await client.DownloadFileTaskAsync(url, file);
+            ZipFile.ExtractToDirectory(file, path, true);
+
+            var files = Directory.GetFiles(path).Where(z => z != file);
+            if (files.Count() > 1)
+                _logger.Warn($"Количество файлов при загрузке по {url} больше одного : {string.Join(",", files)}");
+            else if (files.Count() == 1)
+                File.Delete(file);
+
+            _logger.Info($"Загрузка описательных данных по облигациям произведена");
+            return files.FirstOrDefault();
+        }
+
+        public async Task<string> DownloadEurobondDescriptionAsync()
+        {
+            var path = Path.Combine(_moexSettings.FolderPath, "EurobondDescription", $"{DateTime.Today:yyyy.MM.dd}");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            var file = Path.Combine(path, $"{DateTime.Today:yyyy.MM.dd}.zip");
+            _logger.Info($"Загрузка описательных данных по облигациям будет произведена в: {file}");
+            var url = "https://iss.moex.com/iss/downloads/securitygroups/stock_eurobond/collections/stock_eurobond_all/securities_stock_eurobond_all.csv.zip";
+            using var client = new WebClient();
+            await client.DownloadFileTaskAsync(url, file);
+            ZipFile.ExtractToDirectory(file, path, true);
+
+            var files = Directory.GetFiles(path).Where(z => z != file);
+            if (files.Count() > 1)
+                _logger.Warn($"Количество файлов при загрузке по {url} больше одного : {string.Join(",", files)}");
+            else if (files.Count() == 1)
+                File.Delete(file);
+
+            _logger.Info($"Загрузка описательных данных по облигациям произведена");
+            return files.FirstOrDefault();
+        }
+
     }
 }

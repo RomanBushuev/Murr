@@ -17,21 +17,14 @@ namespace Murzik.Tests.Murzik.SaverMurrData
         private ISaverMurrData _saverMurrData;
         private DateTime constDate = new DateTime(2021, 11, 05);
 
-        public static IConfiguration GetConfiguration()
-        {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            return config;
-        }
+        
 
         public TestSaverMurrProvider()
         {
             IMapper mapper = AutoMapperConfiguration.Configure().CreateMapper();
             _logger = new Mock<ILogger>();
 
-            var dataProvider = GetConfiguration()
+            var dataProvider = TestExtensions.GetConfiguration()
                 .GetSection("DataProvider")
                 .Get<DataProvider>();
 

@@ -8,6 +8,10 @@ using System;
 using Xunit;
 using Murzik.Entities.MoexNew.Amortization;
 using Murzik.Entities.MoexNew.Offer;
+using Murzik.Tests;
+using Murzik.Entities.MoexNew;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Tests.Murzik.MoexProvider
 {
@@ -38,11 +42,10 @@ namespace Tests.Murzik.MoexProvider
                 {
                     new Coupon
                     {
-                        
+
                     }
                 }
             });
-
             _jsonMoexParser.Setup(z => z.ConvertToAmortizationInformationAndGetLast(It.IsAny<string>())).Returns(new AmortizationInformation
             {
                 AmortizationCursors = new[]
@@ -62,10 +65,9 @@ namespace Tests.Murzik.MoexProvider
                     }
                 }
             });
-
-            _jsonMoexParser.Setup(z=>z.ConvertToOfferInformationAndGetLast(It.IsAny<string>())).Returns(new OfferInformation
+            _jsonMoexParser.Setup(z => z.ConvertToOfferInformationAndGetLast(It.IsAny<string>())).Returns(new OfferInformation
             {
-               OfferCursors = new[]
+                OfferCursors = new[]
                {
                    new OfferCursor
                    {
@@ -74,7 +76,7 @@ namespace Tests.Murzik.MoexProvider
                        Total = 100
                    }
                },
-               Offers = new []
+                Offers = new[]
                {
                    new Offer
                    {
@@ -82,7 +84,12 @@ namespace Tests.Murzik.MoexProvider
                    }
                }
             });
-            _moexDownloader = new MoexDownloader(_mapper, _logger.Object, _jsonMoexParser.Object);
+
+            var moexSettings = TestExtensions.GetConfiguration()
+                .GetSection("MoexSettings")
+                .Get<MoexSettings>();
+
+            _moexDownloader = new MoexDownloader(_mapper, _logger.Object, _jsonMoexParser.Object, Options.Create(moexSettings));
         }
 
         [Fact]
@@ -128,6 +135,27 @@ namespace Tests.Murzik.MoexProvider
         {
             var result = await _moexDownloader.DownloadOffersAsync(1);
             Assert.Single(result);
+        }
+
+        [Fact]
+        public async void TestDownloadShareAsync()
+        {
+            var result = await _moexDownloader.DownloadShareDescriptionAsync();
+            Assert.True(!string.IsNullOrEmpty(result));
+        }
+
+        [Fact]
+        public async void TestDownloadBondAsync()
+        {
+            var result = await _moexDownloader.DownloadBondDescriptionAsync();
+            Assert.True(!string.IsNullOrEmpty(result));
+        }
+
+        [Fact]
+        public async void TestDownloadEurobondAsync()
+        {
+            var result = await _moexDownloader.DownloadEurobondDescriptionAsync();
+            Assert.True(!string.IsNullOrEmpty(result));
         }
     }
 }

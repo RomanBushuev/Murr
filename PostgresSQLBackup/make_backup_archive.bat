@@ -1,5 +1,5 @@
 SET PGPATH=C:\"Program Files"\PostgreSQL\14\bin\
-SET SVPATH=C:\Users\homan\YandexDisk\backups
+SET SVPATH=C:\Users\homan\YandexDisk\backups\
 SET DBUSR=karma_admin
 SET DBDUMP=.dump
 SET DBDUMPSQL=.sql
@@ -13,3 +13,4 @@ set BACKUPFILE=%BACKUPFILE: =0%
 %PGPATH%pg_dump.exe -h localhost -p 5432 -U %DBUSR% -d karma >%SVPATH%%BACKUPFILE%%DBDUMPSQL%
 %PGPATH%pg_dump.exe -h localhost -p 5432 -U %DBUSR% -Fc -d karma >%GITPATH%%BACKUPFILE%%DBDUMP%
 %PGPATH%pg_dump.exe -h localhost -p 5432 -U %DBUSR% -d karma >%GITPATH%%BACKUPFILE%%DBDUMPSQL%
+pause

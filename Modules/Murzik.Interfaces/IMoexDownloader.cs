@@ -48,5 +48,23 @@ namespace Murzik.Interfaces
         /// <param name="amountOfPageToDownload"></param>
         /// <returns></returns>
         Task<IReadOnlyCollection<Offer>> DownloadOffersAsync(long? amountOfPageToDownload = null);
+
+        /// <summary>
+        /// Загрузка описательных данных акций
+        /// </summary>
+        /// <returns></returns>
+        Task<string> DownloadShareDescriptionAsync();
+
+        /// <summary>
+        /// Загрузка описательных данных облигаций
+        /// </summary>
+        /// <returns></returns>
+        Task<string> DownloadBondDescriptionAsync();
+
+        /// <summary>
+        /// Загрузка описательных данных еврооблигаций
+        /// </summary>
+        /// <returns></returns>
+        Task<string> DownloadEurobondDescriptionAsync();
     }
 }
