@@ -44,7 +44,7 @@ namespace Murzik.Tests.Murzik.CbrDownloader
         [Fact]
         public void TestKeyRateXmlFile()
         {
-            string moexDocument = @"\Files\CbrKeyrate.xml";
+            string moexDocument = @"\Files\Cbr\CbrKeyrate.xml";
             string fullpath = _root + moexDocument;
             var xml = File.ReadAllText(fullpath);
             var newDocument = xml.DeserializeFromXml<KeyRateXml>();
@@ -97,7 +97,7 @@ namespace Murzik.Tests.Murzik.CbrDownloader
         [Fact]
         public void TestCurrenciesXmlFile()
         {
-            string moexDocument = @"\Files\CbrForeignExchange.xml";
+            string moexDocument = @"\Files\Cbr\CbrForeignExchange.xml";
             string fullpath = _root + moexDocument;
             var xml = File.ReadAllText(fullpath);
             var newDocument = xml.DeserializeFromXml<CurrenciesXml>();
@@ -136,7 +136,7 @@ namespace Murzik.Tests.Murzik.CbrDownloader
         [Fact]
         public void TestMosPrimeXmlFile()
         {
-            string moexDocument = @"\Files\CbrMosPrime.xml";
+            string moexDocument = @"\Files\Cbr\CbrMosPrime.xml";
             string fullpath = _root + moexDocument;
             var xml = File.ReadAllText(fullpath);
             var newDocument = xml.DeserializeFromXml<MosPrimeXml>();
@@ -174,7 +174,7 @@ namespace Murzik.Tests.Murzik.CbrDownloader
         [Fact]
         public void TestRoisfoxXmlFile()
         {
-            string moexDocument = @"\Files\CbrRoisfix.xml";
+            string moexDocument = @"\Files\Cbr\CbrRoisfix.xml";
             string fullpath = _root + moexDocument;
             var xml = File.ReadAllText(fullpath);
             var newDocument = xml.DeserializeFromXml<RoisFixXml>();
@@ -209,7 +209,7 @@ namespace Murzik.Tests.Murzik.CbrDownloader
         [Fact]
         public void TestRuoniaXmlFile()
         {
-            string moexDocument = @"\Files\CbrRuonia.xml";
+            string moexDocument = @"\Files\Cbr\CbrRuonia.xml";
             string fullpath = _root + moexDocument;
             var xml = File.ReadAllText(fullpath);
             var newDocument = xml.DeserializeFromXml<RuoniaXml>();

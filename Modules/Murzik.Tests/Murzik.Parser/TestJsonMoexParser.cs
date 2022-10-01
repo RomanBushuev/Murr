@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using Moq;
 using Murzik.Entities.MoexNew.Coupon;
 using Murzik.Interfaces;
 using Murzik.Parser;
-using NLog;
 using System;
 using System.IO;
 using System.Linq;
@@ -26,7 +24,7 @@ namespace Murzik.Tests.Murzik.Parser
         [Fact]
         public void TestConvertCoupons()
         {
-            string moexDocument = @"\Files\MoexDownloadCoupons.json";
+            string moexDocument = @"\Files\Moex\MoexDownloadCoupons.json";
             string fullpath = _root + moexDocument;
             var json = File.ReadAllText(fullpath).Trim();
             var couponInformation = _jsonMoexParser.ConvertToCouponInformationAndGetLast(json);
@@ -53,7 +51,7 @@ namespace Murzik.Tests.Murzik.Parser
         [Fact]
         public void TestConvertCoupons2()
         {
-            string moexDocument = @"\Files\MoexDownloadCoupons2.json";
+            string moexDocument = @"\Files\Moex\MoexDownloadCoupons2.json";
             string fullpath = _root + moexDocument;
             var json = File.ReadAllText(fullpath).Trim();
             var couponInformation = _jsonMoexParser.ConvertToCouponInformationAndGetLast(json);
@@ -112,7 +110,7 @@ namespace Murzik.Tests.Murzik.Parser
         [Fact]
         public void TestConvertAmortization()
         {
-            string moexDocument = @"\Files\MoexDownloadAmortization.json";
+            string moexDocument = @"\Files\Moex\MoexDownloadAmortization.json";
             string fullpath = _root + moexDocument;
             var json = File.ReadAllText(fullpath).Trim();
             var couponInformation = _jsonMoexParser.ConvertToAmortizationInformationAndGetLast(json);
@@ -139,7 +137,7 @@ namespace Murzik.Tests.Murzik.Parser
         [Fact]
         public void TestConvertOffer()
         {
-            string moexDocument = @"\Files\MoexDownloadOffers.json";
+            string moexDocument = @"\Files\Moex\MoexDownloadOffers.json";
             string fullpath = _root + moexDocument;
             var json = File.ReadAllText(fullpath).Trim();
             var couponInformation = _jsonMoexParser.ConvertToOfferInformationAndGetLast(json);
@@ -165,5 +163,5 @@ namespace Murzik.Tests.Murzik.Parser
             Assert.Equal("RU000A0JUCA9", offer.Secid);
             Assert.Equal("TQCB", offer.PrimaryBoardId);
         }
-    }
+    }    
 }

@@ -4,15 +4,15 @@ namespace Murzik.Entities.MoexNew.Bond
 {
     public class BondDataRow
     {
-        public string Boardid { get; set; }
+        public string BoardId { get; set; }
 
-        public DateTime Tradedate { get; set; }
+        public DateTime TradeDate { get; set; }
 
         public string Shortname { get; set; }
 
         public string Secid { get; set; }
 
-        public decimal Numtrades { get; set; }
+        public decimal NumTrades { get; set; }
 
         public decimal Value { get; set; }
 
@@ -22,7 +22,7 @@ namespace Murzik.Entities.MoexNew.Bond
 
         public decimal? Close { get; set; }
 
-        public decimal? Legalcloseprice { get; set; }
+        public decimal? LegalClosePrice { get; set; }
 
         public decimal? Accint { get; set; }
 
@@ -34,9 +34,9 @@ namespace Murzik.Entities.MoexNew.Bond
 
         public decimal Volume { get; set; }
 
-        public decimal? Marketprice2 { get; set; }
+        public decimal? MarketPrice2 { get; set; }
 
-        public decimal? Marketprice3 { get; set; }
+        public decimal? MarketPrice3 { get; set; }
 
         /// <summary>
         /// Признаваемая котировка
@@ -48,7 +48,7 @@ namespace Murzik.Entities.MoexNew.Bond
         /// </summary>
         public decimal MP2ValTrd { get; set; }
 
-        public decimal Marketprice3TradesValue { get; set; }
+        public decimal MarketPrice3TradesValue { get; set; }
 
         public decimal AdmittedValue { get; set; }
 

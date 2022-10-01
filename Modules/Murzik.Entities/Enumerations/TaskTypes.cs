@@ -40,5 +40,11 @@
 
         [MurrDb("DOWNLOAD MOEX INSTRUMENT DESCIPRTION")]
         DownloadMoexInstrumentDescription = 12,
+
+        [MurrDb("IMPORT BOND DESCRIPTION")]
+        ImportBondDescription = 13,
+
+        [MurrDb("IMPORT BOND QUOTES")]
+        ImportBondQuotes = 14,
     }
 }

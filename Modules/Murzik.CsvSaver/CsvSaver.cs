@@ -2,6 +2,7 @@
 using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
 using Microsoft.Extensions.Options;
+using Murzik.CsvProvider.Mapping;
 using Murzik.Entities.MoexNew;
 using Murzik.Entities.MoexNew.Amortization;
 using Murzik.Entities.MoexNew.Bond;
@@ -64,6 +65,7 @@ namespace Murzik.CsvProvider
             {
                 csv.Context.TypeConverterOptionsCache.AddOptions<DateTime>(options);
                 csv.Context.TypeConverterOptionsCache.AddOptions<DateTime?>(options);
+                csv.Context.RegisterClassMap<BondDataRowMap>();
                 csv.WriteRecords(bonds);
             }
         }

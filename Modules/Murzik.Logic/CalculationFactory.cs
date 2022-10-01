@@ -2,7 +2,11 @@
 using Murzik.Entities.Enumerations;
 using Murzik.Interfaces;
 using Murzik.Logic.Cbr;
+using Murzik.Logic.Cbr.Download;
+using Murzik.Logic.Cbr.Import;
 using Murzik.Logic.Moex;
+using Murzik.Logic.Moex.Download;
+using Murzik.Logic.Moex.Import;
 using Murzik.Utils;
 using NLog;
 using System.Collections.Generic;
@@ -19,6 +23,7 @@ namespace Murzik.Logic
         private ICsvSaver _csvSaver;
         private IConverterFactory _convertFactory;
         private ISaverMurrData _saverMurrData;
+        private ICsvReaderAgent _csvReaderAgent;
 
         public CalculationFactory(ILogger logger,
             ITaskActions taskAction,
@@ -27,7 +32,9 @@ namespace Murzik.Logic
             IXmlSaver xmlSaver,
             ICsvSaver csvSaver,
             IConverterFactory converterFactory,
-            ISaverMurrData saverMurrData)
+            ISaverMurrData saverMurrData,
+            ICsvReaderAgent csvReaderAgent
+            )
         {
             _logger = logger;
             _taskAction = taskAction;
@@ -37,6 +44,7 @@ namespace Murzik.Logic
             _csvSaver = csvSaver;
             _convertFactory = converterFactory;
             _saverMurrData = saverMurrData;
+            _csvReaderAgent = csvReaderAgent;
         }
 
         public IAlgorithm GetCalculation(CalculationJson json)
@@ -131,6 +139,24 @@ namespace Murzik.Logic
                         calculation = new DownloadMoexInstrumentDescription(_logger,
                             _taskAction,
                             _moexDownloader);
+                        break;
+                    }
+                case (long)TaskTypes.ImportBondDescription:
+                    {
+                        calculation = new ImportBondDescriptions(_logger,
+                            _taskAction,
+                            _convertFactory,
+                            _saverMurrData,
+                            _csvReaderAgent);
+                        break;
+                    }
+                case (long)TaskTypes.ImportBondQuotes:
+                    {
+                        calculation = new ImportBondQuotes(_logger,
+                            _taskAction,
+                            _convertFactory,
+                           _saverMurrData,
+                           _csvReaderAgent);
                         break;
                     }
                 default:

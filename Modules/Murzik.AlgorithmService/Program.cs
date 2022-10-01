@@ -41,7 +41,7 @@ namespace Murzik.AlgorithmService
                     var nLogConfig = hostContext.Configuration.GetSection("NLog");
                     LogManager.Configuration = new NLogLoggingConfiguration(nLogConfig);
                     ILogger logger = LogManager.GetCurrentClassLogger();
-                    services.AddSingleton(logger);
+                    services.AddSingleton<ILogger>(logger);
                     services.Configure<AlgorithmServiceConfige>(hostContext.Configuration.GetSection("AlgorithmServiceConfige"));
                     services.Configure<MoexSettings>(hostContext.Configuration.GetSection("MoexSettings"));
 
@@ -50,7 +50,7 @@ namespace Murzik.AlgorithmService
                     services.AddCbrServices();
                     services.AddMoexServices(hostContext.Configuration);
                     services.AddXmlSaverServices();
-                    services.AddCsvSaverServices(hostContext.Configuration);
+                    services.AddCsvSaverServices();
                     services.AddSaverMurrDataServices(hostContext.Configuration);
                     services.AddLogicServices();
                     services.AddAlgorithmServiceActionsServices();

@@ -1,6 +1,8 @@
 ﻿using Murzik.Entities.Cbr.Packs;
+using Murzik.Entities.MoexNew.Packs;
 using Murzik.Interfaces;
-using Murzik.Logic.Cbr;
+using Murzik.Logic.Cbr.Converter;
+using Murzik.Logic.Moex.Converter;
 using System;
 using System.Collections.Generic;
 
@@ -11,6 +13,8 @@ namespace Murzik.Logic
         public ConverterFactory()
         {
             AddTConverter(typeof(PackCurrencies), new ConverterForeignExchange());
+            AddTConverter(typeof(PackMoexBonds), new ConverterMoexBonds());
+            AddTConverter(typeof(PackMoexBondQuote), new ConverterMoexBondQuotes());
         }
 
         private Dictionary<Type, IConverter> _storage = new Dictionary<Type, IConverter>();

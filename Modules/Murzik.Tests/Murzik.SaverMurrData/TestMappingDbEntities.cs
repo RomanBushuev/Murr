@@ -27,9 +27,9 @@ namespace Murzik.Tests.Murzik.SaverMurrData
                 FinId = 1,
                 FinIdent = "isin",
                 DataSourceId = 2,
-                FinDataValues = new[]
+                FinDateValues = new[]
                 {
-                    new FinDataValue { FinAttriubte = "MATURITY", FromDate =  constDate, Value = constDate}
+                    new FinDateValue { FinAttriubte = "MATURITY", FromDate =  constDate, Value = constDate}
                 },
                 FinNumericValues = new[]
                 {
@@ -57,9 +57,9 @@ namespace Murzik.Tests.Murzik.SaverMurrData
                 FinId = 1,
                 FinIdent = "isin",
                 DataSourceId = 2,
-                FinDataValues = new[]
+                FinDateValues = new[]
                 {
-                    new FinDataValue { FinAttriubte = "MATURITY", FromDate =  constDate, Value = constDate}
+                    new FinDateValue { FinAttriubte = "MATURITY", FromDate =  constDate, Value = constDate}
                 },
                 FinNumericValues = new[]
                 {

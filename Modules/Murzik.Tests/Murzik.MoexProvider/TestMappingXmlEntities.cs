@@ -36,23 +36,23 @@ namespace Tests.Murzik.MoexProvider
                             Accint = null,
                             AdmittedQuote = null,
                             AdmittedValue = 12.0m,
-                            Boardid = "ID",
+                            BoardId = "ID",
                             Close = null,
                             CurrencyId = "RUB",
                             FaceValue = 14.0m,
                             High = null,
-                            Legalcloseprice = null,
+                            LegalClosePrice = null,
                             Low = null,
-                            Marketprice2 = null,
-                            Marketprice3 = null,
-                            Marketprice3TradesValue = 20.0m,
+                            MarketPrice2 = null,
+                            MarketPrice3 = null,
+                            MarketPrice3TradesValue = 20.0m,
                             MatDate = ConstDateTime,
                             MP2ValTrd = 21.0m,
-                            Numtrades =22.0m,
+                            NumTrades =22.0m,
                             Open = null,
                             Secid = "SEC_ID",
                             Shortname = "RUB_BOND",
-                            Tradedate = ConstDateTime,
+                            TradeDate = ConstDateTime,
                             TradingSession = 10,
                             Value = 24.0m,
                             Volume = 25.0m,
@@ -101,7 +101,7 @@ namespace Tests.Murzik.MoexProvider
         [Fact]
         public void TestBondHistoryDataXmlFile()
         {
-            string moexDocument = @"\Files\MoexDownloadBond.xml";
+            string moexDocument = @"\Files\Moex\MoexDownloadBond.xml";
             string fullpath = _root + moexDocument;
             var xml = File.ReadAllText(fullpath);
             var newDocument = xml.DeserializeFromXml<BondDocumentXml>();
@@ -175,7 +175,7 @@ namespace Tests.Murzik.MoexProvider
         [Fact]
         public void TestShareHistoryDataXmlFile()
         {
-            string moexDocument = @"\Files\MoexDownloadShare.xml";
+            string moexDocument = @"\Files\Moex\MoexDownloadShare.xml";
             string fullpath = _root + moexDocument;
             var xml = File.ReadAllText(fullpath);
             var newDocument = xml.DeserializeFromXml<ShareDocumentXml>();

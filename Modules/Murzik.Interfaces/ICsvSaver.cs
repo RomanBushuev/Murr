@@ -16,6 +16,7 @@ namespace Murzik.Interfaces
         string Save(IReadOnlyCollection<Coupon> coupons, long taskId);
 
         string Save(IReadOnlyCollection<Amortization> amortizations, long taskId);
+
         string Save(IReadOnlyCollection<Offer> offers, long taskId);
     }
 }

@@ -39,6 +39,25 @@
         TypeS = 12,
 
         [MurrDb("DIGITAL_CODE")]
-        DigitalCodeS = 13
+        DigitalCodeS = 13,
+
+        [MurrDb("ISSUE_DATE")]
+        IssueDateD = 14,
+
+        [MurrDb("ISSUE_SIZE")]
+        IssueSizeN = 15,
+
+        [MurrDb("REGNUMBER")]
+        Regnumber = 16,
+
+        [MurrDb("VALUE_RUB")]
+        ValueRubT = 17,
+
+        [MurrDb("NUMTRADES")]
+        NumtradesT = 18,
+
+        [MurrDb("WAPRICE")]
+        WapriceT = 19,
+
     }
 }

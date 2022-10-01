@@ -10,7 +10,7 @@ namespace Murzik.Utils
 {
     public static class ParamDescriptorExtensions
     {
-        private static NumberStyles _numberFormat = NumberStyles.Float;
+        private static readonly NumberStyles _numberFormat = NumberStyles.Float;
         private static string[] _formats = new string[] { "yyyy-MM-dd", "dd.MM.yyyy HH:mm:ss", "dd.MM.yyyy H:mm:ss", "dd.MM.yyyy" };
 
         public static void SetNum(this IEnumerable<ParamDescriptor> paramDescriptors, string ident, decimal val)

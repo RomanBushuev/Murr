@@ -10,7 +10,7 @@ namespace Murzik.Entities.MurrData
 
         public long? DataSourceId { get; set; }
 
-        public IReadOnlyCollection<FinDataValue> FinDataValues { get; set; } = new List<FinDataValue>();
+        public IReadOnlyCollection<FinDateValue> FinDateValues { get; set; } = new List<FinDateValue>();
 
         public IReadOnlyCollection<FinNumericValue> FinNumericValues { get; set; } = new List<FinNumericValue>();
 

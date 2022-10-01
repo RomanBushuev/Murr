@@ -38,6 +38,13 @@ namespace Murzik.DownloaderProvider
                 return DateTime.Today.AddDays(-2);
             if (value == "tomorrow")
                 return DateTime.Today.AddDays(1);
+            var temp = value.ToUpper();
+            if(temp.Contains("NOW"))
+            {
+                var days = int.Parse(temp.Remove(temp.IndexOf("NOW"), 3));
+                return DateTime.Now.AddDays(days);
+            }
+
             throw new Exception("Error in ChangeParmas");
         }
 

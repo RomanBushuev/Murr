@@ -1,0 +1,2 @@
+BoardId;TradeDate;Shortname;Secid;NumTrades;Value;Low;High;Close;LegalClosePrice;Accint;Waprice;YieldClose;Open;Volume;MarketPrice2;MarketPrice3;AdmittedQuote;MP2ValTrd;MarketPrice3TradesValue;AdmittedValue;MatDate;Duration;YieldAtWap;IriCPiClose;BeiClose;CouponPercent;CouponValue;BuyBackDate;LastTradeDate;FaceValue;CurrencyId;CbrClose;YieldToOffer;YieldLastCoupon;OfferDate;FaceUnit;TradingSession
+TQCB;27.05.2022;UBANK11/22;AMUNIBB2AER2;0;0;;;;100,3;;;;;0;;101,8091;100,3;0;519946,91;0;15.11.2022;;;;;5,25;1,31;;;100;SUR;;;;;USD;3

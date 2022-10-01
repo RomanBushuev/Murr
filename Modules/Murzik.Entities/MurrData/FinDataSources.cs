@@ -4,6 +4,6 @@
     {
         public long FinDataSoruceId { get; set; }
 
-        public long FinDataSourceIdent { get; set; }
+        public string FinDataSourceIdent { get; set; }
     }
 }

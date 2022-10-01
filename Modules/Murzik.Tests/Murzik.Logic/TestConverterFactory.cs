@@ -1,7 +1,7 @@
 ﻿using Murzik.Entities.Cbr.Packs;
 using Murzik.Interfaces;
 using Murzik.Logic;
-using Murzik.Logic.Cbr;
+using Murzik.Logic.Cbr.Converter;
 using Xunit;
 
 namespace Murzik.Tests.Murzik.Logic

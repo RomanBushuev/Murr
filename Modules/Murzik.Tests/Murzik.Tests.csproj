@@ -47,12 +47,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Murzik.CbrDownloader\Murzik.CbrDownloader.csproj" />
+    <ProjectReference Include="..\Murzik.CsvSaver\Murzik.CsvProvider.csproj" />
     <ProjectReference Include="..\Murzik.Entities\Murzik.Entities.csproj" />
     <ProjectReference Include="..\Murzik.Logic\Murzik.Logic.csproj" />
     <ProjectReference Include="..\Murzik.MoexProvider\Murzik.MoexProvider.csproj" />
     <ProjectReference Include="..\Murzik.Parser\Murzik.Parser.csproj" />
     <ProjectReference Include="..\Murzik.SaverMurrData\Murzik.SaverMurrData.csproj" />
     <ProjectReference Include="..\Murzik.Utils\Murzik.Utils.csproj" />
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

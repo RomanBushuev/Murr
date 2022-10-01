@@ -15,7 +15,7 @@ namespace Murzik.SaverMurrData
                 .ForMember(z => z.DataSourceId, x => x.MapFrom(source => source.DataSourceId));
 
             CreateMap<FinInstrument, IReadOnlyCollection<DbFinDataValue>>()
-                .ConstructUsing(z => z.FinDataValues.Select(x => new DbFinDataValue()
+                .ConstructUsing(z => z.FinDateValues.Select(x => new DbFinDataValue()
                 {
                     FinAttributeIdent = x.FinAttriubte,
                     FinInstrumentId = z.FinId.Value,
